@@ -1,36 +1,24 @@
 {
-  "name": "vidpick",
+  "name": "11ty-project",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
-  "devDependencies": {
-    "@11ty/eleventy": "^3.1.2",
-    "@11ty/eleventy-img": "^6.0.4",
-    "@11ty/eleventy-navigation": "^1.0.5",
-    "@11ty/eleventy-plugin-rss": "^2.0.4",
-    "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
-    "@11ty/eleventy-plugin-vite": "^7.0.0",
-    "@quasibit/eleventy-plugin-sitemap": "^2.2.0",
-    "@tailwindcss/cli": "^4.2.2",
-    "@tailwindcss/vite": "^4.2.1",
-    "concurrently": "^9.2.1",
-    "cross-env": "^10.1.0",
-    "lightningcss": "^1.32.0",
-    "markdown-it": "^14.1.1",
-    "markdown-it-attrs": "^4.3.1",
-    "markdown-it-multimd-table-ext": "^4.2.35",
-    "markdown-it-ruby": "^1.1.2",
-    "tailwindcss": "^4.2.1"
+  "scripts": {
+    "dev": "concurrently \"eleventy --watch\" \"vite\"",
+    "build": "eleventy && vite build",
+    "clean": "node --eval \"fs.rmSync('_site',{recursive:true,force:true});fs.rmSync('.cache',{recursive:true,force:true});fs.rmSync('.vite',{recursive:true,force:true})\"",
+    "fresh": "npm run clean && npm run dev"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
-  "scripts": {
-    "build:css": "npx @tailwindcss/cli -i ./src/assets/css/main.css -o ./src/assets/css/style.css",
-    "build": "npm run build:css && eleventy",
-    "dev": "concurrently \"eleventy --serve --incremental\" \"npx @tailwindcss/cli -i ./src/assets/css/main.css -o ./src/assets/css/style.css --watch\" ",
-    "preview": "npx serve _site",
-    "clean": "node --eval \"fs.rmSync('_site',{recursive:true,force:true}); fs.rmSync('.cache',{recursive:true,force:true}); fs.rmSync('.vite',{recursive:true,force:true}); fs.rmSync('.11ty-vite-temp',{recursive:true,force:true})\""
-  },
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.2",
+    "@11ty/eleventy-plugin-rss": "^2.0.4",
+    "@tailwindcss/vite": "^4.2.1",
+    "concurrently": "^9.2.1",
+    "tailwindcss": "^4.2.1",
+    "vite": "^7.3.1"
+  }
 }
