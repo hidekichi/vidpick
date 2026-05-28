@@ -1,0 +1,66 @@
+/* 1. 通常体（Regular）の設定 */
+@font-face {
+  font-family: "FragmentMono"; /* 同じ名前を使う */
+  src: url("/assets/fonts/fragment_Mono/FragmentMono-Regular.ttf")
+    format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* 2. 斜体（Italic）の設定 */
+@font-face {
+  font-family: "FragmentMono"; /* ここも同じ名前にする */
+  src: url("/assets/fonts/fragment_Mono/FragmentMono-Italic.ttf")
+    format("truetype");
+  font-weight: 400;
+  font-style: italic; /* ここで斜体であることを指定 */
+}
+
+/* --- Lato: Normal (ital@0) --- */
+
+/* 400: Regular */
+@font-face {
+  font-family: "Lato";
+  src: url("/assets/fonts/lato/Lato-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 700: Bold */
+@font-face {
+  font-family: "Lato";
+  src: url("/assets/fonts/lato/Lato-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 900: Black */
+@font-face {
+  font-family: "Lato";
+  src: url("/assets/fonts/lato/Lato-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --- Lato: Italic (ital@1) --- */
+
+/* 400: Italic */
+@font-face {
+  font-family: "Lato";
+  src: url("/assets/fonts/lato/Lato-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* 700: Bold Italic */
+@font-face {
+  font-family: "Lato";
+  src: url("/assets/fonts/lato/Lato-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}

@@ -1,0 +1,47 @@
+---
+layout: base.njk
+---
+
+<article class="post-container">
+
+  <section>
+    <header class="post-header">
+      <div class="post-meta-top">
+        {% if tags %}
+          <div class="post-tags">
+            {% for tag in tags | excludeTag("posts") %}
+              <span class="post-tag">{{ tag }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+        <time class="post-date" datetime="{{ date | dateISO }}">
+          {{ date | dateJP }}
+        </time>
+      </div>
+      <h1 class="post-title">{{ title }}</h1>
+      {% if description %}
+        <p class="post-description">{{ description }}</p>
+      {% endif %}
+    </header>
+  </section>
+
+  {% if category === "vidpick" %}
+    <section class="zxc">
+      {{ content | safe }}
+    </section>
+    <div class="layout">
+        {% include "components/contents.njk" %}
+    </div>
+{% else %}
+  <div class="body-copy">
+    {{ content | safe }}
+  </div>
+{% endif %}
+
+  <footer class="post-footer">
+    <a href="/" class="back-link">
+      <span class="back-arrow">←</span> 記事一覧に戻る
+    </a>
+  </footer>
+
+</article>

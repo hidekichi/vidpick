@@ -1,0 +1,24 @@
+{
+  "name": "vidpick",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"eleventy --watch\" \"vite\"",
+    "build": "eleventy && vite build",
+    "clean": "node --eval \"fs.rmSync('_site',{recursive:true,force:true});fs.rmSync('.cache',{recursive:true,force:true});fs.rmSync('.vite',{recursive:true,force:true})\"",
+    "fresh": "npm run clean && npm run dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@11ty/eleventy": "^3.1.2",
+    "@11ty/eleventy-plugin-rss": "^2.0.4",
+    "@tailwindcss/vite": "^4.2.1",
+    "concurrently": "^9.2.1",
+    "tailwindcss": "^4.2.1",
+    "vite": "^7.3.1"
+  }
+}

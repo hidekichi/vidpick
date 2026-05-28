@@ -1,0 +1,9 @@
+node_modules/
+_site/
+.cache/
+.vite/
+.env
+.env.local
+.zed/
+Thumbs.db
+desktop.ini
