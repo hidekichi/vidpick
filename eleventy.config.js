@@ -1,8 +1,9 @@
 import { DateTime } from "luxon";
-import EleventyVitePlugin from "@11ty/eleventy-plugin-vite";
+import vitePlugin from "@11ty/eleventy-plugin-vite";
 import tailwind from "@tailwindcss/vite";
 import pluginRss from "@11ty/eleventy-plugin-rss";
 import pluginNavigation from "@11ty/eleventy-navigation";
+import { EleventyHtmlBasePlugin } from "@11ty/eleventy";
 import sitemap from "@quasibit/eleventy-plugin-sitemap";
 import Image from "@11ty/eleventy-img";
 import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
@@ -17,16 +18,15 @@ const isServe = process.env.ELEVENTY_RUN_MODE === "serve";
 
 export default function (eleventyConfig) {
 
-  eleventyConfig.addPassthroughCopy("public");
-
   // -----------------------------------------------------------------
   // plugins
   // -----------------------------------------------------------------
   eleventyConfig.addPlugin(HtmlBasePlugin);
   eleventyConfig.addPlugin(pluginNavigation);
+  // eleventyConfig.addPlugin(EleventyDraftPlugin);
   eleventyConfig.addPlugin(sitemap, {
     sitemap: {
-      hostname: "https://blazechariot.netlify.app",
+      hostname: "https://vidpick.pages.dev/",
     },
   });
   eleventyConfig.addPlugin(pluginRss);
@@ -46,18 +46,34 @@ export default function (eleventyConfig) {
   // オプションを渡す場合
   // eleventyConfig.addPlugin(youtubeEmbedPlugin, { defaultClass: "video-embed" });
 
-  if (isServe) {
-      eleventyConfig.watchIgnores.add(".11ty-vite/**"); //おまじない的な意味で
-      eleventyConfig.setServerPassthroughCopyBehavior("copy");
 
-      eleventyConfig.addPlugin(EleventyVitePlugin, {
+    if (isServe) {
+      eleventyConfig.setServerPassthroughCopyBehavior("copy");
+      eleventyConfig.watchIgnores.add(".11ty-vite/**");
+
+      eleventyConfig.addPlugin(vitePlugin, {
         serverOptions: {
           domDiff: false,
         },
         viteOptions: {
           publicDir: "public",
-          assetsInclude: ["**/*.xml", "**/*.xsl", "**/*.txt"],
-          build: {},
+          assetsInclude: ["**/*.xml", "**/*.txt"],
+          server: {
+            mode: "development",
+            middlewareMode: true,
+            hmr: { overlay: true },
+              watch: {
+                // パススルーコピーされるJSはViteの監視対象から除外
+                ignored: [
+                  "**/assets/js/*.js",
+                  "**/assets/js/**/*.js",
+                  //"**/assets/css/style.css",
+                ],
+              },
+            },
+          build: {
+            emptyOutDir: true,
+          },
         },
       });
     }
@@ -66,10 +82,11 @@ export default function (eleventyConfig) {
   // Passthrough
   // -----------------------------------------------------------------
 
-  eleventyConfig.addPassthroughCopy("src/assets");
+  eleventyConfig.addPassthroughCopy("src/assets/css");
+  eleventyConfig.addPassthroughCopy("src/assets/css/style.css");
+  eleventyConfig.addPassthroughCopy("src/assets/js");
+  eleventyConfig.addPassthroughCopy("src/assets/fonts");
   eleventyConfig.addPassthroughCopy("src/_plugins");
-  eleventyConfig.addPassthroughCopy("src/blog/img");
-  eleventyConfig.addPassthroughCopy("src/guitar/img");
   eleventyConfig.addPassthroughCopy("src/*.{txt,xml,xsl}");
 
   /*
@@ -120,6 +137,10 @@ export default function (eleventyConfig) {
     return array.slice(0, n);
   });
 
+  eleventyConfig.addFilter("excludeTag", (tags, exclude) => {
+      return (tags || []).filter((tag) => tag !== exclude);
+    });
+
   eleventyConfig.addFilter("sortByTagMatch", (posts, currentTags, currentUrl) => {
     if (!currentTags || currentTags.length === 0) return [];
     return [...posts]
@@ -134,10 +155,6 @@ export default function (eleventyConfig) {
       .map((item) => item.post);
   });
 
-  eleventyConfig.addFilter("excludeTag", (tags, exclude) => {
-      return (tags || []).filter((tag) => tag !== exclude);
-    });
-
   eleventyConfig.addNunjucksFilter("readableDate", (dateObj) => {
     const date = new Date(dateObj);
     return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
@@ -145,34 +162,23 @@ export default function (eleventyConfig) {
 
   eleventyConfig.addFilter("dateToRfc3339", pluginRss.dateToRfc3339);
 
-  eleventyConfig.addFilter("blogImage", function (filePath) {
-    if (!filePath) return "";
-    const filename = filePath.split("/").pop();
-    return `/blog/img/${filename}`;
-  });
 
   // -----------------------------------------------------------------
   // collections
   // -----------------------------------------------------------------
 
-  eleventyConfig.addCollection("blog", (api) =>
-    api.getFilteredByGlob("src/blog/**/*.md").reverse()
-  );
-  eleventyConfig.addCollection("guitar", (api) =>
-    api.getFilteredByGlob("src/guitar/**/*.md")
-  );
-  eleventyConfig.addCollection("guitarAll", (api) =>
-    api.getFilteredByGlob("src/guitar/**/*.md")
-  );
-  eleventyConfig.addCollection("latestPosts", (api) => {
-    return api.getFilteredByGlob("src/**/*.md").sort((a, b) => b.date - a.date);
+  const noDraft = (items) => {
+    return isServe ? [...items] : items.filter(item => !item.data.draft);
+  };
+
+  eleventyConfig.addCollection("blog", (api) => {
+    return noDraft(api.getFilteredByGlob("src/posts/**/*.md")).reverse();
   });
+
   eleventyConfig.addCollection("allPosts", (api) =>
     api.getFilteredByGlob("src/**/*.md")
   );
-  eleventyConfig.addCollection("posts", (api) => {
-    return api.getFilteredByGlob("src/blog/*.md").sort((a, b) => b.date - a.date);
-  });
+
   eleventyConfig.addCollection("allTags", function (collectionApi) {
     const allTags = new Set();
     collectionApi.getAll().forEach((item) => {
@@ -182,6 +188,7 @@ export default function (eleventyConfig) {
     });
     return Array.from(allTags).sort();
   });
+
   eleventyConfig.addCollection("categoryTags", function (collectionApi) {
     let categoryTags = {};
     collectionApi.getAll().forEach((post) => {
@@ -194,6 +201,7 @@ export default function (eleventyConfig) {
     });
     return categoryTags;
   });
+
   eleventyConfig.addCollection("postsSortedByUpdate", (api) => {
     const normalizeDate = (val) => {
       if (!val) return "0000-00-00";

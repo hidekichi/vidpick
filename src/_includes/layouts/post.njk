@@ -29,9 +29,7 @@ layout: base.njk
     <section class="zxc">
       {{ content | safe }}
     </section>
-    <div class="layout">
-        {% include "components/contents.njk" %}
-    </div>
+    {% include "components/contents.njk" %}
 {% else %}
   <div class="body-copy">
     {{ content | safe }}
