@@ -1,4 +1,4 @@
-import "/assets/css/main.css";
+//import "/assets/css/main.css";
 import { footnote } from "./module/footnote.js";
 import { formattingSorting } from "./module/formatting-sorting.js";
 
