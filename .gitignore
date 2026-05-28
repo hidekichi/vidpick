@@ -1,9 +1,33 @@
+# === 依存パッケージ ===
 node_modules/
+
+# === Eleventyビルド出力 ===
 _site/
+
+# === Eleventyキャッシュ ===
 .cache/
+.11ty-cache/
+
+# === Viteキャッシュ ===
 .vite/
+
+# === 環境変数（APIキーなど機密情報） ===
 .env
 .env.local
-.zed/
+.env.*.local
+
+# === OS生成ファイル（Windows） ===
 Thumbs.db
 desktop.ini
+
+# === OS生成ファイル（Mac、チームにMacユーザーがいる場合） ===
+.DS_Store
+
+# === エディタ設定 ===
+.vscode/*
+!.vscode/extensions.json   # 推奨拡張だけ共有したい場合はこれを残す
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
