@@ -19,7 +19,8 @@
     "markdown-it-attrs": "^4.3.1",
     "markdown-it-multimd-table-ext": "^4.2.35",
     "markdown-it-ruby": "^1.1.2",
-    "tailwindcss": "^4.2.1"
+    "tailwindcss": "^4.2.1",
+    "wrangler": "^4.95.0"
   },
   "keywords": [],
   "author": "",
@@ -29,8 +30,9 @@
     "build:css": "npx @tailwindcss/cli -i ./src/assets/css/styles.css -o ./src/assets/css/style.css",
     "build": "npm run build:css && eleventy",
     "dev": "concurrently \"eleventy --serve --incremental\" \"npx @tailwindcss/cli -i ./src/assets/css/styles.css -o ./src/assets/css/style.css --watch\" ",
-    "preview": "npx serve _site",
-    "clean": "node --eval \"fs.rmSync('_site',{recursive:true,force:true}); fs.rmSync('.cache',{recursive:true,force:true}); fs.rmSync('.vite',{recursive:true,force:true}); fs.rmSync('.11ty-vite-temp',{recursive:true,force:true})\""
+    "preview": "npm run build && wrangler dev",
+    "clean": "node --eval \"fs.rmSync('_site',{recursive:true,force:true}); fs.rmSync('.cache',{recursive:true,force:true}); fs.rmSync('.vite',{recursive:true,force:true}); fs.rmSync('.11ty-vite-temp',{recursive:true,force:true})\"",
+    "deploy": "npm run build && wrangler deploy"
   },
   "description": ""
 }
