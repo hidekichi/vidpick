@@ -5,7 +5,6 @@ pagination:
   data: collections.posts
   size: 5
   alias: posts
-  reverse: true
 ---
 
 <div class="home-container">
@@ -18,7 +17,7 @@ pagination:
 
   <section class="post-list-section">
     <div class="post-list">
-      {%- for post in collections.posts | reverse -%}
+      {%- for post in collections.posts -%}
         <article class="post-card">
           <div class="post-card-meta">
             <time datetime="{{ post.date | dateISO }}">{{ post.date | dateJP }}</time>

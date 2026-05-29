@@ -1,0 +1,126 @@
+/**
+ * uaplus.css version 0.3.0
+ */
+@layer {
+  *,
+  *::after,
+  *::before {
+    box-sizing: border-box;
+  }
+  :focus-visible {
+    outline-offset: 3px;
+  }
+  html {
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+  }
+  html {
+    line-height: 1.5;
+  }
+  html {
+    scrollbar-gutter: stable;
+  }
+  h1 {
+    font-size: 2em;
+    margin-block: 0;
+  }
+  abbr[title] {
+    cursor: help;
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+  }
+  @media (forced-colors: active) {
+    mark {
+      color: HighlightText;
+      background-color: Highlight;
+    }
+  }
+  audio,
+  iframe,
+  img,
+  svg,
+  video {
+    max-block-size: 100%;
+    max-inline-size: 100%;
+  }
+  fieldset {
+    min-inline-size: 0;
+  }
+  label:has(+ input:not([type="radio"], [type="checkbox"]), select, textarea) {
+    display: block;
+  }
+  textarea:not([rows]) {
+    min-block-size: 6em;
+  }
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  @supports (-webkit-touch-callout: none) {
+    [type="search"] {
+      border: 1px solid -apple-system-secondary-label;
+      background-color: canvas;
+    }
+  }
+  input:where([type="tel"], [type="url"], [type="email"], [type="number"]):not(
+      :placeholder-shown
+    ) {
+    direction: ltr;
+  }
+  table {
+    border-collapse: collapse;
+    /*border: 1px solid;*/
+  }
+  th,
+  td {
+    /*border: 1px solid;*/
+    padding: 0.25em 0.5em;
+    vertical-align: top;
+  }
+  dialog::backdrop {
+    background: oklch(0% 0 0 / 0.3);
+  }
+  dialog,
+  [popover],
+  dialog::backdrop {
+    opacity: 0;
+    transition:
+      opacity 150ms ease-out,
+      display 150ms allow-discrete,
+      overlay 150ms allow-discrete;
+  }
+  dialog[open],
+  :popover-open,
+  dialog[open]::backdrop {
+    opacity: 1;
+  }
+  @starting-style {
+    dialog[open],
+    :popover-open,
+    dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+  [hidden]:not([hidden="until-found"]) {
+    display: none !important;
+  }
+  img {
+    display: block;
+  }
+  summary {
+    cursor: default;
+  }
+  iframe {
+    border: none;
+  }
+  @supports (position-area: block-end span-inline-end) {
+    [popover] {
+      margin: 0;
+      position-area: block-end span-inline-end;
+    }
+  }
+}

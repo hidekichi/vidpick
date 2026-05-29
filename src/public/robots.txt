@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://blazechariot.netlify.app/sitemap.xml

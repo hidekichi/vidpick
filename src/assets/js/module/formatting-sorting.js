@@ -209,10 +209,16 @@ const loadThumbnail = (cardEl, thumbSrc, linkUrl, fallbackSrc = null, timeoutMs 
     );
 
     img.onload = () => settle(() => {
+      if (img.naturalWidth === 120 && img.naturalHeight === 90) {
+        const dv = document.createElement("div");
+        dv.classList.add("no-thumb");
+        thumbEl.appendChild(dv);
+      } else {
       const a = Object.assign(document.createElement("a"),
         { href: linkUrl, target: "_blank", title: "リンク" });
       a.appendChild(img);
-      thumbEl.appendChild(a);
+        thumbEl.appendChild(a);
+      }
     });
 
     img.onerror = () => settle(onFail);

@@ -1,24 +1,29 @@
-//import path from "path";
+import path from "path";
 import { DateTime } from "luxon";
-import vitePlugin from "@11ty/eleventy-plugin-vite";
-//import tailwind from "@tailwindcss/vite";
-// import  Critters  from 'critters';
+import { HtmlBasePlugin } from "@11ty/eleventy";
 import pluginRss from "@11ty/eleventy-plugin-rss";
 import pluginNavigation from "@11ty/eleventy-navigation";
-import { HtmlBasePlugin } from "@11ty/eleventy";
+import tailwind from "@tailwindcss/vite";
 import sitemap from "@quasibit/eleventy-plugin-sitemap";
 import Image from "@11ty/eleventy-img";
+import EleventyVitePlugin from "@11ty/eleventy-plugin-vite";
 import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 import markdownIt from "markdown-it";
 import rubyPlugin from "markdown-it-ruby";
 import attrs from "markdown-it-attrs";
 import markdownItMultimdTable from "markdown-it-multimd-table-ext";
 import youtubeEmbedPlugin, { markdownItYoutube } from "./src/_plugins/markdown-youtube.js";
+import EleventyPassthroughBridge from './src/_plugins/eleventy-passthrough-bridge.js';
+
+const isServe = process.env.ELEVENTY_RUN_MODE === "serve";
 
 export default function (eleventyConfig) {
+  //ignore
+  eleventyConfig.watchIgnores.add("src/assets");
 
+  // passthrough を実コピーにする（Vite の root から見えるようにするため）
+  eleventyConfig.setServerPassthroughCopyBehavior("copy");
   eleventyConfig.addPassthroughCopy("public");
-  eleventyConfig.watchIgnores.add("src/assets/css/style.css");
 
   // -----------------------------------------------------------------
   // plugins
@@ -27,7 +32,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addPlugin(pluginNavigation);
   eleventyConfig.addPlugin(sitemap, {
     sitemap: {
-      hostname: "https://blazechariot.netlify.app",
+      hostname: "https://vidpick.pages.dev/",
     },
   });
   eleventyConfig.addPlugin(pluginRss);
@@ -43,85 +48,90 @@ export default function (eleventyConfig) {
     errorOnInvalidLanguage: false,
   });
 
-  const isServe = process.env.ELEVENTY_RUN_MODE === "serve";
-
-  eleventyConfig.addPlugin(youtubeEmbedPlugin);
   // オプションを渡す場合
   // eleventyConfig.addPlugin(youtubeEmbedPlugin, { defaultClass: "video-embed" });
+  eleventyConfig.addPlugin(youtubeEmbedPlugin);
 
-  if (isServe) {
-    eleventyConfig.setServerPassthroughCopyBehavior("copy");
-    eleventyConfig.watchIgnores.add(".11ty-vite/**");
-    //eleventyConfig.setServerOptions({
-    //  domDiff: false,  // ← これがキー
-    //});
-
-    eleventyConfig.addPlugin(vitePlugin, {
-      serverOptions: {
-        domDiff: false,
+  // Vite プラグインは最後に追加
+  eleventyConfig.addPlugin(EleventyVitePlugin, {
+    tempFolderName: ".11ty-vite",
+    serverOptions: {
+      domDiff: false, // Vite HMR と競合するため無効化推奨
+    },
+    viteOptions: {
+      plugins: [tailwind({
+        content: ['./src/**/*.{html,njk,md,js}'],
+      })],
+      //plugins: [tailwind()],
+      publicDir: "public",
+      clearScreen: false,
+      appType: "mpa",
+      assetsInclude: ["**/*.xml", "**/*.txt"],
+      server: {
+        middlewareMode: true,
+        watch: {
+            ignored: [
+              '**/.11ty-vite/assets/js/**',
+              '**/.11ty-vite/assets/images/**',
+              '**/.11ty-vite/assets/fonts/**',
+              '**/_site/**',
+            ]
+          }
       },
-      viteOptions: {
-        publicDir: "public",
-        assetsInclude: ["**/*.xml", "**/*.txt"],
-        server: {
-          mode: "development",
-          middlewareMode: true,
-          hmr: { overlay: true },
-            watch: {
-              // パススルーコピーされるJSはViteの監視対象から除外
-
-              ignored: [
-                "**/assets/js/*.js",
-                "**/assets/js/**/*.js",
-            //"**/assets/css/style.css",
-              ],
+      build: {
+        emptyOutDir: true,
+        manifest: true,
+        assetsInlineLimit: 0,
+        rollupOptions: {
+          output: {
+            /*
+            // Viteがアセットをbase64でcss化してしまう場合に
+            assetFileNames: (assetInfo) => {
+              if (assetInfo.name?.endsWith('.css')) {
+                return 'assets/css/[name].[hash][extname]';
+              }
+              if (/\.(png|jpe?g|gif|svg|avif|webp|ico)$/.test(assetInfo.name ?? '')) {
+                return 'assets/images/[name].[hash][extname]';
+              }
+              if (/\.(woff2?|ttf|eot|otf)$/.test(assetInfo.name ?? '')) {
+                return 'assets/fonts/[name].[hash][extname]';
+              }
+              return 'assets/[name].[hash][extname]';
             },
-          },
-        build: {
-          emptyOutDir: true,
-          /*
-          manifest: true,
-          rollupOptions: {
-            output: {
-              assetFileNames: "assets/css/[name].[hash].css",
-              chunkFileNames: "assets/js/[name].[hash].js",
-              entryFileNames: "assets/js/[name].[hash].js",
-            },
-          },
             */
+            // assetFileNames: "assets/css/[name].[hash].css",
+            chunkFileNames: "assets/js/[name].[hash].js",
+            entryFileNames: "assets/js/[name].[hash].js",
+          },
         },
       },
-    });
-  }
+      resolve: {
+        alias: {
+          '@css': path.resolve('./src/assets/css'),
+          "/node_modules": path.resolve(".", "node_modules"),
+        },
+      },
+    },
+  });
+  eleventyConfig.addPlugin(EleventyPassthroughBridge, { verbose: true });
 
-    // -----------------------------------------------------------------
-  // Passthrough
-  // -----------------------------------------------------------------
 
-  //eleventyConfig.addPassthroughCopy("src/assets");
-  eleventyConfig.addPassthroughCopy("src/assets/css/style.css");
-  eleventyConfig.addPassthroughCopy("src/assets/fonts");
-  eleventyConfig.addPassthroughCopy("src/assets/images");
-  eleventyConfig.addPassthroughCopy("src/assets/js");
-  eleventyConfig.addPassthroughCopy("src/_plugins");
-  eleventyConfig.addPassthroughCopy("src/blog/img");
-  eleventyConfig.addPassthroughCopy("src/guitar/img");
-  eleventyConfig.addPassthroughCopy("src/guitar/sound/**/*.ogg");
-  eleventyConfig.addPassthroughCopy("src/*.{txt,xsl,jpg}");
-  //eleventyConfig.addPassthroughCopy({ "src/public/**/*.css": "/assets/css" });
+// -----------------------------------------------------------------
+// Passthrough
+// -----------------------------------------------------------------
 
-  /*
-  eleventyConfig.addPassthroughCopy({
-    "src/images": "images"
-  })
-  */
-
-  // -----------------------------------------------------------------
-  // ignore
-  // -----------------------------------------------------------------
-
-  eleventyConfig.ignores.add("src/pretty-atom-feed.xsl");
-
+eleventyConfig.addPassthroughCopy("src/assets");
+//eleventyConfig.addPassthroughCopy("src/assets/css/style.css");
+eleventyConfig.addPassthroughCopy("src/assets/fonts");
+eleventyConfig.addPassthroughCopy("src/assets/images");
+eleventyConfig.addPassthroughCopy("src/assets/js");
+//eleventyConfig.addPassthroughCopy("src/assets/css");
+eleventyConfig.addPassthroughCopy("src/_plugins");
+eleventyConfig.addPassthroughCopy("src/blog/img");
+eleventyConfig.addPassthroughCopy("src/guitar/img");
+eleventyConfig.addPassthroughCopy("src/guitar/sound/**/*.ogg");
+eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg}");
+//eleventyConfig.addPassthroughCopy({ "src/public/**/*.css": "/assets/css" });
 
   // -----------------------------------------------------------------
   // filter
@@ -165,9 +175,10 @@ export default function (eleventyConfig) {
     return array.slice(0, n);
   });
 
-  eleventyConfig.addFilter("excludeTag", (tags, exclude) => {
-    return (tags || []).filter((tag) => tag !== exclude);
-  });
+  // 4. タグからpostsを除外（タグ一覧表示用）
+    eleventyConfig.addFilter("excludeTag", (tags, exclude) => {
+      return (tags || []).filter((tag) => tag !== exclude);
+    });
 
   eleventyConfig.addFilter("sortByTagMatch", (posts, currentTags, currentUrl) => {
     if (!currentTags || currentTags.length === 0) return [];
@@ -188,8 +199,13 @@ export default function (eleventyConfig) {
     return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
   });
 
-  eleventyConfig.addFilter("dateToRfc3339", pluginRss.dateToRfc3339);
+  //eleventyConfig.addFilter("dateToRfc3339", pluginRss.dateToRfc3339);
 
+  eleventyConfig.addFilter("blogImage", function (filePath) {
+    if (!filePath) return "";
+    const filename = filePath.split("/").pop();
+    return `/blog/img/${filename}`;
+  });
 
   // -----------------------------------------------------------------
   // collections
@@ -199,31 +215,28 @@ export default function (eleventyConfig) {
   //   api.getFilteredByGlob("src/blog/**/*.md").reverse()
   // );
 
-const noDraft = (items) => {
-  return isServe ? [...items] : items.filter(item => !item.data.draft);
-};
+  // ドラフト記事を除外する関数
+  // isServeの設定必須
+  // const isServe = process.env.ELEVENTY_RUN_MODE === "serve";
+  const noDraft = (items) => {
+    return isServe ? [...items] : items.filter(item => !item.data.draft);
+  };
 
-eleventyConfig.addCollection("posts", (api) => {
-  return noDraft(api.getFilteredByGlob("src/posts/**/*.njk")).reverse();
-});
-
-  eleventyConfig.addCollection("latestPosts", (api) => {
-    return noDraft(api.getFilteredByGlob("src/**/*.[md,njk]")).sort((a, b) => b.date - a.date);
+  eleventyConfig.addCollection("posts", (api) => {
+    return noDraft(api.getFilteredByGlob("src/posts/**/*.njk")).reverse();
   });
 
-  eleventyConfig.addCollection("allTags", function (collectionApi) {
-    const allTags = new Set();
-    collectionApi.getAll().forEach((item) => {
-      if (item.data.tags) {
-        item.data.tags.forEach((tag) => allTags.add(tag));
-      }
-    });
-    return Array.from(allTags).sort();
+  eleventyConfig.addCollection("allTags", (api) => {
+    return [
+      ...new Set(
+        noDraft(api.getAll()).flatMap((item) => item.data.tags || [])
+      )
+    ].sort();
   });
 
-  eleventyConfig.addCollection("categoryTags", function (collectionApi) {
+  eleventyConfig.addCollection("categoryTags", (api) => {
     let categoryTags = {};
-    collectionApi.getAll().forEach((post) => {
+    noDraft(api.getAll()).forEach((post) => {
       let category = post.filePathStem.split("/")[1];
       let tags = post.data.tags || [];
       if (!categoryTags[category]) categoryTags[category] = {};
@@ -234,8 +247,25 @@ eleventyConfig.addCollection("posts", (api) => {
     return categoryTags;
   });
 
+  eleventyConfig.addCollection("postsSortedByUpdate", (api) => {
+    const rawPosts = api.getFilteredByGlob("src/blog/*.md");
+    let posts = noDraft(rawPosts);
+
+    const normalizeDate = (val) => {
+      if (!val) return "0000-00-00";
+      const d = new Date(val);
+      return isNaN(d.getTime()) ? "0000-00-00" : d.toISOString().slice(0, 10);
+    };
+
+    return posts.sort((a, b) => {
+      const dateA = normalizeDate(a.data.update || a.data.updated || a.data.lastmod || a.data.date);
+      const dateB = normalizeDate(b.data.update || b.data.updated || b.data.lastmod || b.data.date);
+      return dateB.localeCompare(dateA);
+    });
+  });
+
   // -----------------------------------------------------------------
-  // shortcord
+  // shortcode
   // -----------------------------------------------------------------
 
   eleventyConfig.addNunjucksAsyncShortcode(
@@ -247,7 +277,7 @@ eleventyConfig.addCollection("posts", (api) => {
         widths: [400, 800, 1200],
         formats: ["avif", "webp", "jpeg"],
 
-        outputDir: "_site/images/",
+        outputDir: "_site/assets/images/",
         urlPath: "/images/"
       })
 
@@ -288,16 +318,15 @@ eleventyConfig.addCollection("posts", (api) => {
   eleventyConfig.setLibrary("md", mdLib);
 
   return {
-      templateFormats: ["md", "njk", "html"],
-      markdownTemplateEngine: "njk",
-      htmlTemplateEngine: "njk",
+    templateFormats: ["md", "njk", "html"],
+    markdownTemplateEngine: "njk",
+    htmlTemplateEngine: "njk",
 
-      dir: {
-        input: "src",
-        output: "_site",
-        includes: "_includes",
-        layouts: "_includes/layouts"
-      }
+    dir: {
+      input: "src",
+      output: "_site",
+      includes: "_includes",
+      layouts: "_includes/layouts"
     }
-
-  }
+  };
+}

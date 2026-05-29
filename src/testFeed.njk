@@ -1,0 +1,38 @@
+---json
+{
+	"permalink": "/public/feed.xml",
+	"eleventyExcludeFromCollections": true,
+      "metadata": {
+      "title": "BlazeChariot",
+      "description": "BlazeChariotはギター初心者のためとブログのサイトです。11tyと言うので作りました。",
+      "language": "ja",
+      "base": "https://blazechariot.netlify.app/",
+      "author": {
+      	"name": "Hidekichi"
+      }
+	}
+}
+---
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="./pretty-atom-feed.xsl" type="text/xsl"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ metadata.language or page.lang }}">
+	<title>{{ metadata.title }}</title>
+	<subtitle>{{ metadata.description }}</subtitle>
+	<link href="{{ permalink | htmlBaseUrl(metadata.base) }}" rel="self" />
+	<link href="{{ metadata.base | addPathPrefixToFullUrl }}" />
+	<updated>{{ collections.posts | getNewestCollectionItemDate | dateToRfc3339 }}</updated>
+	<id>{{ metadata.base | addPathPrefixToFullUrl }}</id>
+	<author>
+	<name>{{ metadata.author.name }}</name>
+	</author>
+	{%- for post in collections.allPosts | reverse %}
+	{%- set absolutePostUrl %}{{ post.url | htmlBaseUrl(metadata.base) }}{% endset %}
+	<entry>
+	<title>{{ post.data.title }}</title>
+	<link href="{{ absolutePostUrl }}" />
+	<updated>{{ (post.data.update or post.date) | dateToRfc3339 }}</updated>
+	<id>{{ absolutePostUrl }}</id>
+	<content type="html">{{ post.content | renderTransforms(post.data.page, metadata.base) | excerpt | safe }}</content>
+	</entry>
+	{%- endfor %}
+</feed>
