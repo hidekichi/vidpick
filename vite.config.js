@@ -11,6 +11,10 @@ export default defineConfig({
       // '/assets/images': path.resolve(process.cwd(), 'src/assets/images'),
     }
   },
+  build: {
+    outDir: path.resolve(process.cwd(), "_site"),
+    emptyOutDir: false,  // 11tyが生成したHTMLを消さないため必須
+  },
   server: {
     host: "localhost",
     port: 5173,
