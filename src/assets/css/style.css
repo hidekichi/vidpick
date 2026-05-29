@@ -9,8 +9,6 @@
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
     --color-amber-300: oklch(87.9% 0.169 91.605);
-    --default-transition-duration: 150ms;
-    --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
   }
@@ -182,12 +180,6 @@
   .max-h-\[500px\] {
     max-height: 500px;
   }
-  .flex-shrink {
-    flex-shrink: 1;
-  }
-  .border-collapse {
-    border-collapse: collapse;
-  }
   .flex-wrap {
     flex-wrap: wrap;
   }
@@ -203,24 +195,11 @@
   .overflow-y-scroll {
     overflow-y: scroll;
   }
-  .border {
-    border-style: var(--tw-border-style);
-    border-width: 1px;
-  }
   .text-amber-300 {
     color: var(--color-amber-300);
   }
   .filter {
     filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
-  }
-  .backdrop-filter {
-    -webkit-backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
-    backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
-  }
-  .transition {
-    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
 }
 @font-face {
@@ -334,7 +313,16 @@ img {
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
 }
+@keyframes fadeInScroll {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 .header-inner {
+  position: relative;
   max-width: var(--max-w-wide);
   margin: 0 auto;
   padding: 0 1.5rem;
@@ -342,6 +330,21 @@ img {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  .back-to-top-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8em;
+    width: fit-content;
+    overflow: hidden;
+    margin: inline auto;
+    justify-self: center;
+    animation-name: fadeInScroll;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+    animation-timeline: scroll(root block);
+    animation-range: 0px 50vh;
+  }
 }
 .site-logo {
   font-family: var(--font-sans);
@@ -377,7 +380,6 @@ img {
   flex: 1;
 }
 .site-footer {
-  margin-top: 5rem;
   border-top: 1px solid var(--border);
   padding: 2rem 1.5rem;
 }
@@ -798,29 +800,34 @@ img {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding-inline: 1rem;
+  padding-inline: 2rem;
   & > div {
+    position: relative;
     width: 100%;
     max-width: calc(100% / 1);
-    max-height: 100vh;
+    max-height: 1000px;
     overflow-y: auto;
-    padding-block-end: 1rem;
-    padding-inline: 1rem;
-    &:not(:last-of-type) {
-      border-right: 1px solid rgba(255, 255, 255, 0.3);
-    }
+    padding-block: 1rem;
+    padding-inline: 1rem 2rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    .tver {
-      margin-bottom: 1rem;
-      &:last-of-type {
-        margin-bottom: 0;
-      }
-      &:not(:last-of-type)::after {
-        content: "";
-        display: block;
-        width: 100%;
-        margin-block: 1.5rem 2rem;
-        border-bottom: 1px dashed rgba(200, 200, 200, 0.5);
+    &:not(:last-of-type) {
+      border: 0;
+      border-right: 1px solid rgba(200, 200, 255, 0.5);
+      border-bottom: 2px solid rgba(200, 200, 255, 0.5);
+    }
+    &:empty {
+      display: none;
+    }
+    p:is(.tver, .yt) {
+      margin-block: 1rem;
+      &:not(:last-of-type) {
+        &::after {
+          content: "";
+          display: block;
+          width: 100%;
+          margin-block: 1.5rem 2rem;
+          border-bottom: 1px dashed rgba(200, 200, 200, 0.5);
+        }
       }
     }
   }
@@ -830,26 +837,29 @@ img {
     max-width: calc(100% / 2);
   }
 }
+:root {
+  --wdth: (100% - 1rem);
+}
 @media (1199px > width > 800px) {
   .layout > div {
-    max-width: calc(100% / 3);
+    max-width: calc(var(--wdth) / 3);
   }
 }
 @media (1599px > width > 1200px) {
   .layout > div {
-    max-width: calc(100% / 4);
+    max-width: calc(var(--wdth) / 4);
   }
 }
 @media (width > 1600px) {
   .layout > div {
-    max-width: calc(100% / 5);
+    max-width: calc(var(--wdth) / 5);
     max-height: 100vh;
   }
 }
-.tver {
+p.tver, p.yt {
   width: 100%;
   height: max-content;
-  &.period > * {
+  &.period > div {
     filter: blur(3px) grayscale(100%);
     pointer-events: none;
   }
@@ -876,10 +886,16 @@ img {
   }
 }
 .head {
+  display: inline-block;
   font-size: 1.5em;
   font-weight: 700;
   line-height: 1.2;
+  text-align: middle;
+  .title {
+    vertical-align: middle;
+  }
   .broadcastYear {
+    font-size: 0.65em;
     &::before {
       content: "(";
     }
@@ -892,6 +908,9 @@ img {
       content: "・";
     }
   }
+  .episode {
+    font-size: 0.85em;
+  }
 }
 .channel {
   font-size: 0.6em;
@@ -899,14 +918,14 @@ img {
   opacity: 0.7;
   &:not(:empty)::before {
     content: "／";
-    margin-inline: 0.25em;
+    margin-inline: 0.2em;
   }
 }
 .duration {
   font-size: 0.6em;
   font-weight: 400;
   &:not(:empty)::before {
-    content: "　";
+    content: "｜";
   }
 }
 .endOfDay {
@@ -954,10 +973,14 @@ img {
   }
 }
 .link {
-  a:not(:first-of-type) {
-    &::before {
-      content: "｜";
-      margin-inline: 0.25rem;
+  a {
+    font-size: 0.8em;
+    transition: unset;
+    &:not(:first-of-type) {
+      &::before {
+        content: "｜";
+        margin-inline: 0.25rem;
+      }
     }
   }
 }
@@ -966,10 +989,14 @@ img {
   overflow: hidden;
   width: 100%;
 }
-@property --tw-border-style {
-  syntax: "*";
-  inherits: false;
-  initial-value: solid;
+.vidpick:has(.post-container) {
+  margin: 0;
+  .post-header {
+    padding: 1rem 0;
+  }
+  .post-title {
+    font-size: 1.2em;
+  }
 }
 @property --tw-blur {
   syntax: "*";
@@ -1024,46 +1051,9 @@ img {
   syntax: "*";
   inherits: false;
 }
-@property --tw-backdrop-blur {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-backdrop-brightness {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-backdrop-contrast {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-backdrop-grayscale {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-backdrop-hue-rotate {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-backdrop-invert {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-backdrop-opacity {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-backdrop-saturate {
-  syntax: "*";
-  inherits: false;
-}
-@property --tw-backdrop-sepia {
-  syntax: "*";
-  inherits: false;
-}
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
-      --tw-border-style: solid;
       --tw-blur: initial;
       --tw-brightness: initial;
       --tw-contrast: initial;
@@ -1077,15 +1067,6 @@ img {
       --tw-drop-shadow-color: initial;
       --tw-drop-shadow-alpha: 100%;
       --tw-drop-shadow-size: initial;
-      --tw-backdrop-blur: initial;
-      --tw-backdrop-brightness: initial;
-      --tw-backdrop-contrast: initial;
-      --tw-backdrop-grayscale: initial;
-      --tw-backdrop-hue-rotate: initial;
-      --tw-backdrop-invert: initial;
-      --tw-backdrop-opacity: initial;
-      --tw-backdrop-saturate: initial;
-      --tw-backdrop-sepia: initial;
     }
   }
 }

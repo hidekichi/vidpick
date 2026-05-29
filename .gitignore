@@ -3,6 +3,7 @@ node_modules/
 
 # === Eleventyビルド出力 ===
 _site/
+src/assets/css/style.css
 
 # === Eleventyキャッシュ ===
 .cache/
