@@ -90,6 +90,7 @@ img {
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
 }
+
 @keyframes fadeInScroll {
   from {
     opacity: 0;
@@ -98,6 +99,7 @@ img {
     opacity: 1;
   }
 }
+
 .header-inner {
   position: relative;
   max-width: var(--max-w-wide);
@@ -166,9 +168,12 @@ img {
 }
 .footer-copy {
   font-family: var(--font-sans);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: var(--text-faint);
   letter-spacing: 0.03em;
+  width: fit-content;
+  margin-inline: auto;
+
   a {
     color: var(--text-faint);
     &:hover {
@@ -270,33 +275,39 @@ img {
 .post-container {
   max-width: var(--max-w);
   margin: 0 auto;
-  padding: 0 0 5rem;
+  padding-block: 0;
+
   section {
     margin: 0;
     padding: 0;
   }
 }
+
 .post-header {
   margin: 0;
   padding: 0;
   padding: 5rem 0;
   border-bottom: 1px solid var(--border);
 }
+
 .post-meta-top {
   display: flex;
   align-items: center;
   gap: 1rem;
   margin-bottom: 1.25rem;
 }
+
 .post-date {
   font-size: 0.75rem;
   color: var(--text-faint);
   letter-spacing: 0.05em;
 }
+
 .post-tags {
   display: flex;
   gap: 0.4rem;
 }
+
 .post-title {
   font-size: clamp(1.8rem, 4vw, 3rem);
   font-weight: 700;
@@ -304,22 +315,25 @@ img {
   color: var(--text);
   margin: 0 0 1rem;
 }
+
 .post-description {
   font-size: 0.9rem;
   color: var(--text-muted);
   margin: 0;
   line-height: 1.7;
 }
+
 .post-footer {
-  margin-top: 3.5rem;
-  padding-top: 2rem;
+  padding-block: 3rem;
   border-top: 1px solid var(--border);
 }
+
 .back-link {
   font-family: var(--font-sans);
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   color: var(--text-muted);
   letter-spacing: 0.05em;
+
   &:hover {
     color: var(--accent);
     opacity: 1;
@@ -572,6 +586,7 @@ img {
   .home-hero {
     padding: 3rem 0 2.5rem;
   }
+
   .post-container,
   .about-container {
     padding: 2.5rem 0 4rem;
