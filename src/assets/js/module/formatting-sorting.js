@@ -9,10 +9,12 @@ const calcEndInfo = (rawStr) => {
   if (!rawStr || rawStr.includes("未記載"))
     return { endOfDay: "", leftD: "", expired: false };
 
-  const endOfDay = rawStr.replace("まで", "").trim();
+  //const endOfDay = rawStr.replace("まで", "").trim();
+  const endOfDay = rawStr.match(/(\d+\/\d+\(?.*?\)?\s+\d+:\d{2})/)[1];
 
   // 曜日"(木)"などを除去し日付部分だけ Date に渡す
-  const datePart = endOfDay.replace(/\(.\)/g, "").split(" ")[0].trim();
+  //const datePart = endOfDay.replace(/\(.\)/g, "").split(" ")[0].trim();
+  const datePart = endOfDay;
   const withYear = /^\d{4}/.test(datePart)
     ? datePart
     : `${new Date().getFullYear()}/${datePart}`;
@@ -72,7 +74,7 @@ const parseTver = (p) => {
     season: rawSeason.replace("期", "シーズン"),
     episode, sub: subLine.replace(/^※\s*/, ""),
     endOfDay, leftDay: leftD, expired,
-    cast: artist.split(" ")[0],
+    cast: artist.split(/\s+(話|らが出演しています)/)[0],
     links,
     thumbSrc: `https://image-cdn.tver.jp/w=800/images/content/thumbnail/episode/small/${episodeId}.jpg`,
     catId: rule.catId,
@@ -114,10 +116,11 @@ const parseYT = (p) => {
     } else if (line.includes("：")) {
       // キャスト：キャラクター 形式（複数行）
       //castNames.push(line.split("：")[0].replace(/[\s　]+/g, ""));
-		castNames.push(...line.split("\n"));
+		castNames.push(line);
     } else if (line.includes("、") || line.includes("らが出演")) {
+      let withoutLastSpace = line.replace(/\s+?(話|らが出演)/,"|").split("|")[0];
       // 読点区切りキャスト
-      castNames.push(...line.split(" ")[0].split("、"));
+      castNames.push(withoutLastSpace);
 
     } else {
       // その他の情報行

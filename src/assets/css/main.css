@@ -85,7 +85,17 @@ img {
   border-bottom: 1px solid var(--border);
 }
 
+@keyframes fadeInScroll {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1; /* 最大不透明度（薄くしたいなら0.7等に） */
+  }
+}
+
 .header-inner {
+  position: relative;
   max-width: var(--max-w-wide);
   margin: 0 auto;
   padding: 0 1.5rem;
@@ -93,6 +103,22 @@ img {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  .back-to-top-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.8em;
+    width: fit-content;
+    overflow: hidden;
+    margin: inline auto;
+    justify-self: center;
+    animation-name: fadeInScroll;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+    animation-timeline: scroll(root block);
+    animation-range: 0px 50vh;
+  }
 }
 
 .site-logo {
@@ -138,7 +164,6 @@ img {
 }
 
 .site-footer {
-  margin-top: 5rem;
   border-top: 1px solid var(--border);
   padding: 2rem 1.5rem;
 }
@@ -671,17 +696,21 @@ img {
   padding-inline: 2rem;
 
   & > div {
+    position: relative;
     width: 100%;
     max-width: calc(100% / 1);
-    max-height: 100vh;
+    max-height: 1000px;
     overflow-y: auto;
     padding-block: 1rem;
-    padding-inline: 1rem;
+    padding-inline: 1rem 2rem;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 
     &:not(:last-of-type) {
-      border-right: 1px solid rgba(255, 255, 255, 0.3);
+      border: 0;
+      border-right: 1px solid rgba(200, 200, 255, 0.5);
+      border-bottom: 2px solid rgba(200, 200, 255, 0.5);
     }
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 
     &:empty {
       display: none;
@@ -709,21 +738,25 @@ img {
   }
 }
 
+:root {
+  --wdth: (100% - 1rem);
+}
+
 @media (1199px > width > 800px) {
   .layout > div {
-    max-width: calc(100% / 3);
+    max-width: calc(var(--wdth) / 3);
   }
 }
 
 @media (1599px > width > 1200px) {
   .layout > div {
-    max-width: calc(100% / 4);
+    max-width: calc(var(--wdth) / 4);
   }
 }
 
 @media (width > 1600px) {
   .layout > div {
-    max-width: calc(100% / 5);
+    max-width: calc(var(--wdth) / 5);
     max-height: 100vh;
   }
 }
@@ -763,14 +796,19 @@ p.yt {
 }
 
 .head {
+  display: inline-block;
   font-size: 1.5em;
   font-weight: 700;
   line-height: 1.2;
+  text-align: middle;
 
   .title {
-    /**/
+    vertical-arign: middle;
   }
+
   .broadcastYear {
+    font-size: 0.65em;
+
     &::before {
       content: "(";
     }
@@ -785,9 +823,7 @@ p.yt {
   }
 
   .episode {
-    &::after {
-      /**/
-    }
+    font-size: 0.85em;
   }
 }
 
@@ -798,14 +834,14 @@ p.yt {
   opacity: 0.7;
   &:not(:empty)::before {
     content: "／";
-    margin-inline: 0.25em;
+    margin-inline: 0.2em;
   }
 }
 .duration {
   font-size: 0.6em;
   font-weight: 400;
   &:not(:empty)::before {
-    content: "　";
+    content: "｜";
   }
 }
 
@@ -863,10 +899,15 @@ p.yt {
 }
 
 .link {
-  a:not(:first-of-type) {
-    &::before {
-      content: "｜";
-      margin-inline: 0.25rem;
+  a {
+    font-size: 0.8em;
+    transition: unset;
+
+    &:not(:first-of-type) {
+      &::before {
+        content: "｜";
+        margin-inline: 0.25rem;
+      }
     }
   }
 }
@@ -875,4 +916,17 @@ p.yt {
   border-radius: 1rem;
   overflow: hidden;
   width: 100%;
+}
+
+/* bodyに.vidpickがある場合 */
+.vidpick:has(.post-container) {
+  margin: 0;
+
+  .post-header {
+    padding: 1rem 0;
+  }
+
+  .post-title {
+    font-size: 1.2em;
+  }
 }
