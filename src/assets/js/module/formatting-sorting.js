@@ -115,7 +115,8 @@ const parseYT = (p) => {
         } else {
           links.push({ label: "", url: line });
         }
-    } else if (line.includes("：") || line.includes("|") || line.includes("｜")) {
+      //} else if (line.includes("：") || line.includes("|") || line.includes("｜")) {
+    } else if (line.includes("：") || line.includes("｜")) {
       // キャスト：キャラクター 形式（複数行）
       //castNames.push(line.split("：")[0].replace(/[\s　]+/g, ""));
 		castNames.push(line);
@@ -157,6 +158,39 @@ const renderLinks = (links) => {
   ).join("");
 };
 
+
+let castIdCounter = 0;
+
+const buildCast = (cast) => {
+ const isArray = Array.isArray(cast);
+ const hasRoles = isArray && cast.some(c => c.includes("："));
+
+ // 「、」区切り → 従来通り
+ if (!hasRoles) {
+   const inner = isArray ? cast.join("、") : cast;
+   return `<div class="cast">${inner}</div>`;
+ }
+
+ // キャスト：キャラクター → popover
+ const id = `cast-pop-${castIdCounter++}`;
+ const rows = cast.map(line => {
+   const [actor, role = ""] = line.split("：");
+   return `<div class="cast-entry">
+     <span class="cast-actor">${actor.trim()}</span>
+     <span class="cast-role">${role.trim()}</span>
+   </div>`;
+ }).join("");
+
+ return `
+   <button class="cast-toggle" popovertarget="${id}">
+     出演者 ${cast.length}名をPickup
+   </button>
+   <div id="${id}" popover class="cast-popover">
+     <div class="cast-popover-grid">${rows}</div>
+   </div>`;
+};
+
+
 // head部分はTVerとYoutubeで構造が違う
 const buildHead = (d) => d.type === "youtube"
   ? `<span class="title">${d.title}</span>
@@ -167,12 +201,14 @@ const buildHead = (d) => d.type === "youtube"
      <span class="episode">${d.episode}</span>`;
 
 const render = (d, p) => {
-	let rCast;
+/*
+  let rCast;
 	if (Array.isArray(d.cast)) {
 		rCast = d.cast.some((c) => c.includes("：")) ? d.cast.join("<br>") : d.cast.join("、");
 	} else {
 		rCast = d.cast;
-	}
+  }
+	*/
 
   p.innerHTML = `
     <div class="category ${d.catId}">${d.genre}</div>
@@ -181,7 +217,7 @@ const render = (d, p) => {
       ? `<div class="endOfDay">${d.endOfDay}<span class="leftDay">${d.leftDay}</span></div>`
       : ""}
     <div class="sub">${d.sub}</div>
-    <div class="cast">${rCast}</div>
+    <div class="cast">${buildCast(d.cast)}</div>
     <div class="thumbnail"></div>
     <div class="link">${renderLinks(d.links)}</div>`;
 

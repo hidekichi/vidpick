@@ -61,7 +61,11 @@ body {
   background-color: #333;
   line-height: 1.7;
   width: 100vw;
+  overflow-wrap: break-word;
+  word-break: normal;
+  line-break: strict;
 }
+
 a {
   color: var(--accent);
   text-decoration: none;
@@ -78,6 +82,7 @@ img {
   height: auto;
   display: block;
 }
+
 .site-header {
   position: sticky;
   top: 0;
@@ -592,30 +597,36 @@ img {
     padding: 2.5rem 0 4rem;
   }
 }
+
 .layout {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   padding-inline: 2rem;
+
   & > div {
     position: relative;
     width: 100%;
     max-width: calc(100% / 1);
-    max-height: 1000px;
+    max-height: 100vh;
     overflow-y: auto;
     padding-block: 1rem;
     padding-inline: 1rem 2rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+
     &:not(:last-of-type) {
       border: 0;
       border-right: 1px solid rgba(200, 200, 255, 0.5);
       border-bottom: 2px solid rgba(200, 200, 255, 0.5);
     }
+
     &:empty {
       display: none;
     }
+
     p:is(.tver, .yt) {
       margin-block: 1rem;
+
       &:not(:last-of-type) {
         &::after {
           content: "";
@@ -628,6 +639,7 @@ img {
     }
   }
 }
+
 @media (799px > width > 450px) {
   .layout > div {
     max-width: calc(100% / 2);
@@ -762,14 +774,17 @@ p.yt {
     margin-right: 0.5rem;
   }
 }
+
 .cast {
   margin-block: 1rem;
   font-size: 0.9em;
-  &::after {
+
+  &:first-of-type::after {
     content: "らが出演しています";
     opacity: 0.6;
     margin-left: 0.5rem;
   }
+
   &:has(br) {
     font-family: monospace;
   }
@@ -777,6 +792,79 @@ p.yt {
     display: none;
   }
 }
+
+/* トリガーボタン */
+.cast-toggle {
+  /* 既存の.categoryバッジに近い見た目に寄せる例 */
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  cursor: pointer;
+  padding: 0.2em 0.75em;
+  border-radius: 3px;
+  font-size: 0.85em;
+  margin-block: 0.75rem;
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* popover本体 */
+.cast-popover {
+  font-family: monospace;
+  background: #3a3a3a;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  width: min(480px, 92vw);
+  margin: auto; /* 画面中央 */
+
+  /* 表示アニメーション */
+  opacity: 0;
+  transition:
+    opacity 0.2s,
+    display 0.2s allow-discrete;
+
+  &:popover-open {
+    opacity: 1;
+  }
+
+  @starting-style {
+    &:popover-open {
+      opacity: 0;
+    }
+  }
+}
+
+/* エントリ行 */
+.cast-popover-grid {
+  display: grid;
+  gap: 0.5em 0;
+}
+
+.cast-entry {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 幅が広いので2列でも余裕 */
+  gap: 0.25em 1em;
+  padding: 0.4em 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.cast-actor {
+  opacity: 0.95;
+}
+.cast-role {
+  opacity: 0.6;
+  font-size: 0.9em;
+}
+
 .link {
   a {
     font-size: 0.8em;
@@ -794,12 +882,17 @@ p.yt {
   overflow: hidden;
   width: 100%;
 }
+
 .vidpick:has(.post-container) {
-  margin: 0;
+  max-width: 90vw;
+  margin-inline: auto;
+
   .post-header {
     padding: 1rem 0;
   }
+
   .post-title {
     font-size: 1.2em;
+    margin-inline-start: 0.5rem;
   }
 }

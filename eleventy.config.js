@@ -127,9 +127,6 @@ eleventyConfig.addPassthroughCopy("src/assets/images");
 eleventyConfig.addPassthroughCopy("src/assets/js");
 //eleventyConfig.addPassthroughCopy("src/assets/css");
 eleventyConfig.addPassthroughCopy("src/_plugins");
-eleventyConfig.addPassthroughCopy("src/blog/img");
-eleventyConfig.addPassthroughCopy("src/guitar/img");
-eleventyConfig.addPassthroughCopy("src/guitar/sound/**/*.ogg");
 eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg}");
 //eleventyConfig.addPassthroughCopy({ "src/public/**/*.css": "/assets/css" });
 
@@ -200,12 +197,6 @@ eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg}");
   });
 
   //eleventyConfig.addFilter("dateToRfc3339", pluginRss.dateToRfc3339);
-
-  eleventyConfig.addFilter("blogImage", function (filePath) {
-    if (!filePath) return "";
-    const filename = filePath.split("/").pop();
-    return `/blog/img/${filename}`;
-  });
 
   // -----------------------------------------------------------------
   // collections
