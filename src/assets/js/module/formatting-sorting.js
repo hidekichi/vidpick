@@ -108,12 +108,14 @@ const parseYT = (p) => {
       const m = info.match(/(\d{1,2}\/\d{1,2}(?:\(.\))?(?:\s*\d{1,2}:\d{2})?)\s*まで/);
       if (m && !endDayRaw) endDayRaw = m[0];
       subParts.push(info);
-
     } else if (line.includes("https://")) {
-      // 追加URLはlinksに加える
-      links.push({ label: "", url: line });
-
-    } else if (line.includes("：")) {
+      const m = line.match(/^(.+?)[：:]\s*(https?:\/\/\S+)$/);
+        if (m) {
+          links.push({ label: m[1].trim(), url: m[2] });
+        } else {
+          links.push({ label: "", url: line });
+        }
+    } else if (line.includes("：") || line.includes("|") || line.includes("｜")) {
       // キャスト：キャラクター 形式（複数行）
       //castNames.push(line.split("：")[0].replace(/[\s　]+/g, ""));
 		castNames.push(line);
