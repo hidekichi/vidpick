@@ -7,7 +7,6 @@ import { formattingSorting } from "./module/formatting-sorting.js";
 document.addEventListener("DOMContentLoaded", async () => {
   back2top();
 
-
 const layout = document.querySelector(".layout");
 
   if (document.querySelector(".body-copy")) {

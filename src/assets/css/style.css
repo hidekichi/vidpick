@@ -30,7 +30,7 @@
   --border-light: #3a3733;
   --text: #fff;
   --text-muted: oklch(0.86 0.12 200.22 / 0.5);
-  --text-faint: #66c;
+  --text-faint: oklch(0.74 0.16 213.37);
   --accent: oklab(0.85 -0.14 -0.04);
   --accent-dim: #9a7e4f;
   --font-serif: "Georgia", serif;
@@ -171,9 +171,10 @@ img {
   max-width: var(--max-w-wide);
   margin: 0 auto;
 }
+
 .footer-copy {
   font-family: var(--font-sans);
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: var(--text-faint);
   letter-spacing: 0.03em;
   width: fit-content;
@@ -335,9 +336,10 @@ img {
 
 .back-link {
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--text-muted);
   letter-spacing: 0.05em;
+  margin-inline-start: 0.5em;
 
   &:hover {
     color: var(--accent);
@@ -605,6 +607,7 @@ img {
   padding-inline: 2rem;
 
   & > div {
+    font-family: var(--font-sans);
     position: relative;
     width: 100%;
     max-width: calc(100% / 1);
@@ -664,15 +667,17 @@ img {
     max-height: 100vh;
   }
 }
-p.tver,
-p.yt {
+
+p:is(.tver, .yt) {
   width: 100%;
   height: max-content;
+
   &.period > div {
     filter: blur(3px) grayscale(100%);
     pointer-events: none;
   }
 }
+
 .category {
   font-size: 0.8em;
   background-color: red;
@@ -703,12 +708,14 @@ p.yt {
   text-align: middle;
 
   .title {
+    font-family: var(--font-sans);
     vertical-align: middle;
     color: oklch(0.85 0.06 263.98);
   }
 
   .broadcastYear {
-    font-size: 0.65em;
+    font-size: 0.8em;
+
     &::before {
       content: "(";
     }
@@ -716,51 +723,65 @@ p.yt {
       content: ")";
     }
   }
+
   .season {
     &:not(:empty)::before {
       content: "・";
     }
   }
+
   .episode {
-    font-size: 0.85em;
+    font-size: 0.9em;
   }
 }
+
 .channel {
-  font-size: 0.6em;
+  font-size: 0.8em;
   font-weight: 400;
   opacity: 0.7;
+
   &:not(:empty)::before {
-    content: "／";
+    content: "｜";
     margin-inline: 0.2em;
   }
 }
+
 .duration {
-  font-size: 0.6em;
+  font-size: 0.8em;
   font-weight: 400;
+
   &:not(:empty)::before {
     content: "｜";
   }
 }
 
 .endOfDay {
+  font-size: 1.25em;
+
   &::before {
-    content: "［終了日］";
+    content: "終了日：";
+    font-size: 0.8em;
     opacity: 0.65;
-    margin-inline-end: 0.5rem;
+    margin-inline-end: 0.25rem;
   }
 }
+
 .leftDay {
-  &:not(:empty)::before {
-    content: "(あと";
-    margin-inline: 0.5rem;
-  }
-  &:not(:empty)::after {
-    content: "日)";
-  }
+  font-size: 1em;
+
   &:not(:empty) {
+    &::before {
+      content: "(あと";
+      margin-inline: 0.3rem;
+    }
+    &::after {
+      content: "日)";
+    }
+
     &::before,
     &::after {
       color: #cca;
+      font-size: 0.7em;
       opacity: 0.7;
     }
   }
@@ -769,6 +790,7 @@ p.yt {
 .sub {
   margin-block: 0.5rem;
   line-height: 1.4;
+
   &:not(:empty)::before {
     content: "※";
     margin-right: 0.5rem;
@@ -866,6 +888,10 @@ p.yt {
 }
 
 .link {
+  padding-block-start: 0.5em;
+  line-height: 1;
+  font-family: var(--font-sans);
+
   a {
     font-size: 0.8em;
     transition: unset;
@@ -877,6 +903,7 @@ p.yt {
     }
   }
 }
+
 .thumbnail {
   border-radius: 1rem;
   overflow: hidden;

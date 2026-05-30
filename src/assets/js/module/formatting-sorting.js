@@ -71,7 +71,7 @@ const parseTver = (p) => {
   return {
     type: "tver",
     genre, title, year,
-    season: rawSeason.replace("期", "シーズン"),
+    season: rawSeason.replace(/(\d+)期/, "シーズン$1"),
     episode, sub: subLine.replace(/^※\s*/, ""),
     endOfDay, leftDay: leftD, expired,
     cast: artist.split(/\s+(話|らが出演しています)/)[0],
@@ -209,6 +209,12 @@ const render = (d, p) => {
 		rCast = d.cast;
   }
 	*/
+
+  if (d.genre === "アニメ") {
+    d.genre = `${d.genre}<span class="genre-hero">(ヒーロー)</span>`;
+  } else if (d.genre === "ドキュメンタリー") {
+    d.genre = `${d.genre}<span class="genre-documentaly">(報道)</span>`;
+	}
 
   p.innerHTML = `
     <div class="category ${d.catId}">${d.genre}</div>

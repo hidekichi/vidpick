@@ -61,7 +61,20 @@ export default function (eleventyConfig) {
     viteOptions: {
       plugins: [tailwind({
         content: ['./src/**/*.{html,njk,md,js}'],
-      })],
+      }),
+          {
+            name: 'watch-src-js',
+            configureServer(server) {
+                server.watcher.add(path.resolve('./src/assets/js'));
+                server.watcher.on('change', (file) => {
+                  // バックスラッシュをスラッシュに統一して比較
+                  if (file.replace(/\\/g, '/').includes('src/assets/js')) {
+                    server.ws.send({ type: 'full-reload' });
+                  }
+                });
+              }
+          }
+      ],
       //plugins: [tailwind()],
       publicDir: "public",
       clearScreen: false,
