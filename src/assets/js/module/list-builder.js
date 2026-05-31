@@ -13,10 +13,10 @@ const buildItem = (d) => {
     ? STATUS[status].label(d)
     : STATUS[status].label;
   const castStr = d.cast.map(c => c.split("：")[0].trim()).join("、");
-
+  const url = d.thumbLinkUrl ?? d.links[0]?.url ?? "";
   return `<div class="list-item status-${status}" data-cast="${castStr}">
     <span class="list-badge status-${status}">${label}</span>
-    <a href="${d.links[0].url}" target="_blank">
+    <a href="${url}" target="_blank">
       ${d.title}${d.episode ? `　${d.episode}` : ""}
     </a>
   </div>`;

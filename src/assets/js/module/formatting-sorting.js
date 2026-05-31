@@ -91,10 +91,12 @@ const parseYT = (p) => {
     head.split(/[|｜]/).map(s => s.trim());
 
   // 末尾のURL
-  const url = rest.pop() ?? "";
-  const videoId = getVideoId(url);
-  const links = [{ label: "", url }];
-
+  //const url = rest.pop() ?? "";
+  const mainUrlIdx = rest.findLastIndex(l => /^https?:\/\//.test(l.trim()));
+  const mainUrl = mainUrlIdx >= 0 ? rest.splice(mainUrlIdx, 1)[0].trim() : "";
+  //const videoId = getVideoId(mainUrl);
+  //const links = [{ label: "", url: mainUrl }];
+const links = [];
   const subParts = [];
   const castNames = [];
   let endDayRaw = "";
@@ -108,6 +110,10 @@ const parseYT = (p) => {
       const m = info.match(/(\d{1,2}\/\d{1,2}(?:\(.\))?(?:\s*\d{1,2}:\d{2})?)\s*まで/);
       if (m && !endDayRaw) endDayRaw = m[0];
       subParts.push(info);
+    } else if (/^.+?[：:]\s*https?:\/\//.test(line)) {
+      const m = line.match(/^(.+?)[：:]\s*(https?:\/\/\S+)$/);
+      if (m) links.push({ label: m[1].trim(), url: m[2] });
+
     } else if (line.includes("https://")) {
       const m = line.match(/^(.+?)[：:]\s*(https?:\/\/\S+)$/);
         if (m) {
@@ -133,6 +139,10 @@ const parseYT = (p) => {
 
   const { endOfDay, leftD, expired } = calcEndInfo(endDayRaw || "未記載");
 
+  // サムネイルのリンク先：mainUrl優先、なければ最初のラベル付きリンク
+  const thumbLinkUrl = mainUrl || links[0]?.url || "";
+  const videoId = getVideoId(thumbLinkUrl);
+
   return {
     type: "youtube",
     genre: "YouTube",
@@ -143,19 +153,24 @@ const parseYT = (p) => {
     cast: castNames,
     links,
     thumbSrc: `https://i.ytimg.com/vi_webp/${videoId}/maxresdefault.webp`,
-    fallbackSrc: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
-    catId: "youtube",
+      fallbackSrc: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+      thumbLinkUrl,
+      catId: "youtube",
   };
 };
 
 
 // ── レンダリング ──────────────────────────────────────
-const renderLinks = (links) => {
-  if (links.length === 1)
-    return `<a href="${links[0].url}" target="_blank">${links[0].url}</a>`;
-  return links.map(({ label, url }) =>
-    `<a class="part-link" href="${url}" target="_blank">${label || url}</a>`
-  ).join("");
+const renderLinks = (links, mainUrl = "") => {
+  if (links.length > 0) {
+    return links.map(({ label, url }) =>
+      `<a class="part-link" href="${url}" target="_blank">${label || url}</a>`
+    ).join("");
+  }
+  // ラベル付きリンクがない場合はmainUrlを表示
+  return mainUrl
+    ? `<a href="${mainUrl}" target="_blank">${mainUrl}</a>`
+    : "";
 };
 
 
@@ -227,7 +242,7 @@ const render = (d, p) => {
     <div class="sub">${d.sub}</div>
     <div class="cast">${buildCast(d.cast)}</div>
     <div class="thumbnail"></div>
-    <div class="link">${renderLinks(d.links)}</div>`;
+    <div class="link">${renderLinks(d.links, d.thumbLinkUrl ?? "")}</div>`;
 
   if (d.expired) p.classList.add("period");
   document.querySelector(`#${d.catId}`).appendChild(p);
@@ -301,9 +316,9 @@ export async function formattingSorting() {
       render(d, p);
       cards.push({
         p,
-        thumbSrc: d.thumbSrc,
+        thumbSrc:    d.thumbSrc,
         fallbackSrc: d.fallbackSrc ?? null,
-        linkUrl: d.links[0].url,
+        linkUrl:     d.thumbLinkUrl ?? d.links[0]?.url ?? "", // ← ここ
       });
     } catch (e) {
       console.error("パースエラー:", e.message, "\n", p.textContent.slice(0, 60));

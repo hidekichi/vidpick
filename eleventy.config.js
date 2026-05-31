@@ -59,9 +59,9 @@ export default function (eleventyConfig) {
       domDiff: false, // Vite HMR と競合するため無効化推奨
     },
     viteOptions: {
-      plugins: [tailwind({
-        content: ['./src/**/*.{html,njk,md,js}'],
-      }),
+      plugins: [tailwind(
+        //{ content: ['./src/**/*.{html,njk,md,js}'],}
+      ),
           {
             name: 'watch-src-js',
             configureServer(server) {
@@ -82,6 +82,9 @@ export default function (eleventyConfig) {
       assetsInclude: ["**/*.xml", "**/*.txt"],
       server: {
         middlewareMode: true,
+        headers: {
+          'Cache-Control': 'no-store', // ← devは常に新鮮なファイルを取得
+        },
         watch: {
             ignored: [
               '**/.11ty-vite/assets/js/**',
