@@ -23,7 +23,7 @@ const layout = document.querySelector(".layout");
 
     busyman.addEventListener("click", () => {
       const target = document.querySelector(".busy");
-      target.scrollIntoView({ block: "nearest" });
+      target.scrollIntoView({ block: "center" });
     });
   }
 });
