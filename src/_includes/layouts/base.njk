@@ -12,6 +12,19 @@
     <link rel="icon" type="image/svg+xml" href="/assets/images/favicons/favicon.svg" />
     <link rel="shortcut icon" href="/assets/images/favicons/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicons/apple-touch-icon.png" />
+
+    <!-- Open Graph -->
+	<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="{% if title %}{{ title }}{% else %}VidPick{% endif %}">
+	<meta property="og:image" content="{% if cover %}{{ site.name }}{{ page.url | url }}{{ cover }}{% else %}{{ site.url }}/opengraph-cover.jpg{% endif %}" />
+	<meta property="og:description" content="{% if description %}{{ description }}{% else %}VidPickはTVerやYoutubeからピックアップした動画をまとめたサイトです。11tyで作りました。{% endif %}" />
+	<meta property="og:site_name" content="{{ site.name }}">
+	<meta property="og:locale" content="ja_JP">
+
+	<!-- Twitter -->
+	<meta property="twitter:image" content="{% if cover %}{{ site.name }}{{ page.url | url }}{{ cover }}{% else %}{{ site.url }}/opengraph-cover.jpg{% endif %}" />
+	<meta name="twitter:card" content="summary_large_image" />
 </head>
 {% if category == "vidpick" %}
 <body class="vidpick">
