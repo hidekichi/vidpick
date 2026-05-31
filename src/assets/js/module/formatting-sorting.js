@@ -200,6 +200,8 @@ const buildHead = (d) => d.type === "youtube"
      <span class="broadcastYear">${d.year}<span class="season">${d.season}</span></span>
      <span class="episode">${d.episode}</span>`;
 
+const allVideoData = [];
+
 const render = (d, p) => {
 /*
   let rCast;
@@ -229,7 +231,20 @@ const render = (d, p) => {
 
   if (d.expired) p.classList.add("period");
   document.querySelector(`#${d.catId}`).appendChild(p);
+
+  allVideoData.push({
+      title:   d.title,
+      episode: d.episode,
+      genre:   d.genre,
+      catId:   d.catId,
+      links:   d.links,
+      cast:    Array.isArray(d.cast) ? d.cast : d.cast.split("、"),
+      endOfDay: d.endOfDay,
+      leftDay:  d.leftDay,    // 数値 or ""
+      expired:  d.expired,
+    });
 };
+export const getVideoData = () => allVideoData;
 
 // ── サムネイル非同期ロード ─────────────────────────────
 const loadThumbnail = (cardEl, thumbSrc, linkUrl, fallbackSrc = null, timeoutMs = 8000) => {

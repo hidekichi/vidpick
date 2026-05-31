@@ -1,8 +1,9 @@
-//import "/assets/css/main.css";
+//import "/assets/css/style.css";
 import "@css/style.css";
 import { footnote } from "./module/footnote.js";
 import { back2top } from "./module/back2top.js";
-import { formattingSorting } from "./module/formatting-sorting.js";
+import { formattingSorting, getVideoData } from "./module/formatting-sorting.js";
+import { buildList, initCastSearch } from "./module/list-builder.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   back2top();
@@ -14,6 +15,15 @@ const layout = document.querySelector(".layout");
   }
 
   if (layout) {
-    await formattingSorting();
+    formattingSorting();
+    buildList(getVideoData());
+    initCastSearch();
+
+    const busyman = document.querySelector(".busyman");
+
+    busyman.addEventListener("click", () => {
+      const target = document.querySelector(".busy");
+      target.scrollIntoView({ block: "nearest" });
+    });
   }
 });
