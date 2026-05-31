@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet href="./pretty-atom-feed.xsl" type="text/xsl"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja">
-	<title>BlazeChariot</title>
-	<subtitle>BlazeChariotはギター初心者のためとブログのサイトです。11tyと言うので作りました。</subtitle>
-	<link href="https://blazechariot.netlify.app/feed.xml" rel="self" />
-	<link href="https://blazechariot.netlify.app/" />
+	<title>VidPick</title>
+	<subtitle>VidPickはTVerとYoutubeからピックアップした動画へ素早くアクセスするためのサイトです。11tyと言うので作りました。</subtitle>
+	<link href="https://vidpick.pages.dev//feed.xml" rel="self" />
+	<link href="https://vidpick.pages.dev//" />
 	<updated>2026-03-26T00:00:00Z</updated>
-	<id>https://blazechariot.netlify.app/</id>
+	<id>https://vidpick.pages.dev/</id>
 	<author>
 	<name>Hidekichi</name>
 	</author>
@@ -2044,7 +2044,7 @@ https://youtu.be/LqAqwyE-QVs
 一番重要なポイントとして、まずギター譜があってそこにはリズムとアクセントそしてギターのコードが書かれています。そして、コードチェンジをする所に目的のコードが書かれていて、その部分のリズムを弾く際にはすでにコードチェンジを完了していなければならないと言うことが条件としてあります。つまり楽譜を見る時に大切なのは、その変えるべきコードが書かれている場所に移る時、どの状態からコードチェンジを始めれば間に合うかという事なのです。
 そして、かならずタイムラグ（ズレ）はあります。例えばCからFに変える時にコンマ数秒の間、ギターの弦は開放弦を鳴らしている時間があると言う事です。これは上級者になりコードチェンジが素早くできるようになればなるほど短くなっていきます。タイムラグがありながらも、それをそうと感じさせないようにコードチェンジをする事が重要なのです。
 
-  
+
   </content>
 	</entry>
 	<entry>
@@ -2107,7 +2107,7 @@ C
 半音
 
 
- 
+
 全音
 全音
 全音
