@@ -425,6 +425,56 @@ section {
   margin: 0;
 }
 
+:where(h2, h3, h4, h5, h6) {
+  line-height: 1.2;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  margin: 2em 0 1.5em;
+  color: var(--text);
+}
+
+h2 {
+  font-size: 2rem;
+  padding-bottom: 0.4em;
+  border-bottom: 1px solid var(--border);
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+h4 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+h5 {
+  font-size: 1rem;
+}
+
+h6 {
+  font-size: 0.75rem;
+}
+
+:where(ul, ol) {
+  margin-block: 1em;
+
+  :where(ul, ol) {
+    margin-inline-start: 0.5em;
+  }
+
+  li {
+    font-size: 1em;
+
+    li {
+      font-size: 0.9em;
+    }
+  }
+}
+
 .body-copy {
   width: 100%;
   color: var(--text);
@@ -436,40 +486,6 @@ section {
   line-break: strict;
   & > * + * {
     margin-top: 1.5rem;
-  }
-
-  :where(h2, h3, h4, h5, h6) {
-    line-height: 1.2;
-    font-family: var(--font-sans);
-    font-weight: 600;
-    margin: 2em 0 1.5em;
-    color: var(--text);
-  }
-
-  h2 {
-    font-size: 2rem;
-    padding-bottom: 0.4em;
-    border-bottom: 1px solid var(--border);
-  }
-
-  h3 {
-    font-size: 1.5rem;
-  }
-
-  h4 {
-    font-size: 1.25rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-  }
-
-  h5 {
-    font-size: 1rem;
-  }
-
-  h6 {
-    font-size: 0.75rem;
   }
 
   p {
@@ -492,6 +508,7 @@ section {
     text-underline-offset: 4px;
   }
 
+  b,
   strong {
     font-weight: 600;
     color: #ede8e0;
@@ -1088,6 +1105,8 @@ p:is(.tver, .yt) {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   margin-inline: auto;
+  gap: 1em;
+  width: 90%;
 
   .list {
     border: solid 1px;
@@ -1192,7 +1211,7 @@ p:is(.tver, .yt) {
     color: #ffa;
   }
   &.status-unknown {
-    background: #444;
+    background: oklch(0.23 0.03 224.99);
     color: #aaa;
   }
   &.status-expired {
