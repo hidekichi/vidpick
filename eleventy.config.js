@@ -136,11 +136,12 @@ export default function (eleventyConfig) {
 eleventyConfig.addPassthroughCopy("src/assets");
 //eleventyConfig.addPassthroughCopy("src/assets/css/style.css");
 eleventyConfig.addPassthroughCopy("src/assets/fonts");
-eleventyConfig.addPassthroughCopy("src/assets/images");
+  eleventyConfig.addPassthroughCopy("src/assets/images");
+  eleventyConfig.addPassthroughCopy("src/assets/images/favicons");
 eleventyConfig.addPassthroughCopy("src/assets/js");
 //eleventyConfig.addPassthroughCopy("src/assets/css");
 eleventyConfig.addPassthroughCopy("src/_plugins");
-eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg}");
+eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg,png,svg}");
 //eleventyConfig.addPassthroughCopy({ "src/public/**/*.css": "/assets/css" });
 
   // -----------------------------------------------------------------
