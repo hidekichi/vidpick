@@ -1058,40 +1058,60 @@ p:is(.tver, .yt) {
   }
 }
 
+.vidp-details {
+  margin-inline-start: 1em;
+  background-color: transparent;
+
+  summary {
+    cursor: pointer;
+    font-size: 1.2em;
+    padding-inline-start: 1em;
+
+    & + div {
+      margin: 0;
+      padding-inline-start: 2em;
+    }
+  }
+
+  &::details-content {
+    transition:
+      height 0.6s,
+      opacity 0.6s,
+      content-visibility 0.6s allow-discrete;
+    height: 0;
+    opacity: 0;
+    overflow: clip;
+    background-color: transparent;
+  }
+
+  &[open]::details-content {
+    opacity: 1;
+  }
+}
+
+@supports (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords; /* height:0（数値型） → auto（文字型） のアニメーションを可能にするための指定 */
+  }
+  details[open]::details-content {
+    height: auto;
+  }
+}
+
+/* height:0→autoへのアニメーションが対応していない場合は、固定値にアニメーションさせる */
+@supports not (interpolate-size: allow-keywords) {
+  details[open]::details-content {
+    height: 150px;
+    overflow-y: scroll;
+  }
+}
+
 .vidp-h2 {
   font-size: 2em;
   max-width: 80vw;
   line-height: 1.2;
-  text-align: center;
-  margin-inline: auto;
-  margin-block: 5rem 2rem;
-
-  &::before {
-    content: "＜";
-    margin-inline-end: 0.5rem;
-  }
-  &::after {
-    content: "＞";
-    margin-inline-start: 0.5rem;
-  }
-}
-
-.vidp-ul {
-  max-width: 50vw;
-  margin-block-end: 2rem;
-  margin-inline: auto;
-
-  ul {
-    margin-inline-start: 1rem;
-  }
-
-  li {
-    font-size: 0.9em;
-    list-style-type: initial;
-    &:not(:last-of-type) {
-      margin-block-end: 0.8em;
-    }
-  }
+  margin-inline-start: 1em;
+  margin-block: 5rem 0.5em;
 }
 
 #cast-search {
