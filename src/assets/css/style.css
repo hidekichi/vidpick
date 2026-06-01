@@ -334,10 +334,19 @@ section {
   .busyman {
     cursor: pointer;
     margin-inline: auto 0.5rem;
+    font-size: 0.8em;
+    border: 1px solid oklch(0.74 0.04 219.34);
+    padding: 0.2em 0.8em;
+    border-radius: 5px;
+    background-color: oklch(0.45 0.07 215.68);
 
     &::before {
       content: "⇣";
       margin-inline: 0 0.5em;
+    }
+
+    &:hover {
+      filter: brightness(1.5);
     }
   }
 }
@@ -485,6 +494,7 @@ h6 {
   overflow-wrap: anywhere;
   word-break: normal;
   line-break: strict;
+
   & > * + * {
     margin-top: 1.5rem;
   }
@@ -706,17 +716,20 @@ h6 {
     padding: 3rem 0 2.5rem;
   }
 
-  .post-container,
   .about-container {
     padding: 2.5rem 0 4rem;
   }
 }
 
 .layout {
+  /*
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   padding-inline: 2rem;
+  */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 
   & > div {
     font-family: var(--font-sans);
@@ -754,7 +767,7 @@ h6 {
     }
   }
 }
-
+/*
 @media (799px > width > 450px) {
   .layout > div {
     max-width: calc(100% / 2);
@@ -783,7 +796,7 @@ h6 {
     max-height: 100vh;
   }
 }
-
+*/
 p:is(.tver, .yt) {
   width: 100%;
   height: max-content;
@@ -1031,6 +1044,7 @@ p:is(.tver, .yt) {
 }
 
 .vidpick:has(.post-container) {
+  width: 100%;
   max-width: 90vw;
   margin-inline: auto;
 
@@ -1045,7 +1059,7 @@ p:is(.tver, .yt) {
 }
 
 .vidp-h2 {
-  font-size: 1.6em;
+  font-size: 2em;
   max-width: 80vw;
   line-height: 1.2;
   text-align: center;
