@@ -217,7 +217,7 @@ img {
 }
 
 .home-hero {
-  padding: 5rem 0 4rem;
+  padding: 5rem 0 3rem;
   border-bottom: 1px solid var(--border);
 }
 
@@ -247,7 +247,7 @@ img {
 }
 
 .post-list-section {
-  padding: 3rem 0;
+  padding: 1em 0;
 }
 
 .post-list {
@@ -478,6 +478,9 @@ h6 {
 
   li {
     font-size: 1em;
+    list-style-type: initial;
+    list-style: inside;
+    padding-inline-start: 0.8em;
 
     li {
       font-size: 0.9em;
@@ -712,8 +715,9 @@ h6 {
   html {
     font-size: 16px;
   }
+
   .home-hero {
-    padding: 3rem 0 2.5rem;
+    padding: 3rem 0 2rem;
   }
 
   .about-container {
@@ -1058,8 +1062,16 @@ p:is(.tver, .yt) {
   }
 }
 
-.vidp-details {
+.vidp-h2 {
+  font-size: 2em;
+  max-width: 80vw;
+  line-height: 1.2;
   margin-inline-start: 1em;
+  margin-block: 5rem 0.5em;
+}
+
+.vidp-details {
+  margin-inline: 1em;
   background-color: transparent;
 
   summary {
@@ -1075,8 +1087,8 @@ p:is(.tver, .yt) {
 
   &::details-content {
     transition:
-      height 0.6s,
-      opacity 0.6s,
+      height 0.6s ease,
+      opacity 0.2s,
       content-visibility 0.6s allow-discrete;
     height: 0;
     opacity: 0;
@@ -1104,14 +1116,6 @@ p:is(.tver, .yt) {
     height: 150px;
     overflow-y: scroll;
   }
-}
-
-.vidp-h2 {
-  font-size: 2em;
-  max-width: 80vw;
-  line-height: 1.2;
-  margin-inline-start: 1em;
-  margin-block: 5rem 0.5em;
 }
 
 #cast-search {
