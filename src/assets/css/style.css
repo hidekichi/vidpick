@@ -70,6 +70,30 @@ body {
   line-break: strict;
 }
 
+:where(.fluid) {
+  --fluid-min: calc(
+    var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0))
+  );
+  --fluid-max: calc(
+    var(--font-size-max) * pow(var(--font-ratio-max), var(--font-level, 0))
+  );
+
+  --fluid-preferred: calc(
+    (var(--fluid-max) - var(--fluid-min)) /
+      (var(--font-width-max) - var(--font-width-min))
+  );
+
+  --fluid-type: clamp(
+    (var(--fluid-min) / 16) * 1rem,
+    ((var(--fluid-min) / 16) * 1rem) -
+      (((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) +
+      (var(--fluid-preferred) * var(--variable-unit, 100vi)),
+    (var(--fluid-max) / 16) * 1rem
+  );
+
+  font-size: var(--fluid-type);
+}
+
 a {
   color: var(--accent);
   text-decoration: none;
@@ -1070,7 +1094,7 @@ p:is(.tver, .yt) {
 }
 
 .vidp-h2 {
-  font-size: 2em;
+  /*font-size: 2em;*/
   max-width: 80vw;
   line-height: 1.2;
   margin-inline-start: 1em;
@@ -1261,6 +1285,17 @@ p:is(.tver, .yt) {
 
   #cast-search {
     margin-block: 1em;
+  }
+
+  .vidp-details {
+    summary {
+      padding-inline-start: 0;
+
+      & + div {
+        padding-inline-start: 0;
+        font-size: 0.8em;
+      }
+    }
   }
 }
 
