@@ -1,0 +1,27 @@
+---
+layout: base.njk
+---
+
+{% set posts = collections.article %}
+<section>
+  <div class="reading-header">
+    <div class="header-meta">
+    {% if tags %}
+      <div class="post-tags">
+        {% for tag in tags | excludeTag("posts") %}
+          <span class="post-tag">{{ tag }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+      <time class="date" datetime="{{ date | dateISO }}">
+        {{ date | dateJP }}
+      </time>
+    </div>
+    <h1 class="title">{{ title }}</h1>
+    <p class="summary">{{ summary }}</p>
+  </div>
+</section>
+
+<article class="reading-main">
+    {{ content | safe}}
+</article>

@@ -25,6 +25,7 @@
     "markdown-it-multimd-table-ext": "^4.2.35",
     "markdown-it-ruby": "^1.1.2",
     "nunjucks": "^3.2.4",
+    "serve": "^14.2.6",
     "tailwindcss": "^4.0.0",
     "vite": "^6.0.0"
   }

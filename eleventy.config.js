@@ -272,6 +272,26 @@ eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg,png,svg}");
     });
   });
 
+  eleventyConfig.addCollection("postsWithArticles", (collection) => {
+    const posts    = collection.getFilteredByTag("vidpick")
+                               .sort((a, b) => b.date - a.date);
+    const articles = collection.getFilteredByTag("article");
+
+    return posts.map(post => {
+      const postCast = post.data.cast ?? [];
+          post.relatedArticles = articles.filter(art => {
+            const artCast = art.data.cast ?? [];
+            return artCast.some(c => postCast.includes(c));
+          });
+          return post;
+    });
+  });
+
+  // articlesをコレクション
+  eleventyConfig.addCollection("article", (api) => {
+     return noDraft(api.getFilteredByGlob("src/articles/**/*.md")).reverse();
+   });
+
   // -----------------------------------------------------------------
   // shortcode
   // -----------------------------------------------------------------

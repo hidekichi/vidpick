@@ -31,11 +31,15 @@
 {% else %}
 <body>
 {% endif %}
+
   {% include "components/header.njk" %}
+
   <main class="main-content">
     {{ content | safe }}
   </main>
+
   {% include "components/footer.njk" %}
+
   <script type="module" src="/assets/js/scripts.js"></script>
 </body>
 </html>

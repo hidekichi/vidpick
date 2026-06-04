@@ -48,7 +48,7 @@ async function convertParagraphText() {
 		],
 	];
 
-	await replaceInTextNodes(document.querySelector(".body-copy"), patterns);
+	await replaceInTextNodes(document.querySelector(".reading-main"), patterns);
 }
 
 
@@ -58,7 +58,7 @@ export async function footnote() {
 
 	await convertParagraphText();
 
-	const postContent = document.querySelector('.body-copy');
+	const postContent = document.querySelector('.reading-main');
 	const sups = postContent.querySelectorAll('.footnote');
 
 	if (sups.length > 0) {
@@ -125,7 +125,7 @@ export async function footnote() {
 				});
 
 				observer.observe(findFootnote);
-				findFootnote.scrollIntoView({ block: "start", inline: "nearest" });
+				findFootnote.scrollIntoView({ block: "center", inline: "nearest" });
 			}
 
 			const footElement = e.target.closest('.foot');
@@ -135,7 +135,7 @@ export async function footnote() {
 
 				if (supBacklink) {
 					e.preventDefault();
-					supBacklink.scrollIntoView({ block: "start", inline: "nearest" });
+					supBacklink.scrollIntoView({ block: "center", inline: "nearest" });
 				}
 			}
 		});
