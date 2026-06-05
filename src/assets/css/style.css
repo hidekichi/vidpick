@@ -1519,7 +1519,7 @@ p:is(.tver, .yt) {
   }
 
   h3 {
-    color: oklch(0.94 0.1 194.47);
+    color: oklch(0.83 0.05 136.7);
     font-size: 1.8em;
 
     &::before {
@@ -1556,13 +1556,31 @@ p:is(.tver, .yt) {
     li {
       list-style: outside;
       line-height: 1.6;
+      padding-block-end: 1em;
+
+      &:last-of-type {
+        padding-block-end: 0;
+      }
 
       :where(ul, ol) {
+        margin-block: 0.5em 1em;
+
         li {
           font-size: 1em;
         }
       }
     }
+  }
+
+  :where(p, li, td) {
+    color: oklch(0.93 0 0);
+    font-size: 1.1em;
+    letter-spacing: 0.02em;
+    text-align: justify;
+    line-break: strict;
+    word-break: auto-phrase;
+    overflow-wrap: break-word;
+    line-break: strict;
   }
 
   table {
@@ -1605,7 +1623,21 @@ p:is(.tver, .yt) {
       -1px -1px 1px #0b0b3e;
   }
 
-  hr {
+  .footnotes-list {
+    .foot {
+      font-size: 1em;
+    }
+  }
+
+  .feature {
+    &::before {
+      content: "注目";
+      color: oklch(0.95 0.06 103.58);
+      font-size: 0.8em;
+      background-color: oklch(0.42 0.16 255.46);
+      padding-inline: 0.2em;
+      transform: rotate(-15deg);
+    }
   }
 }
 
