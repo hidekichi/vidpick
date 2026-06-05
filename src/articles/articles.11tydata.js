@@ -7,7 +7,6 @@ export default {
   }
 };
 */
-console.log("✅ articles.11tydata.js loaded");
 export default {
   eleventyComputed: {
     tags: data => {

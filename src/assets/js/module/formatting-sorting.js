@@ -9,19 +9,31 @@ const calcEndInfo = (rawStr) => {
   if (!rawStr || rawStr.includes("未記載"))
     return { endOfDay: "", leftD: "", expired: false };
 
-  //const endOfDay = rawStr.replace("まで", "").trim();
-  const endOfDay = rawStr.match(/(\d+\/\d+\(?.*?\)?\s+\d+:\d{2})/)[1];
+  const endOfDay = rawStr.replace("まで", "").trim();
+  const datePart = endOfDay.replace(/\(.\)/g, "").split(" ")[0].trim();
 
-  // 曜日"(木)"などを除去し日付部分だけ Date に渡す
-  //const datePart = endOfDay.replace(/\(.\)/g, "").split(" ")[0].trim();
-  const datePart = endOfDay;
-  const withYear = /^\d{4}/.test(datePart)
-    ? datePart
-    : `${new Date().getFullYear()}/${datePart}`;
-  const days = leftDay(withYear.replace(/\//g, "-"));
+  let withYear;
+  if (/^\d{4}/.test(datePart)) {
+    withYear = datePart;
+  } else {
+    // 年なし → 今年で試して過去なら来年
+    const y = new Date().getFullYear();
+    withYear = `${y}/${datePart}`;
+    if (leftDay(toISO(withYear)) < 0) {
+      withYear = `${y + 1}/${datePart}`;
+    }
+  }
 
+  const days = leftDay(toISO(withYear));
   return { endOfDay, leftD: days > 0 ? days : "", expired: days < 1 };
 };
+
+// "2028/3/31" → "2028-03-31" に変換（ゼロ埋め）
+const toISO = (str) =>
+  str.replace(
+    /^(\d{4})\/(\d{1,2})\/(\d{1,2})/,
+    (_, y, m, d) => `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`
+  );
 
 // ジャンルごとの設定を一か所に集約（これが「答え」を先に置く部分）
 const GENRE = {
@@ -76,6 +88,7 @@ const parseTver = (p) => {
     endOfDay, leftDay: leftD, expired,
     cast: artist.split(/\s+(話|らが出演しています)/)[0],
     links,
+    thumbLinkUrl: links[0]?.url ?? "",
     thumbSrc: `https://image-cdn.tver.jp/w=800/images/content/thumbnail/episode/small/${episodeId}.jpg`,
     catId: rule.catId,
   };
@@ -103,7 +116,6 @@ const links = [];
 
   for (const line of rest) {
     if (!line) continue;
-
     if (line.startsWith("※")) {
       const info = line.replace(/^※\s*/, "");
       // 期限パターンを探す（「まで」があるもの）
@@ -113,14 +125,15 @@ const links = [];
     } else if (/^.+?[：:]\s*https?:\/\//.test(line)) {
       const m = line.match(/^(.+?)[：:]\s*(https?:\/\/\S+)$/);
       if (m) links.push({ label: m[1].trim(), url: m[2] });
-
     } else if (line.includes("https://")) {
+      //} else if (line.match(/https?:\/\//)[1],includes("https://")) {
       const m = line.match(/^(.+?)[：:]\s*(https?:\/\/\S+)$/);
         if (m) {
           links.push({ label: m[1].trim(), url: m[2] });
         } else {
           links.push({ label: "", url: line });
         }
+
       //} else if (line.includes("：") || line.includes("|") || line.includes("｜")) {
     } else if (line.includes("：") || line.includes("｜")) {
       // キャスト：キャラクター 形式（複数行）
@@ -218,14 +231,6 @@ const buildHead = (d) => d.type === "youtube"
 const allVideoData = [];
 
 const render = (d, p) => {
-/*
-  let rCast;
-	if (Array.isArray(d.cast)) {
-		rCast = d.cast.some((c) => c.includes("：")) ? d.cast.join("<br>") : d.cast.join("、");
-	} else {
-		rCast = d.cast;
-  }
-	*/
 
   if (d.genre === "アニメ") {
     d.genre = `${d.genre}<span class="genre-hero">(ヒーロー)</span>`;
@@ -248,16 +253,18 @@ const render = (d, p) => {
   document.querySelector(`#${d.catId}`).appendChild(p);
 
   allVideoData.push({
-      title:   d.title,
-      episode: d.episode,
-      genre:   d.genre,
-      catId:   d.catId,
-      links:   d.links,
-      cast:    Array.isArray(d.cast) ? d.cast : d.cast.split("、"),
-      endOfDay: d.endOfDay,
-      leftDay:  d.leftDay,    // 数値 or ""
-      expired:  d.expired,
-    });
+    title:        d.title,
+    episode:      d.episode,
+    genre:        d.genre,
+    catId:        d.catId,
+    links:        d.links,
+    thumbLinkUrl: d.thumbLinkUrl ?? "",  // ← これが抜けていると空になる
+    cast:         Array.isArray(d.cast) ? d.cast : d.cast.split("、"),
+    endOfDay:     d.endOfDay,
+    leftDay:      d.leftDay,
+    expired:      d.expired,
+  });
+  console.log("ls", d.links)
 };
 export const getVideoData = () => allVideoData;
 
