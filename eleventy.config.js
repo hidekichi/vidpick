@@ -96,7 +96,7 @@ export default function (eleventyConfig) {
       },
       build: {
         emptyOutDir: true,
-        manifest: true,
+        //manifest: true,
         assetsInlineLimit: 0,
         rollupOptions: {
           output: {
@@ -116,8 +116,8 @@ export default function (eleventyConfig) {
             },
             */
             // assetFileNames: "assets/css/[name].[hash].css",
-            chunkFileNames: "assets/js/[name].[hash].js",
-            entryFileNames: "assets/js/[name].[hash].js",
+            //chunkFileNames: "assets/js/[name].[hash].js",
+            //entryFileNames: "assets/js/[name].[hash].js",
           },
         },
       },
@@ -139,8 +139,8 @@ export default function (eleventyConfig) {
 eleventyConfig.addPassthroughCopy("src/assets");
 //eleventyConfig.addPassthroughCopy("src/assets/css/style.css");
 eleventyConfig.addPassthroughCopy("src/assets/fonts");
-  eleventyConfig.addPassthroughCopy("src/assets/images");
-  eleventyConfig.addPassthroughCopy("src/assets/images/favicons");
+eleventyConfig.addPassthroughCopy("src/assets/images");
+eleventyConfig.addPassthroughCopy("src/assets/images/favicons");
 eleventyConfig.addPassthroughCopy("src/assets/js");
 //eleventyConfig.addPassthroughCopy("src/assets/css");
 eleventyConfig.addPassthroughCopy("src/_plugins");

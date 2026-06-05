@@ -789,6 +789,8 @@ h6 {
     padding-block: 1rem;
     padding-inline: 1rem 2rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    scroll-margin-block-start: 0;
+    scroll-snap-type: y mandatory;
 
     &:not(:last-of-type) {
       border: 0;
@@ -802,6 +804,7 @@ h6 {
 
     p:is(.tver, .yt) {
       margin-block: 1rem;
+      scroll-snap-align: start;
 
       &:not(:last-of-type) {
         &::after {
@@ -1422,8 +1425,21 @@ p:is(.tver, .yt) {
 }
 
 .reading-header {
-  padding-block: 1em 3em;
+  position: relative;
+  padding-block: 2em 8em;
   padding-inline-start: 1em;
+
+  &::after {
+    position: absolute;
+    content: "";
+    bottom: 4em;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30vw;
+    height: 1px;
+    background-color: oklch(0.61 0.14 194.03 / 0.6);
+    margin-inline: auto;
+  }
 
   .header-meta {
     display: flex;
@@ -1444,7 +1460,10 @@ p:is(.tver, .yt) {
       content: "";
       width: 100vw;
       height: 0.7em;
-      background-color: oklch(0.63 0.12 167.33);
+      background-color: oklch(0.3 0.09 244.32 / 0.73);
+      border-bottom: 1px solid oklch(0.3 0.09 244.32 / 0.73);
+      border-right: 1px solid oklch(0.3 0.09 244.32 / 0.73);
+      filter: blur(20px);
       z-index: -1;
     }
 
@@ -1456,7 +1475,7 @@ p:is(.tver, .yt) {
 
     &::after {
       bottom: 50%;
-      right: -30%;
+      right: -70%;
       transform: skewX(-45deg);
     }
 
@@ -1481,9 +1500,10 @@ p:is(.tver, .yt) {
   }
 
   h2 {
-    color: oklch(0.77 0.17 227.99);
+    /*color: oklch(0.77 0.17 227.99);*/
+    position: relative;
     font-size: 2.2em;
-    padding-block: 0 1em;
+    padding-block: 0 1.5em;
     margin-block: 0;
 
     &:not(:first-of-type) {
@@ -1492,7 +1512,9 @@ p:is(.tver, .yt) {
 
     &::before {
       content: "＊";
-      padding-inline-end: 0.5em;
+      position: absolute;
+      left: -1.25em;
+      padding-inline-end: 0em;
     }
   }
 
