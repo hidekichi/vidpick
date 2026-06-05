@@ -264,7 +264,7 @@ const render = (d, p) => {
     leftDay:      d.leftDay,
     expired:      d.expired,
   });
-  console.log("ls", d.links)
+  //console.log("ls", d.links)
 };
 export const getVideoData = () => allVideoData;
 
