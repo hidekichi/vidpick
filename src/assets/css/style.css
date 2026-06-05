@@ -1554,9 +1554,13 @@ p:is(.tver, .yt) {
     margin-block: 0 2em;
 
     li {
+      font-size: 1em;
       list-style: outside;
-      line-height: 1.6;
+      line-height: 1.75;
       padding-block-end: 1em;
+      text-align: justify;
+      line-break: strict;
+      overflow-wrap: break-word;
 
       &:last-of-type {
         padding-block-end: 0;
@@ -1572,15 +1576,13 @@ p:is(.tver, .yt) {
     }
   }
 
-  :where(p, li, td) {
+  :where(p, td) {
     color: oklch(0.93 0 0);
     font-size: 1.1em;
     letter-spacing: 0.02em;
     text-align: justify;
     line-break: strict;
-    word-break: auto-phrase;
     overflow-wrap: break-word;
-    line-break: strict;
   }
 
   table {
@@ -1589,7 +1591,13 @@ p:is(.tver, .yt) {
       color: #fff;
       background-color: oklch(0.41 0.13 254.54 / 0.5);
     }
+
     tr {
+      position: relative;
+
+      &:has(.feature) {
+        border: 1px solid red;
+      }
       &:nth-of-type(even) {
         background-color: oklch(0.41 0.13 254.54 / 0.15);
       }
@@ -1623,6 +1631,29 @@ p:is(.tver, .yt) {
       -1px -1px 1px #0b0b3e;
   }
 
+  del {
+    position: relative;
+    color: #666;
+    filter: blur(1px);
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 0.01em;
+      background-color: oklch(0.71 0.16 204.19);
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      isolation: isolate;
+    }
+  }
+
+  .footnote {
+    padding: 0.2em;
+    margin-inline: 0 0.25em;
+  }
+
   .footnotes-list {
     .foot {
       font-size: 1em;
@@ -1632,10 +1663,16 @@ p:is(.tver, .yt) {
   .feature {
     &::before {
       content: "注目";
-      color: oklch(0.95 0.06 103.58);
-      font-size: 0.8em;
-      background-color: oklch(0.42 0.16 255.46);
-      padding-inline: 0.2em;
+      position: absolute;
+      top: -1em;
+      left: -1em;
+      color: oklch(0.96 0 0);
+      font-size: 0.7em;
+      display: inline-block;
+      background-color: oklch(0.45 0.2 28.42);
+      padding-inline: 0.4em;
+      padding-block: 0.025em;
+      border-radius: 0.5em;
       transform: rotate(-15deg);
     }
   }
