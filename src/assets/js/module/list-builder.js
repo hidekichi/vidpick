@@ -8,7 +8,7 @@ const getStatus = (d) =>
   d.expired ? "expired" : d.endOfDay ? "deadline" : "unknown";
 
 const buildItem = (d) => {
-  console.log(d.title, "links:", d.links, "thumbLinkUrl:", d.thumbLinkUrl);
+  //console.log(d.title, "links:", d.links, "thumbLinkUrl:", d.thumbLinkUrl);
   const status = getStatus(d);
   const label  = typeof STATUS[status].label === "function"
     ? STATUS[status].label(d)
