@@ -125,7 +125,7 @@ export async function footnote() {
 				});
 
 				observer.observe(findFootnote);
-				findFootnote.scrollIntoView({ block: "center", inline: "nearest" });
+				findFootnote.scrollIntoView({ block: "start", inline: "nearest" });
 			}
 
 			const footElement = e.target.closest('.foot');
@@ -135,7 +135,7 @@ export async function footnote() {
 
 				if (supBacklink) {
 					e.preventDefault();
-					supBacklink.scrollIntoView({ block: "center", inline: "nearest" });
+					supBacklink.scrollIntoView({ block: "start", inline: "nearest" });
 				}
 			}
 		});

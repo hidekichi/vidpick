@@ -113,11 +113,18 @@ img {
 }
 
 .site-header {
-  position: sticky;
+  /*
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
+  */
+  width: 100%;
   height: var(--header-h);
   background-color: var(--bg);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 
   @supports (color: color-mix(in lab, red, red)) {
     background-color: color-mix(in srgb, var(--bg) 80%, transparent);
@@ -145,22 +152,6 @@ img {
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  .back-to-top-text {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.8em;
-    width: fit-content;
-    overflow: hidden;
-    margin: inline auto;
-    justify-self: center;
-    animation-name: fadeInScroll;
-    animation-fill-mode: both;
-    animation-timing-function: linear;
-    animation-timeline: scroll(root block);
-    animation-range: 50px 70vh;
-  }
 }
 
 .site-logo {
@@ -680,6 +671,56 @@ h6 {
       padding: 0.5em 0.75em;
     }
   }
+}
+
+.vidpick {
+  position: relative;
+}
+
+.back-to-top-text {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -200%);
+  font-size: 0.8em;
+  width: 48px;
+  aspect-ratio: 1 / 1;
+  justify-content: center;
+  z-index: 100;
+  transition: 0.4s ease;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background-color: transparent;
+  box-shadow: 0 0 50px 10px #fff;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index: -1;
+    width: 48px;
+    aspect-ratio: 1 / 1;
+    background-color: oklch(0.58 0.26 28.42);
+    border-radius: 0 0 10px 10px;
+  }
+}
+.back-to-top-text.down {
+  transform: translate(-50%, -200%);
+}
+
+.back-to-top-text.up {
+  transform: translate(-50%, 0);
+
+  svg {
+    isolation: isolate;
+  }
+}
+
+.back-to-top-text.stop {
+  /*transform: translateY(0);*/
 }
 
 .footnote {
@@ -1283,10 +1324,6 @@ p:is(.tver, .yt) {
 }
 
 @media (width < 450px) {
-  .back-to-top-text {
-    display: none;
-  }
-
   .search-and-list {
     grid-template-columns: 1fr;
   }
@@ -1484,6 +1521,23 @@ p:is(.tver, .yt) {
       padding-inline-start: 0.5em;
     }
   }
+}
+
+kbd {
+  color: #fff;
+  background-color: oklch(0.24 0.05 250.35);
+  padding-inline: 0.5em;
+  padding-block: 0.24em;
+  margin-inline: 0.2em;
+  border: 0.05em solid oklch(0.4 0.08 282.39);
+  border-radius: 4px;
+}
+
+.attention {
+  color: oklch(0.97 0.08 111.61);
+  font-size: 0.8em;
+  margin-inline-start: 0.8em;
+  margin-block-end: 1em;
 }
 
 .reading-main {

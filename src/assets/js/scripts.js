@@ -1,13 +1,14 @@
 //import "/assets/css/style.css";
 import "@css/style.css";
 import { footnote } from "./module/footnote.js";
-import { back2top } from "./module/back2top.js";
+import { back2top, scrollDirection } from "./module/back2top.js";
 import { formattingSorting, getVideoData } from "./module/formatting-sorting.js";
 import { buildList, initCastSearch } from "./module/list-builder.js";
 import { embbedYoutubePlayer } from "./module/embedYoutubePlayer.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   back2top();
+  scrollDirection();
   embbedYoutubePlayer();
 
 const layout = document.querySelector(".layout");
