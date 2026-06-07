@@ -220,8 +220,8 @@ const buildCast = (cast) => {
 // head部分はTVerとYoutubeで構造が違う
 const buildHead = (d) => d.type === "youtube"
   ? `<span class="title">${d.title}</span>
-     <span class="date">${d.year}</span>
      <span class="channel">${d.season}</span>
+     <span class="date">${d.year}</span>
      <span class="duration">${d.episode}</span>`
   : `<span class="title">${d.title}</span>
      <span class="broadcastYear">${d.year}<span class="season">${d.season}</span></span>
