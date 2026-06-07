@@ -7,6 +7,74 @@ export function back2top() {
 	});
 };
 
+// scroll-filter.js
+
+const TOP_THRESHOLD = 100; // ★これより上は「最上部エリア」とみなして初期化
+const DEADZONE = 1;        // 静止しているとみなす「差」のしきい値（px）
+const EASING = 0.15;       // 追従の遅れ度合い（0〜1）
+
+export const initPhysicalScrollWatcher = () => {
+  let targetY = window.scrollY;  // 観念の四角形（実際のスクロール位置）
+  let currentY = window.scrollY; // 遅れて追従する四角形
+
+  let isLooping = false;
+  let currentDirection = 'top';  // 'down' | 'up' | 'stop' | 'top'
+
+  const updatePhysics = () => {
+    // 1. 【最上部ガード】実際のスクロールが閾値より上なら、即座に top 状態にして終了
+    if (targetY <= TOP_THRESHOLD) {
+      currentY = targetY; // 位置を同期
+      if (currentDirection !== 'top') {
+        currentDirection = 'top';
+        window.dispatchEvent(new CustomEvent('scroll-state-change', { detail: { state: 'top' } }));
+      }
+      isLooping = false;
+      return;
+    }
+
+    // 2. 通常エリアにいる場合は、じわっと追従計算
+    currentY += (targetY - currentY) * EASING;
+    const diff = targetY - currentY;
+    const absDiff = Math.abs(diff);
+
+    let nextDirection = currentDirection;
+
+    // 3. 状態の割り出し（最上部エリアは上で抜けているので、純粋に動いているかどうかだけ）
+    if (absDiff <= DEADZONE) {
+      nextDirection = 'stop';
+    } else {
+      nextDirection = diff > 0 ? 'down' : 'up';
+    }
+
+    // 4. 状態が変わった瞬間だけ信号を飛ばす
+    if (nextDirection !== currentDirection) {
+      currentDirection = nextDirection;
+      window.dispatchEvent(new CustomEvent('scroll-state-change', {
+        detail: { state: currentDirection } // isFastは不要になったので削除
+      }));
+    }
+
+    // 静止したらループを止めて省電力化
+    if (currentDirection === 'stop') {
+      currentY = targetY;
+      isLooping = false;
+      return;
+    }
+
+    requestAnimationFrame(updatePhysics);
+  };
+
+  window.addEventListener('scroll', () => {
+    targetY = window.scrollY;
+
+    if (!isLooping) {
+      isLooping = true;
+      requestAnimationFrame(updatePhysics);
+    }
+  }, { passive: true });
+};
+
+/*
 export function scrollDirection() {
   let lastScrollY = window.scrollY;
   let isDown = false;
@@ -72,3 +140,4 @@ export function scrollDirection() {
     // 方向クラス（is-scroll-down / up）は一切触らず、そのままキープ！
   });
 }
+*/
