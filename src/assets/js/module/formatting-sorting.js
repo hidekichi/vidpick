@@ -12,17 +12,10 @@ const calcEndInfo = (rawStr) => {
   const endOfDay = rawStr.replace("まで", "").trim();
   const datePart = endOfDay.replace(/\(.\)/g, "").split(" ")[0].trim();
 
-  let withYear;
-  if (/^\d{4}/.test(datePart)) {
-    withYear = datePart;
-  } else {
-    // 年なし → 今年で試して過去なら来年
-    const y = new Date().getFullYear();
-    withYear = `${y}/${datePart}`;
-    if (leftDay(toISO(withYear)) < 0) {
-      withYear = `${y + 1}/${datePart}`;
-    }
-  }
+  // 年なし → 今年を補完するだけ（繰り上げなし）
+  const withYear = /^\d{4}/.test(datePart)
+    ? datePart
+    : `${new Date().getFullYear()}/${datePart}`;
 
   const days = leftDay(toISO(withYear));
   return { endOfDay, leftD: days > 0 ? days : "", expired: days < 1 };
