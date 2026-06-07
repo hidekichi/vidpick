@@ -996,20 +996,26 @@ p:is(.tver, .yt) {
 }
 
 .endOfDay {
-  font-size: 1.25em;
+  font-size: 1em;
+  color: oklch(0.9 0.12 191.55);
 
   &::before {
     content: "終了日：";
     font-size: 0.8em;
+    color: #fff;
     opacity: 0.65;
     margin-inline-end: 0.25rem;
   }
 }
 
 .leftDay {
-  font-size: 1em;
+  font-size: 1.125em;
+  color: #fff;
 
   &:not(:empty) {
+    color: oklch(0.97 0.13 112.5);
+    font-weight: bold;
+
     &::before {
       content: "(あと";
       margin-inline: 0.3rem;

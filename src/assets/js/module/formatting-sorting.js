@@ -17,7 +17,12 @@ const calcEndInfo = (rawStr) => {
     ? datePart
     : `${new Date().getFullYear()}/${datePart}`;
 
+  const iso = toISO(withYear);
   const days = leftDay(toISO(withYear));
+
+  console.log("[calcEndInfo]", { rawStr, datePart, withYear, iso, days, expired: days < 1 });
+
+
   return { endOfDay, leftD: days > 0 ? days : "", expired: days < 1 };
 };
 
@@ -113,7 +118,7 @@ const links = [];
     if (line.startsWith("※")) {
       const info = line.replace(/^※\s*/, "");
       // 期限パターンを探す（「まで」があるもの）
-      const m = info.match(/(\d{1,2}\/\d{1,2}(?:\(.\))?(?:\s*\d{1,2}:\d{2})?)\s*まで/);
+      const m = info.match(/^((\d{4}\/)?\d{1,2}\/\d{1,2}(?:\(.\))?(?:\s*\d{1,2}:\d{2})?)\s*まで/);
       if (m && !endDayRaw) endDayRaw = m[0];
       subParts.push(info);
     } else if (/^.+?[：:]\s*https?:\/\//.test(line)) {
