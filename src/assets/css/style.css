@@ -1649,9 +1649,16 @@ kbd {
     tr {
       position: relative;
 
+      th {
+        &:first-of-type {
+          min-width: 7em;
+        }
+      }
+
       &:has(.feature) {
         border: 1px solid red;
       }
+
       &:nth-of-type(even) {
         background-color: oklch(0.41 0.13 254.54 / 0.15);
       }
