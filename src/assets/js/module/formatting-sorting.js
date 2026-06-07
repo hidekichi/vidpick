@@ -112,6 +112,7 @@ const parseYT = (p) => {
 const links = [];
   const subParts = [];
   const castNames = [];
+
   let endDayRaw = "";
 
   for (const line of rest) {
@@ -218,10 +219,10 @@ const buildCast = (cast) => {
    </div>`;
 };
 
-
 // head部分はTVerとYoutubeで構造が違う
 const buildHead = (d) => d.type === "youtube"
   ? `<span class="title">${d.title}</span>
+     <span class="date">${d.year}</span>
      <span class="channel">${d.season}</span>
      <span class="duration">${d.episode}</span>`
   : `<span class="title">${d.title}</span>
@@ -259,6 +260,7 @@ const render = (d, p) => {
     catId:        d.catId,
     links:        d.links,
     thumbLinkUrl: d.thumbLinkUrl ?? "",  // ← これが抜けていると空になる
+    year:         d.year,
     cast:         Array.isArray(d.cast) ? d.cast : d.cast.split("、"),
     endOfDay:     d.endOfDay,
     leftDay:      d.leftDay,
