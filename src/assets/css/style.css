@@ -451,9 +451,59 @@ section {
 }
 
 .about-container {
-  max-width: var(--max-w);
-  margin: 0 auto;
+  max-width: 768px;
+  margin-inline: auto;
   padding: 3.5rem 0 5rem;
+
+  .body-copy {
+    font-size: 1.1em;
+
+    h2,
+    h3 {
+      margin-block: 0;
+      padding-block: 2em;
+    }
+
+    h3 {
+      position: relative;
+      color: oklch(0.83 0.15 138.96);
+
+      &::after {
+        position: absolute;
+        bottom: 1.5em;
+        left: 0;
+        content: "";
+        width: 100%;
+        height: 1px;
+        background-color: oklch(0.8 0.18 129.82);
+      }
+    }
+
+    :where(ul, ol) {
+      padding-block: 0.5em 2em;
+
+      li {
+        list-style-position: outside;
+        padding-block: 0 1em;
+
+        &:last-of-type {
+          padding-block: 0;
+        }
+      }
+    }
+
+    b,
+    strong {
+      color: oklch(0.94 0.23 108.45);
+      font-weight: bolder;
+    }
+
+    u {
+      text-decoration-style: dashed;
+      text-decoration-thickness: 0.02em;
+      text-decoration-color: oklch(0.64 0.16 234.58);
+    }
+  }
 }
 
 .about-header {
@@ -1454,6 +1504,7 @@ p:is(.tver, .yt) {
 
     a {
       color: oklch(0.68 0.02 334.89);
+      transition: 0.4s ease;
 
       &:hover {
         opacity: unset;
@@ -1476,11 +1527,40 @@ p:is(.tver, .yt) {
         padding-inline-end: 0.5em;
       }
 
+      .casts {
+        position: relative;
+        font-size: 0.7em;
+        margin-inline-start: 1em;
+        color: oklch(0.85 0.09 161.75);
+
+        &::before {
+          font-size: 0.8em;
+          content: "keyword cast";
+          position: absolute;
+          top: -1.5em;
+          opacity: 0.6;
+        }
+      }
+
       .summary {
         display: block;
         color: oklch(0.76 0.1 198.2 / 0.81);
         font-size: 0.8em;
         padding-inline: 0.5em 0;
+      }
+    }
+  }
+}
+
+@media (width < 600px) {
+  .home-container {
+    .related-articles {
+      li {
+        .casts {
+          display: block;
+          margin-block: 1em 0.5em;
+          margin-inline-start: 0.5em;
+        }
       }
     }
   }
@@ -1760,6 +1840,33 @@ kbd {
       padding-block: 0.025em;
       border-radius: 0.5em;
       transform: rotate(-15deg);
+    }
+  }
+}
+
+#articleList-pagination {
+  ol {
+    display: flex;
+    margin-block-start: 5em;
+    margin-inline-start: 1em;
+
+    li {
+      list-style: none;
+
+      button {
+        border: 1px solid oklch(0.52 0.06 240.25);
+        border-radius: 2px;
+        background-color: oklch(0.29 0.11 262.92);
+        padding-inline: 0.5em;
+
+        &:disabled {
+          filter: grayscale(10%);
+        }
+      }
+    }
+
+    li:has(button) + li:has(button) {
+      padding-inline: 0.5em;
     }
   }
 }

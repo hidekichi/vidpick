@@ -3,7 +3,7 @@ layout: base.njk
 title: Home
 pagination:
   data: collections.postsWithArticles
-  size: 5
+  size: 10
   alias: posts
 ---
 
@@ -18,7 +18,7 @@ pagination:
   <section class="post-list-section">
     <div class="post-list">
 
-      {% for post in collections.postsWithArticles %}
+      {% for post in posts %}
       <article class="post-card">
         <div class="post-card-meta">
           <time datetime="{{ post.date | dateISO }}">{{ post.date | dateJP }}</time>
@@ -40,7 +40,7 @@ pagination:
           <ul class="related-articles">
             {% for art in post.relatedArticles %}
             <li>
-              <a href="{{ art.url }}">{{ art.data.title }}</a>
+              <span><a href="{{ art.url }}">{{ art.data.title }}</a><span class="casts">{{ art.data.cast | join("｜") }}</span></span>
               <span class="summary">{{ art.data.summary }}</span>
             </li>
             {% endfor %}
@@ -97,3 +97,13 @@ pagination:
   </section>
 
 </div>
+
+<nav id="articleList-pagination" aria-labelledby="pagination">
+  <ol class="pagination">
+    <li>{% if pagination.href.previous %}<a href="{{ pagination.href.previous }}"><button class="previous">Prev</button></a>{% else %}<button class="previous text-gray-800 bg-gray-600 aria-disabled cursor-not-allowed">Prev</button>{% endif %}</li>
+	<li>{% if pagination.href.next %}<a href="{{ pagination.href.next }}"><button class="next">Next</button></a>{% else %}<button class="next text-gray-800 bg-gray-600 aria-disabled cursor-not-allowed">Next</button>{% endif %}</li>
+{%- for pageEntry in pagination.pages %}
+    <li><a href="{{ pagination.hrefs[ loop.index0 ] }}"{% if page.url == pagination.hrefs[ loop.index0 ] %} aria-current="page"{% endif %}>Page {{ loop.index }}</a></li>
+{%- endfor %}
+  </ol>
+</nav>
