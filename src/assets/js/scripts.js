@@ -45,9 +45,12 @@ const layout = document.querySelector(".layout");
     //const busyman = document.querySelector(".busyman");
 
     const busyman = document.querySelector(".busyman");
-    busyman.addEventListener("click", () => {
-      const busy = document.querySelector(".busy");
-        busy.scrollIntoView({ block: "center" });
-    });
+
+    if (busyman) {
+      busyman.addEventListener("click", () => {
+        const busy = document.querySelector(".busy");
+        busy.scrollIntoView();
+      });
+    }
   }
 });
