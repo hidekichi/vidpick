@@ -1,6 +1,5 @@
-import "/assets/css/style.css";
-//import "@css/style.css";
-//import "./style.css";
+//import "/assets/css/style.css";
+import "@css/style.css";
 import { footnote } from "./module/footnote.js";
 import { back2top, initPhysicalScrollWatcher } from "./module/back2top.js";
 import { formattingSorting, getVideoData } from "./module/formatting-sorting.js";

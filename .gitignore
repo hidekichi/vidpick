@@ -8,6 +8,7 @@ src/assets/css/style.css
 # === Eleventyキャッシュ ===
 .cache/
 .11ty-cache/
+.11ty-vite/
 
 # === Viteキャッシュ ===
 .vite/
