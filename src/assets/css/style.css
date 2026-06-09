@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@source "../../**/*.{njk,md,js}";
+
 @import "./uaplus.css";
 @import "./syntax.css";
 @import "./font-settings.css";
@@ -1776,7 +1776,7 @@ kbd {
         padding-block: 1.1em;
       }
 
-      &:has(.feature) {
+      &:has(.feature, .feature-text) {
         border: 1px solid red;
       }
 
@@ -1857,6 +1857,20 @@ kbd {
       border-radius: 0.5em;
       transform: rotate(-15deg);
     }
+  }
+
+  .feature-text {
+    position: absolute;
+    top: -1em;
+    left: -1em;
+    color: oklch(0.96 0 0);
+    font-size: 0.7em;
+    display: inline-block;
+    background-color: oklch(0.45 0.2 28.42);
+    padding-inline: 0.4em;
+    padding-block: 0.025em;
+    border-radius: 0.5em;
+    transform: rotate(-15deg);
   }
 }
 

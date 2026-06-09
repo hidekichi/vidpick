@@ -100,6 +100,7 @@ export default function (eleventyConfig) {
 
         resolve: {
           alias: {
+            '@css': path.resolve('./src/assets/css'),
             "/node_modules": path.resolve(".", "node_modules"),
           },
         },
@@ -152,7 +153,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/assets/fonts");
   eleventyConfig.addPassthroughCopy("src/assets/images");
   eleventyConfig.addPassthroughCopy("src/assets/images/favicons");
-  eleventyConfig.addPassthroughCopy("src/assets/js");
+  //eleventyConfig.addPassthroughCopy("src/assets/js");
   //eleventyConfig.addPassthroughCopy("src/assets/css");
   eleventyConfig.addPassthroughCopy("src/_plugins");
   eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg,png,svg}");
