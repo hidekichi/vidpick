@@ -1,4 +1,5 @@
 import path from "path";
+import fs from 'fs-extra';
 import { DateTime } from "luxon";
 import { HtmlBasePlugin } from "@11ty/eleventy";
 import pluginRss from "@11ty/eleventy-plugin-rss";
@@ -54,81 +55,107 @@ export default function (eleventyConfig) {
 
   // Vite プラグインは最後に追加
   eleventyConfig.addPlugin(EleventyVitePlugin, {
-    tempFolderName: ".11ty-vite",
-    serverOptions: {
-      domDiff: false, // Vite HMR と競合するため無効化推奨
-    },
-    viteOptions: {
-      plugins: [tailwind(
-        //{ content: ['./src/**/*.{html,njk,md,js}'],}
-      ),
-          {
-            name: 'watch-src-js',
-            configureServer(server) {
-                server.watcher.add(path.resolve('./src/assets/js'));
-                server.watcher.on('change', (file) => {
-                  // バックスラッシュをスラッシュに統一して比較
-                  if (file.replace(/\\/g, '/').includes('src/assets/js')) {
-                    server.ws.send({ type: 'full-reload' });
-                  }
-                });
-              }
-          }
-      ],
-      //plugins: [tailwind()],
-      publicDir: "public",
-      clearScreen: false,
-      appType: "mpa",
-      assetsInclude: ["**/*.xml", "**/*.txt"],
-      server: {
-        middlewareMode: true,
-        headers: {
-          'Cache-Control': 'no-store', // ← devは常に新鮮なファイルを取得
-        },
-        watch: {
-            ignored: [
-              '**/.11ty-vite/assets/js/**',
-              '**/.11ty-vite/assets/images/**',
-              '**/.11ty-vite/assets/fonts/**',
-              '**/_site/**',
-            ]
-          }
+      tempFolderName: ".11ty-vite",
+      serverOptions: {
+        module: "@11ty/eleventy-dev-server",
+        domDiff: false, // Vite HMR と競合するため無効化推奨
       },
-      build: {
-        emptyOutDir: true,
-        //manifest: true,
-        assetsInlineLimit: 0,
-        rollupOptions: {
-          output: {
-            /*
-            // Viteがアセットをbase64でcss化してしまう場合に
-            assetFileNames: (assetInfo) => {
-              if (assetInfo.name?.endsWith('.css')) {
-                return 'assets/css/[name].[hash][extname]';
+      viteOptions: {
+        plugins: [tailwind(
+          //{ content: ['./src/**/*.{html,njk,md,js}'],}
+        ),
+        {
+          name: 'serve-src-js',
+          configureServer(server) {
+            server.middlewares.use(async (req, res, next) => {
+              if (req.url?.startsWith('/assets/js/')) {
+                const relPath = req.url.split('?')[0].slice('/assets/js/'.length);
+                const absPath = path.resolve('./src/assets/js', relPath)
+                                    .replace(/\\/g, '/');
+                const fsUrl = '/@fs/' + absPath;
+                try {
+                  const result = await server.transformRequest(fsUrl);
+                  if (result) {
+                    res.setHeader('Content-Type', 'application/javascript');
+                    res.setHeader('Cache-Control', 'no-store');
+                    res.end(result.code);
+                    return;
+                  }
+                } catch (e) {
+                  console.error('[serve-src-js]', e);
+                }
               }
-              if (/\.(png|jpe?g|gif|svg|avif|webp|ico)$/.test(assetInfo.name ?? '')) {
-                return 'assets/images/[name].[hash][extname]';
+              next();
+            });
+
+            server.watcher.add(path.resolve('./src/assets/js'));
+            server.watcher.on('change', (file) => {
+              if (file.replace(/\\/g, '/').includes('src/assets/js')) {
+                server.moduleGraph.invalidateAll();
+                server.ws.send({ type: 'full-reload' });
               }
-              if (/\.(woff2?|ttf|eot|otf)$/.test(assetInfo.name ?? '')) {
-                return 'assets/fonts/[name].[hash][extname]';
-              }
-              return 'assets/[name].[hash][extname]';
+            });
+          }
+        }
+        ],
+        //plugins: [tailwind()],
+        publicDir: "public",
+        clearScreen: false,
+        appType: "mpa",
+        assetsInclude: ["**/*.xml", "**/*.txt"],
+        server: {
+          middlewareMode: true,
+          fs: {
+              allow: ['..'],  // ← 追加
             },
-            */
-            // assetFileNames: "assets/css/[name].[hash].css",
-            //chunkFileNames: "assets/js/[name].[hash].js",
-            //entryFileNames: "assets/js/[name].[hash].js",
+          headers: {
+            'Cache-Control': 'no-store', // ← devは常に新鮮なファイルを取得
+          },
+          watch: {
+              ignored: [
+                '**/.11ty-vite/assets/js/**',
+                '**/.11ty-vite/assets/images/**',
+                '**/.11ty-vite/assets/fonts/**',
+                '**/_site/**',
+              ]
+            }
+        },
+        build: {
+          emptyOutDir: true,
+          //manifest: true,
+          assetsInlineLimit: 0,
+          rollupOptions: {
+            output: {
+              /*
+              // Viteがアセットをbase64でcss化してしまう場合に
+              assetFileNames: (assetInfo) => {
+                if (assetInfo.name?.endsWith('.css')) {
+                  return 'assets/css/[name].[hash][extname]';
+                }
+                if (/\.(png|jpe?g|gif|svg|avif|webp|ico)$/.test(assetInfo.name ?? '')) {
+                  return 'assets/images/[name].[hash][extname]';
+                }
+                if (/\.(woff2?|ttf|eot|otf)$/.test(assetInfo.name ?? '')) {
+                  return 'assets/fonts/[name].[hash][extname]';
+                }
+                return 'assets/[name].[hash][extname]';
+              },
+              */
+              // assetFileNames: "assets/css/[name].[hash].css",
+              //chunkFileNames: "assets/js/[name].[hash].js",
+              //entryFileNames: "assets/js/[name].[hash].js",
+            },
+          },
+        },
+        resolve: {
+          alias: {
+            '@css': path.resolve('./src/assets/css'),
+            "/node_modules": path.resolve(".", "node_modules"),
           },
         },
       },
-      resolve: {
-        alias: {
-          '@css': path.resolve('./src/assets/css'),
-          "/node_modules": path.resolve(".", "node_modules"),
-        },
-      },
-    },
-  });
+    });
+
   eleventyConfig.addPlugin(EleventyPassthroughBridge, { verbose: true });
 
 

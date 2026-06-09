@@ -20,9 +20,6 @@ const calcEndInfo = (rawStr) => {
   const iso = toISO(withYear);
   const days = leftDay(toISO(withYear));
 
-  console.log("[calcEndInfo]", { rawStr, datePart, withYear, iso, days, expired: days < 1 });
-
-
   return { endOfDay, leftD: days > 0 ? days : "", expired: days < 1 };
 };
 
