@@ -1758,9 +1758,16 @@ kbd {
     tr {
       position: relative;
 
-      th {
+      th,
+      td {
         &:first-of-type {
+          display: table-cell;
+          width: max-content;
           min-width: 7em;
+          max-width: 20em;
+          word-break: break-all;
+          overflow-wrap: break-word;
+          white-space: normal;
         }
       }
 
