@@ -91,7 +91,7 @@ export default function (eleventyConfig) {
           // HTML は自動注入されるので JS/CSS だけ書く
           rollupOptions: {
             input: {
-              main: path.resolve(__dirname, "src/assets/scripts.js"),
+              main: path.resolve(__dirname, "src/assets/js/scripts.js"),
             },
           },
           // ソースマップ（デプロイ時はオフ推奨）
