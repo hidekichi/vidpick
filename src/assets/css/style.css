@@ -1771,6 +1771,11 @@ kbd {
         }
       }
 
+      td {
+        line-height: 1.25;
+        padding-block: 1.1em;
+      }
+
       &:has(.feature) {
         border: 1px solid red;
       }
