@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "eleventy --serve",
-    "build": "node --eval \"fs.rmSync('.11ty-vite',{recursive:true,force:true});\" _site && eleventy",
+    "build": "rm -rf .11ty-vite _site && eleventy",
     "preview": "npx serve _site",
     "clean": "node --eval \"fs.rmSync('_site',{recursive:true,force:true});fs.rmSync('.cache',{recursive:true,force:true});fs.rmSync('.vite',{recursive:true,force:true});fs.rmSync('.11ty-vite',{recursive:true,force:true});\""
   },
