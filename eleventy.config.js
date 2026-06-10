@@ -1,11 +1,10 @@
 import path from "path";
-import { fileURLToPath } from "url";
-//import fs from 'fs-extra';
+import fs from 'fs-extra';
 import { DateTime } from "luxon";
 import { HtmlBasePlugin } from "@11ty/eleventy";
 import pluginRss from "@11ty/eleventy-plugin-rss";
 import pluginNavigation from "@11ty/eleventy-navigation";
-import tailwindcss from "@tailwindcss/vite";
+import tailwind from "@tailwindcss/vite";
 import sitemap from "@quasibit/eleventy-plugin-sitemap";
 import Image from "@11ty/eleventy-img";
 import EleventyVitePlugin from "@11ty/eleventy-plugin-vite";
@@ -15,19 +14,17 @@ import rubyPlugin from "markdown-it-ruby";
 import attrs from "markdown-it-attrs";
 import markdownItMultimdTable from "markdown-it-multimd-table-ext";
 import youtubeEmbedPlugin, { markdownItYoutube } from "./src/_plugins/markdown-youtube.js";
-//import EleventyPassthroughBridge from './src/_plugins/eleventy-passthrough-bridge.js';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import EleventyPassthroughBridge from './src/_plugins/eleventy-passthrough-bridge.js';
 
 const isServe = process.env.ELEVENTY_RUN_MODE === "serve";
 
 export default function (eleventyConfig) {
   //ignore
-  //eleventyConfig.watchIgnores.add("src/assets");
+  eleventyConfig.watchIgnores.add("src/assets");
 
   // passthrough を実コピーにする（Vite の root から見えるようにするため）
-  //eleventyConfig.setServerPassthroughCopyBehavior("copy");
-  //eleventyConfig.addPassthroughCopy("public");
+  eleventyConfig.setServerPassthroughCopyBehavior("copy");
+  eleventyConfig.addPassthroughCopy("public");
 
   // -----------------------------------------------------------------
   // plugins
@@ -59,104 +56,123 @@ export default function (eleventyConfig) {
   // Vite プラグインは最後に追加
   eleventyConfig.addPlugin(EleventyVitePlugin, {
       tempFolderName: ".11ty-vite",
-
-      // Dev Server 設定
       serverOptions: {
         module: "@11ty/eleventy-dev-server",
-        domDiff: false,
+        domDiff: false, // Vite HMR と競合するため無効化推奨
       },
-
-      // Vite 設定（デフォルトとディープマージされる）
       viteOptions: {
+        plugins: [tailwind(
+          //{ content: ['./src/**/*.{html,njk,md,js}'],}
+        ),
+        {
+          name: 'serve-src-js',
+          configureServer(server) {
+            server.middlewares.use(async (req, res, next) => {
+              if (req.url?.startsWith('/assets/js/')) {
+                const relPath = req.url.split('?')[0].slice('/assets/js/'.length);
+                const absPath = path.resolve('./src/assets/js', relPath)
+                                    .replace(/\\/g, '/');
+                const fsUrl = '/@fs/' + absPath;
+                try {
+                  const result = await server.transformRequest(fsUrl);
+                  if (result) {
+                    res.setHeader('Content-Type', 'application/javascript');
+                    res.setHeader('Cache-Control', 'no-store');
+                    res.end(result.code);
+                    return;
+                  }
+                } catch (e) {
+                  console.error('[serve-src-js]', e);
+                }
+              }
+              next();
+            });
+
+            server.watcher.add(path.resolve('./src/assets/js'));
+            server.watcher.on('change', (file) => {
+              if (file.replace(/\\/g, '/').includes('src/assets/js')) {
+                server.moduleGraph.invalidateAll();
+                server.ws.send({ type: 'full-reload' });
+              }
+            });
+          }
+        }
+        ],
+        //plugins: [tailwind()],
+        publicDir: "public",
         clearScreen: false,
         appType: "mpa",
-
-        plugins: [
-          tailwindcss(),
-          // パススルーファイルをビルド後に保護するプラグイン
-          preservePassthroughFiles([
-            "CNAME",
-            "robots.txt",
-            "favicon.ico",
-          ]),
-        ],
-
+        assetsInclude: ["**/*.xml", "**/*.txt"],
         server: {
           middlewareMode: true,
+          fs: {
+              allow: ['..'],  // ← 追加
+            },
+          headers: {
+            'Cache-Control': 'no-store', // ← devは常に新鮮なファイルを取得
+          },
+          watch: {
+              ignored: [
+                '**/.11ty-vite/assets/js/**',
+                '**/.11ty-vite/assets/images/**',
+                '**/.11ty-vite/assets/fonts/**',
+                '**/_site/**',
+              ]
+            }
         },
-
         build: {
           emptyOutDir: true,
-          // Rollup の入力エントリポイントを明示
-          // HTML は自動注入されるので JS/CSS だけ書く
+          //manifest: true,
+          assetsInlineLimit: 0,
           rollupOptions: {
-            input: {
-              main: path.resolve(__dirname, "src/assets/js/scripts.js"),
+            output: {
+              /*
+              // Viteがアセットをbase64でcss化してしまう場合に
+              assetFileNames: (assetInfo) => {
+                if (assetInfo.name?.endsWith('.css')) {
+                  return 'assets/css/[name].[hash][extname]';
+                }
+                if (/\.(png|jpe?g|gif|svg|avif|webp|ico)$/.test(assetInfo.name ?? '')) {
+                  return 'assets/images/[name].[hash][extname]';
+                }
+                if (/\.(woff2?|ttf|eot|otf)$/.test(assetInfo.name ?? '')) {
+                  return 'assets/fonts/[name].[hash][extname]';
+                }
+                return 'assets/[name].[hash][extname]';
+              },
+              */
+              // assetFileNames: "assets/css/[name].[hash].css",
+              //chunkFileNames: "assets/js/[name].[hash].js",
+              //entryFileNames: "assets/js/[name].[hash].js",
             },
           },
-          // ソースマップ（デプロイ時はオフ推奨）
-          sourcemap: false,
         },
-
         resolve: {
           alias: {
+            '@css': path.resolve('./src/assets/css'),
             "/node_modules": path.resolve(".", "node_modules"),
           },
         },
       },
     });
 
-
-  // ────────────────────────────────────────────
-  // パススルーファイル保護プラグイン
-  // Vite の emptyOutDir:true が _site をクリアした後に
-  // 11ty がパススルーコピーしたファイルを復元する
-  // ────────────────────────────────────────────
-  function preservePassthroughFiles(files) {
-    let outDir;
-
-    return {
-      name: "preserve-eleventy-passthrough",
-      apply: "build",                // ビルド時のみ動作
-      configResolved(config) {
-        outDir = config.build.outDir;
-      },
-      async closeBundle() {
-        const { promises: fs } = await import("fs");
-        const path = await import("path");
-
-        for (const file of files) {
-          // .11ty-vite/ (Vite の root) にあるファイルを _site/ に復元
-          const src = path.resolve(outDir, "..", file);
-          const dest = path.resolve(outDir, file);
-          try {
-            await fs.copyFile(src, dest);
-            console.log(`[passthrough] restored: ${file}`);
-          } catch {
-            // ファイルが存在しない場合はスキップ
-          }
-        }
-      },
-    };
-  }
-
-  //eleventyConfig.addPlugin(EleventyPassthroughBridge, { verbose: true });
+  eleventyConfig.addPlugin(EleventyPassthroughBridge, { verbose: true });
 
 
-  // -----------------------------------------------------------------
-  // Passthrough
-  // -----------------------------------------------------------------
+// -----------------------------------------------------------------
+// Passthrough
+// -----------------------------------------------------------------
 
-  eleventyConfig.addPassthroughCopy("src/assets");
-  //eleventyConfig.addPassthroughCopy("src/assets/css/style.css");
-  eleventyConfig.addPassthroughCopy("src/assets/fonts");
-  eleventyConfig.addPassthroughCopy("src/assets/images");
-  eleventyConfig.addPassthroughCopy("src/assets/images/favicons");
-  //eleventyConfig.addPassthroughCopy("src/assets/js");
-  //eleventyConfig.addPassthroughCopy("src/assets/css");
-  eleventyConfig.addPassthroughCopy("src/_plugins");
-  eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg,png,svg}");
-  //eleventyConfig.addPassthroughCopy({ "src/public/**/*.css": "/assets/css" });
+eleventyConfig.addPassthroughCopy("src/assets");
+//eleventyConfig.addPassthroughCopy("src/assets/css/style.css");
+eleventyConfig.addPassthroughCopy("src/assets/fonts");
+eleventyConfig.addPassthroughCopy("src/assets/images");
+eleventyConfig.addPassthroughCopy("src/assets/images/favicons");
+eleventyConfig.addPassthroughCopy("src/assets/js");
+//eleventyConfig.addPassthroughCopy("src/assets/css");
+eleventyConfig.addPassthroughCopy("src/_plugins");
+eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg,png,svg}");
+//eleventyConfig.addPassthroughCopy({ "src/public/**/*.css": "/assets/css" });
 
   // -----------------------------------------------------------------
   // filter

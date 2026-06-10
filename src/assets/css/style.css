@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@source "../../**/*.{njk,md,js}";
 @import "./uaplus.css";
 @import "./syntax.css";
 @import "./font-settings.css";
@@ -335,9 +335,9 @@ img {
 .post-tag {
   font-size: 0.68rem;
   letter-spacing: 0.08em;
-  padding-inline: 0.6em;
-  border: 1px solid oklch(0.91 0.15 187.73 / 0.5);
-  color: oklch(0.91 0.15 187.73 / 0.5);
+  padding: 0.15em 0.6em;
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
   border-radius: 2px;
   text-transform: uppercase;
 }
@@ -1776,7 +1776,7 @@ kbd {
         padding-block: 1.1em;
       }
 
-      &:has(.feature, .feature-text) {
+      &:has(.feature) {
         border: 1px solid red;
       }
 
@@ -1857,20 +1857,6 @@ kbd {
       border-radius: 0.5em;
       transform: rotate(-15deg);
     }
-  }
-
-  .feature-text {
-    position: absolute;
-    top: -1em;
-    left: -1em;
-    color: oklch(0.96 0 0);
-    font-size: 0.7em;
-    display: inline-block;
-    background-color: oklch(0.45 0.2 28.42);
-    padding-inline: 0.4em;
-    padding-block: 0.025em;
-    border-radius: 0.5em;
-    transform: rotate(-15deg);
   }
 }
 
