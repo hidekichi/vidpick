@@ -100,7 +100,6 @@ export default function (eleventyConfig) {
 
         resolve: {
           alias: {
-            '@css': path.resolve('./src/assets/css'),
             "/node_modules": path.resolve(".", "node_modules"),
           },
         },
