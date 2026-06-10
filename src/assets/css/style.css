@@ -69,6 +69,7 @@ body {
   overflow-wrap: break-word;
   word-break: normal;
   line-break: strict;
+  overflow-x: hidden;
 }
 
 :where(.fluid) {
