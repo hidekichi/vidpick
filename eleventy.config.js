@@ -113,7 +113,7 @@ export default function (eleventyConfig) {
           },
           watch: {
               ignored: [
-                '**/.11ty-vite/assets/js/**',
+                //'**/.11ty-vite/assets/js/**',
                 '**/.11ty-vite/assets/images/**',
                 '**/.11ty-vite/assets/fonts/**',
                 '**/_site/**',

@@ -5,6 +5,7 @@ import { back2top, initPhysicalScrollWatcher } from "./module/back2top.js";
 import { formattingSorting, getVideoData } from "./module/formatting-sorting.js";
 import { buildList, initCastSearch } from "./module/list-builder.js";
 import { embbedYoutubePlayer } from "./module/embedYoutubePlayer.js";
+import { insertLoadlazy, externalLink } from "./module/utils.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   back2top();
@@ -29,6 +30,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     // これにより、上向きスクロールで出現したボタンは、指を離して静止しても消えずに残り、
     // ユーザーが「戻るボタンを押す」という目的を確実に達成できます。
   });
+
+  if (window.location.pathname.includes('/articles/')) {
+    insertLoadlazy();
+    externalLink();
+  }
 
 const layout = document.querySelector(".layout");
 
