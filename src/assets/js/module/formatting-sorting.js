@@ -10,16 +10,29 @@ const calcEndInfo = (rawStr) => {
     return { endOfDay: "", leftD: "", expired: false };
 
   const endOfDay = rawStr.replace("まで", "").trim();
-  const datePart = endOfDay.replace(/\(.\)/g, "").split(" ")[0].trim();
 
-  // 年なし → 今年を補完するだけ（繰り上げなし）
+  // 曜日除去してから日付と時刻に分離
+  const cleaned = endOfDay.replace(/\(.\)/g, "").trim();
+  const [datePart, timePart] = cleaned.split(" ");
+
+  // 年を補完
   const withYear = /^\d{4}/.test(datePart)
     ? datePart
     : `${new Date().getFullYear()}/${datePart}`;
 
-  const iso = toISO(withYear);
-  const days = leftDay(toISO(withYear));
+  // "2026/6/12" → "2026-06-12"（ゼロ埋め）
+  const [y, m, d] = withYear.split("/");
+  const dateStr = `${y}-${m.padStart(2,"0")}-${d.padStart(2,"0")}`;
 
+  // 時刻あり → ローカル時間のdatetime / なし → ローカル深夜0時
+  const isoStr = timePart
+    ? (() => {
+        const [h, min] = timePart.split(":");
+        return `${dateStr}T${h.padStart(2,"0")}:${min.padStart(2,"0")}:00`;
+      })()
+    : `${dateStr}T00:00:00`;
+
+  const days = leftDay(isoStr);
   return { endOfDay, leftD: days > 0 ? days : "", expired: days < 1 };
 };
 
