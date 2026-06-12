@@ -6,7 +6,7 @@ import pluginRss from "@11ty/eleventy-plugin-rss";
 import pluginNavigation from "@11ty/eleventy-navigation";
 import tailwind from "@tailwindcss/vite";
 import sitemap from "@quasibit/eleventy-plugin-sitemap";
-import Image from "@11ty/eleventy-img";
+import Image from '@11ty/eleventy-img';
 import EleventyVitePlugin from "@11ty/eleventy-plugin-vite";
 import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 import markdownIt from "markdown-it";
@@ -48,131 +48,132 @@ export default function (eleventyConfig) {
     },
     errorOnInvalidLanguage: false,
   });
-
+  //eleventyConfig.addPlugin(image);
   // オプションを渡す場合
   // eleventyConfig.addPlugin(youtubeEmbedPlugin, { defaultClass: "video-embed" });
   eleventyConfig.addPlugin(youtubeEmbedPlugin);
 
   // Vite プラグインは最後に追加
   eleventyConfig.addPlugin(EleventyVitePlugin, {
-      tempFolderName: ".11ty-vite",
-      serverOptions: {
-        module: "@11ty/eleventy-dev-server",
-        domDiff: false, // Vite HMR と競合するため無効化推奨
-      },
-      viteOptions: {
-        plugins: [tailwind(
-          //{ content: ['./src/**/*.{html,njk,md,js}'],}
-        ),
-        {
-          name: 'serve-src-js',
-          configureServer(server) {
-            server.middlewares.use(async (req, res, next) => {
-              if (req.url?.startsWith('/assets/js/')) {
-                const relPath = req.url.split('?')[0].slice('/assets/js/'.length);
-                const absPath = path.resolve('./src/assets/js', relPath)
-                                    .replace(/\\/g, '/');
-                const fsUrl = '/@fs/' + absPath;
-                try {
-                  const result = await server.transformRequest(fsUrl);
-                  if (result) {
-                    res.setHeader('Content-Type', 'application/javascript');
-                    res.setHeader('Cache-Control', 'no-store');
-                    res.end(result.code);
-                    return;
-                  }
-                } catch (e) {
-                  console.error('[serve-src-js]', e);
+    tempFolderName: ".11ty-vite",
+    serverOptions: {
+      module: "@11ty/eleventy-dev-server",
+      domDiff: false, // Vite HMR と競合するため無効化推奨
+    },
+    viteOptions: {
+      plugins: [tailwind(
+        //{ content: ['./src/**/*.{html,njk,md,js}'],}
+      ),
+      {
+        name: 'serve-src-js',
+        configureServer(server) {
+          server.middlewares.use(async (req, res, next) => {
+            if (req.url?.startsWith('/assets/js/')) {
+              const relPath = req.url.split('?')[0].slice('/assets/js/'.length);
+              const absPath = path.resolve('./src/assets/js', relPath)
+                .replace(/\\/g, '/');
+              const fsUrl = '/@fs/' + absPath;
+              try {
+                const result = await server.transformRequest(fsUrl);
+                if (result) {
+                  res.setHeader('Content-Type', 'application/javascript');
+                  res.setHeader('Cache-Control', 'no-store');
+                  res.end(result.code);
+                  return;
                 }
+              } catch (e) {
+                console.error('[serve-src-js]', e);
               }
-              next();
-            });
-
-            server.watcher.add(path.resolve('./src/assets/js'));
-            server.watcher.on('change', (file) => {
-              if (file.replace(/\\/g, '/').includes('src/assets/js')) {
-                server.moduleGraph.invalidateAll();
-                server.ws.send({ type: 'full-reload' });
-              }
-            });
-          }
-        }
-        ],
-        //plugins: [tailwind()],
-        publicDir: "public",
-        clearScreen: false,
-        appType: "mpa",
-        assetsInclude: ["**/*.xml", "**/*.txt"],
-        server: {
-          middlewareMode: true,
-          fs: {
-              allow: ['..'],  // ← 追加
-            },
-          headers: {
-            'Cache-Control': 'no-store', // ← devは常に新鮮なファイルを取得
-          },
-          watch: {
-              ignored: [
-                //'**/.11ty-vite/assets/js/**',
-                '**/.11ty-vite/assets/images/**',
-                '**/.11ty-vite/assets/fonts/**',
-                '**/_site/**',
-              ]
             }
+            next();
+          });
+
+          server.watcher.add(path.resolve('./src/assets/js'));
+          server.watcher.on('change', (file) => {
+            if (file.replace(/\\/g, '/').includes('src/assets/js')) {
+              server.moduleGraph.invalidateAll();
+              server.ws.send({ type: 'full-reload' });
+            }
+          });
+        }
+      }
+      ],
+      //plugins: [tailwind()],
+      publicDir: "public",
+      clearScreen: false,
+      appType: "mpa",
+      assetsInclude: ["**/*.xml", "**/*.txt"],
+      server: {
+        middlewareMode: true,
+        fs: {
+          allow: ['..'],  // ← 追加
         },
-        build: {
-          emptyOutDir: true,
-          //manifest: true,
-          assetsInlineLimit: 0,
-          rollupOptions: {
-            output: {
-              /*
-              // Viteがアセットをbase64でcss化してしまう場合に
-              assetFileNames: (assetInfo) => {
-                if (assetInfo.name?.endsWith('.css')) {
-                  return 'assets/css/[name].[hash][extname]';
-                }
-                if (/\.(png|jpe?g|gif|svg|avif|webp|ico)$/.test(assetInfo.name ?? '')) {
-                  return 'assets/images/[name].[hash][extname]';
-                }
-                if (/\.(woff2?|ttf|eot|otf)$/.test(assetInfo.name ?? '')) {
-                  return 'assets/fonts/[name].[hash][extname]';
-                }
-                return 'assets/[name].[hash][extname]';
-              },
-              */
-              // assetFileNames: "assets/css/[name].[hash].css",
-              //chunkFileNames: "assets/js/[name].[hash].js",
-              //entryFileNames: "assets/js/[name].[hash].js",
+        headers: {
+          'Cache-Control': 'no-store', // ← devは常に新鮮なファイルを取得
+        },
+        watch: {
+          ignored: [
+            //'**/.11ty-vite/assets/js/**',
+            '**/.11ty-vite/assets/images/**',
+            '**/.11ty-vite/assets/fonts/**',
+            '**/_site/**',
+          ]
+        }
+      },
+      build: {
+        emptyOutDir: true,
+        //manifest: true,
+        assetsInlineLimit: 0,
+        rollupOptions: {
+          output: {
+            /*
+            // Viteがアセットをbase64でcss化してしまう場合に
+            assetFileNames: (assetInfo) => {
+              if (assetInfo.name?.endsWith('.css')) {
+                return 'assets/css/[name].[hash][extname]';
+              }
+              if (/\.(png|jpe?g|gif|svg|avif|webp|ico)$/.test(assetInfo.name ?? '')) {
+                return 'assets/images/[name].[hash][extname]';
+              }
+              if (/\.(woff2?|ttf|eot|otf)$/.test(assetInfo.name ?? '')) {
+                return 'assets/fonts/[name].[hash][extname]';
+              }
+              return 'assets/[name].[hash][extname]';
             },
-          },
-        },
-        resolve: {
-          alias: {
-            '@css': path.resolve('./src/assets/css'),
-            "/node_modules": path.resolve(".", "node_modules"),
+            */
+            // assetFileNames: "assets/css/[name].[hash].css",
+            //chunkFileNames: "assets/js/[name].[hash].js",
+            //entryFileNames: "assets/js/[name].[hash].js",
           },
         },
       },
-    });
+      resolve: {
+        alias: {
+          '@css': path.resolve('./src/assets/css'),
+          "/node_modules": path.resolve(".", "node_modules"),
+        },
+      },
+    },
+  });
 
   eleventyConfig.addPlugin(EleventyPassthroughBridge, { verbose: true });
 
 
-// -----------------------------------------------------------------
-// Passthrough
-// -----------------------------------------------------------------
+  // -----------------------------------------------------------------
+  // Passthrough
+  // -----------------------------------------------------------------
 
-eleventyConfig.addPassthroughCopy("src/assets");
-//eleventyConfig.addPassthroughCopy("src/assets/css/style.css");
-eleventyConfig.addPassthroughCopy("src/assets/fonts");
-eleventyConfig.addPassthroughCopy("src/assets/images");
-eleventyConfig.addPassthroughCopy("src/assets/images/favicons");
-eleventyConfig.addPassthroughCopy("src/assets/js");
-//eleventyConfig.addPassthroughCopy("src/assets/css");
-eleventyConfig.addPassthroughCopy("src/_plugins");
-eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg,png,svg}");
-//eleventyConfig.addPassthroughCopy({ "src/public/**/*.css": "/assets/css" });
+  eleventyConfig.addPassthroughCopy("src/assets");
+  //eleventyConfig.addPassthroughCopy("src/assets/css/style.css");
+  eleventyConfig.addPassthroughCopy("src/assets/fonts");
+  eleventyConfig.addPassthroughCopy("src/assets/images");
+  eleventyConfig.addPassthroughCopy("src/images");
+  eleventyConfig.addPassthroughCopy("src/assets/images/favicons");
+  eleventyConfig.addPassthroughCopy("src/assets/js");
+  //eleventyConfig.addPassthroughCopy("src/assets/css");
+  eleventyConfig.addPassthroughCopy("src/_plugins");
+  eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg,png,svg}");
+  //eleventyConfig.addPassthroughCopy({ "src/public/**/*.css": "/assets/css" });
 
   // -----------------------------------------------------------------
   // filter
@@ -217,9 +218,9 @@ eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg,png,svg}");
   });
 
   // 4. タグからpostsを除外（タグ一覧表示用）
-    eleventyConfig.addFilter("excludeTag", (tags, exclude) => {
-      return (tags || []).filter((tag) => tag !== exclude);
-    });
+  eleventyConfig.addFilter("excludeTag", (tags, exclude) => {
+    return (tags || []).filter((tag) => tag !== exclude);
+  });
 
   eleventyConfig.addFilter("sortByTagMatch", (posts, currentTags, currentUrl) => {
     if (!currentTags || currentTags.length === 0) return [];
@@ -300,33 +301,45 @@ eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg,png,svg}");
   });
 
   eleventyConfig.addCollection("postsWithArticles", (collection) => {
-    const posts    = collection.getFilteredByTag("vidpick")
-                               .sort((a, b) => b.date - a.date);
+    const posts = collection.getFilteredByTag("vidpick")
+      .sort((a, b) => b.date - a.date);
     const articles = collection.getFilteredByTag("article");
 
     return posts.map(post => {
       const postCast = post.data.cast ?? [];
-          post.relatedArticles = articles.filter(art => {
-            const artCast = art.data.cast ?? [];
-            return artCast.some(c => postCast.includes(c));
-          });
-          return post;
+      post.relatedArticles = articles.filter(art => {
+        const artCast = art.data.cast ?? [];
+        return artCast.some(c => postCast.includes(c));
+      });
+      return post;
     });
   });
 
   // articlesをコレクション
   eleventyConfig.addCollection("article", (api) => {
-     return noDraft(api.getFilteredByGlob("src/articles/**/*.md")).reverse();
-   });
+    return noDraft(api.getFilteredByGlob("src/articles/**/*.md")).reverse();
+  });
 
   // -----------------------------------------------------------------
   // shortcode
   // -----------------------------------------------------------------
 
-  eleventyConfig.addNunjucksAsyncShortcode(
-    "image",
-    async (src, alt, sizes = "100vw") => {
-
+  eleventyConfig.addShortcode("image", async function (src, alt, widths = [400, 800, 1200], sizes = "") {
+    return Image(src, {
+      widths,
+      formats: ["avif", "webp"],
+      returnType: "html",
+      outputDir: "./images/",
+      htmlOptions: {
+        imgAttributes: {
+          alt,
+          sizes,
+          loading: "lazy",
+          decoding: "async",
+        }
+      }
+    });
+    /*
       let metadata = await Image(src, {
 
         widths: [400, 800, 1200],
@@ -343,9 +356,10 @@ eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg,png,svg}");
         decoding: "async"
       }
 
-      return Image.generateHTML(metadata, imageAttributes)
-    }
-  )
+    return Image.generateHTML(metadata, imageAttributes);
+    */
+  });
+
 
   // -----------------------------------------------------------------
   // Markdown Library

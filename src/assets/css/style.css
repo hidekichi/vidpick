@@ -460,6 +460,11 @@ section {
 
   .body-copy {
     font-size: 1.1em;
+    font-family: var(--font-sans);
+    letter-spacing: 0.02em;
+    line-break: strict;
+    word-break: auto-phrase;
+    overflow-wrap: break-word;
 
     h2,
     h3 {
@@ -483,7 +488,11 @@ section {
     }
 
     :where(ul, ol) {
-      padding-block: 0.5em 2em;
+      padding-block: 0.5em 1em;
+
+      &:last-of-type {
+        padding-block: 0;
+      }
 
       li {
         list-style-position: outside;
@@ -493,6 +502,11 @@ section {
           padding-block: 0;
         }
       }
+    }
+
+    cr {
+      display: block;
+      margin-block-end: 0.5em;
     }
 
     b,
@@ -772,9 +786,6 @@ h6 {
   }
 }
 
-.back-to-top-text.stop {
-  /*transform: translateY(0);*/
-}
 
 .footnote {
   display: inline-flex;
