@@ -325,11 +325,16 @@ export default function (eleventyConfig) {
   // -----------------------------------------------------------------
 
   eleventyConfig.addShortcode("image", async function (src, alt, widths = [400, 800, 1200], sizes = "") {
-    return Image(src, {
+    const inputPath = path.join("src", src);
+    //const dirPath = isServe ? "/images/" : "./_site/images/";
+    //const oudDirPath = isServe ? "./src/images/" : "./_site/images/";
+//.11ty-vite
+    return Image(inputPath, {
       widths,
       formats: ["avif", "webp"],
       returnType: "html",
-      outputDir: "./images/",
+      urlPath: "/images/",
+      outputDir: "./src/images/",
       htmlOptions: {
         imgAttributes: {
           alt,
@@ -339,25 +344,6 @@ export default function (eleventyConfig) {
         }
       }
     });
-    /*
-      let metadata = await Image(src, {
-
-        widths: [400, 800, 1200],
-        formats: ["avif", "webp", "jpeg"],
-
-        outputDir: "_site/assets/images/",
-        urlPath: "/images/"
-      })
-
-      let imageAttributes = {
-        alt,
-        sizes,
-        loading: "lazy",
-        decoding: "async"
-      }
-
-    return Image.generateHTML(metadata, imageAttributes);
-    */
   });
 
 
