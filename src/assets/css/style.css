@@ -312,6 +312,7 @@ img {
 }
 
 .post-card-title {
+  position: relative;
   font-size: 1.3rem;
   font-weight: 600;
   line-height: 1.4;
@@ -323,6 +324,15 @@ img {
       color: var(--accent);
       opacity: 1;
     }
+  }
+
+  svg {
+    position: absolute;
+    left: 0;
+    bottom: -1.1em;
+    width: 1.1em;
+    height: 1.4em;
+    color: oklch(0.7 0.13 285.27);
   }
 }
 
@@ -490,7 +500,7 @@ section {
     :where(ul, ol) {
       padding-block: 0.5em 1em;
 
-      &:last-of-type(:has(:where(ul,ol))) {
+      &:last-of-type(:has(:where(ul, ol))) {
         padding-block: 0.8em 0;
         margin-block-end: 0;
       }
@@ -786,7 +796,6 @@ h6 {
     isolation: isolate;
   }
 }
-
 
 .footnote {
   display: inline-flex;
@@ -1501,6 +1510,8 @@ p:is(.tver, .yt) {
     position: relative;
     padding-inline: 1em 0;
     padding-block: 1.5em 0;
+    margin-inline: 0.8em 0;
+    margin-block: 0.8em 0;
 
     &::before {
       content: "";
