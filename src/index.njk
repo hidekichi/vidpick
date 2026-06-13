@@ -51,49 +51,6 @@ pagination:
       </article>
       {% endfor%}
 
-{#
-      <div class="index-row">
-
-        <a class="index-post" href="{{ post.url }}">
-          {{ post.data.title }}
-        </a>
-
-        {% if post.relatedArticles.length %}
-        <ul class="related-articles">
-          {% for art in post.relatedArticles %}
-          <li>
-            <a href="{{ art.url }}">{{ art.data.title }}</a>
-            <span class="summary">{{ art.data.summary }}</span>
-          </li>
-          {% endfor %}
-        </ul>
-        {% endif %}
-
-      </div>
-      {% endfor %}
-#}
-{#
-      {%- for post in collections.posts -%}
-        <article class="post-card">
-          <div class="post-card-meta">
-            <time datetime="{{ post.date | dateISO }}">{{ post.date | dateJP }}</time>
-            {% if post.data.tags %}
-              <div class="post-card-tags">
-                {% for tag in post.data.tags | excludeTag("posts") %}
-                  <span class="post-tag">{{ tag }}</span>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
-          <h2 class="post-card-title">
-            <a href="{{ post.url }}">{{ post.data.title }}</a>
-          </h2>
-          {% if post.data.description %}
-            <p class="post-card-excerpt">{{ post.data.description }}</p>
-          {% endif %}
-        </article>
-      {%- endfor -%}
-#}
     </div>
   </section>
 
