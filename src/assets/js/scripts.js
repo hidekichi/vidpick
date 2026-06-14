@@ -6,6 +6,7 @@ import { formattingSorting, getVideoData } from "./module/formatting-sorting.js"
 import { buildList, initCastSearch } from "./module/list-builder.js";
 import { embbedYoutubePlayer } from "./module/embedYoutubePlayer.js";
 import { insertLoadlazy, externalLink } from "./module/utils.js";
+import { initTooltip } from "./module/tooltip.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   back2top();
@@ -40,6 +41,7 @@ const layout = document.querySelector(".layout");
 
   if (document.querySelector(".reading-main")) {
     await footnote();
+    initTooltip();
   }
 
   if (layout) {

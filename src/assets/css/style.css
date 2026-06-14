@@ -2123,3 +2123,24 @@ kbd {
     transform: translate(-50%, -50%) scale(0.8);
   }
 }
+
+#custom-tooltip {
+  position: fixed;
+  background: oklch(0.25 0.05 217.49 / 0.8);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 0.725em;
+  pointer-events: none;
+  max-width: 25em; /* 長文を折り返す上限 */
+  word-break: break-word;
+  white-space: normal; /* 折り返しを許可 */
+  line-height: 1.5;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 9999;
+
+  &.visible {
+    opacity: 1;
+  }
+}
