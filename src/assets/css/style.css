@@ -612,7 +612,7 @@ section {
     :where(ul, ol) {
       padding-block: 0.5em 1em;
 
-      &:last-of-type(:has(:where(ul, ol))) {
+      &:where(ul, ol):last-of-type {
         padding-block: 0.8em 0;
         margin-block-end: 0;
       }
