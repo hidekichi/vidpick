@@ -4,7 +4,7 @@ eleventyExcludeFromCollections: true
 ---
 <?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  {% for page in collections.allPosts %}
+  {% for page in collections.posts %}
     {% set path = page.url | url %}
     {% if page.url and page.data.title and page.data.excludeFromSitemap !== true %}
     <url>
@@ -12,7 +12,23 @@ eleventyExcludeFromCollections: true
         <lastmod>{{ (page.data.update or page.date).toISOString() }}</lastmod>
 
         {# 'page.data.priority' が存在すればそれを使い、なければ '0.5' #}
-        <priority>{{ page.data.priority if page.data.priority else "0.5" }}</priority>
+        <priority>{{ page.data.priority if page.data.priority else "0.8" }}</priority>
+
+        {# 'page.data.changeFreq' が存在すればそれを使い、なければ 'monthly' #}
+        <changefreq>{{ page.data.changeFreq if page.data.changeFreq else "monthly" }}</changefreq>
+    </url>
+    {% endif %}
+  {% endfor %}
+
+  {% for page in collections.article %}
+    {% set path = page.url | url %}
+    {% if page.url and page.data.title and page.data.excludeFromSitemap !== true %}
+    <url>
+        <loc>{{ site.url }}{{ page.url | url }}</loc>
+        <lastmod>{{ (page.data.update or page.date).toISOString() }}</lastmod>
+
+        {# 'page.data.priority' が存在すればそれを使い、なければ '0.5' #}
+        <priority>{{ page.data.priority if page.data.priority else "0.4" }}</priority>
 
         {# 'page.data.changeFreq' が存在すればそれを使い、なければ 'monthly' #}
         <changefreq>{{ page.data.changeFreq if page.data.changeFreq else "monthly" }}</changefreq>
