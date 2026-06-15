@@ -33,7 +33,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addPlugin(pluginNavigation);
   eleventyConfig.addPlugin(sitemap, {
     sitemap: {
-      hostname: "https://vidpick.pages.dev/",
+      hostname: "https://vidpick.pages.dev",
     },
   });
   eleventyConfig.addPlugin(pluginRss);
