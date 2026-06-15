@@ -49,3 +49,47 @@ export const initCastSearch = () => {
       });
     });
 };
+
+// list-builder.js
+export const initIndexCastSearch = () => {
+  const input     = document.querySelector("#index-cast-search");
+  const resultsEl = document.querySelector("#search-results");
+  if (!input || !resultsEl) return;
+
+  let dataPromise = null;
+  const getData = () =>
+    dataPromise ??= fetch("/posts-index.json").then(r => r.json());
+
+  input.addEventListener("input", async ({ target }) => {
+    const q = target.value.trim();
+
+    if (!q) {
+      resultsEl.hidden = true;
+      resultsEl.innerHTML = "";
+      return;
+    }
+
+    const data = await getData();
+    const matches = data.filter(post => post.cast.some(c => c.includes(q)));
+
+    resultsEl.hidden = false;
+    resultsEl.innerHTML = matches.length
+      ? matches.map(post => `
+        <div class="result-title">${q}</div>
+        <article class="post-card">
+          <div class="post-card-meta">
+            <time>${post.date.slice(0, 10)}</time>
+              <!--
+              <div class="post-card-tags">
+                  <span class="post-tag">{{ tag }}</span>
+              </div>
+              -->
+          </div>
+          <h2 class="post-card-title">
+            <a href="${post.url}">${post.title}</a>
+            <svg role="img" width="13.35px" height="13.35px" class="line-left-to-up"><use href="#line-left-to-up"></use></svg>
+          </h2>
+        </article>`).join("")
+      : `<p class="no-results">該当する番組が見つかりません</p>`;
+  });
+};

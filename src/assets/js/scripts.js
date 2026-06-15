@@ -7,9 +7,11 @@ import { buildList, initCastSearch } from "./module/list-builder.js";
 import { embbedYoutubePlayer } from "./module/embedYoutubePlayer.js";
 import { insertLoadlazy, externalLink } from "./module/utils.js";
 import { initTooltip } from "./module/tooltip.js";
+import { initIndexCastSearch } from "./module/list-builder.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   back2top();
+  initIndexCastSearch();
   //scrollDirection();
   embbedYoutubePlayer();
 

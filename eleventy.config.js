@@ -373,7 +373,7 @@ export default function (eleventyConfig) {
   eleventyConfig.setLibrary("md", mdLib);
 
   return {
-    templateFormats: ["md", "njk", "html"],
+    templateFormats: ["md", "njk", "11ty.js", "html"],
     markdownTemplateEngine: "njk",
     htmlTemplateEngine: "njk",
 
