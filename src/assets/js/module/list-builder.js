@@ -60,6 +60,11 @@ export const initIndexCastSearch = () => {
   const getData = () =>
     dataPromise ??= fetch("/posts-index.json").then(r => r.json());
 
+  const escapeHtml = (str) =>
+    str.replace(/[&<>"']/g, c => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    })[c]);
+
   input.addEventListener("input", async ({ target }) => {
     const q = target.value.trim();
 
@@ -75,15 +80,10 @@ export const initIndexCastSearch = () => {
     resultsEl.hidden = false;
     resultsEl.innerHTML = matches.length
       ? matches.map(post => `
-        <div class="result-title">${q}</div>
+        <div class="result-title">${escapeHtml(q)}</div>
         <article class="post-card">
           <div class="post-card-meta">
             <time>${post.date.slice(0, 10)}</time>
-              <!--
-              <div class="post-card-tags">
-                  <span class="post-tag">{{ tag }}</span>
-              </div>
-              -->
           </div>
           <h2 class="post-card-title">
             <a href="${post.url}">${post.title}</a>
