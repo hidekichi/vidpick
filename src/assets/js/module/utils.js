@@ -75,3 +75,25 @@ export function externalLink() {
         wrapper.appendChild(createSvgIcon('#icon_external-link', 'icon_external-link'));
     });
 }
+
+export function clearButton() {
+  const wrapper = document.querySelector('.cast-search');
+  const input = document.getElementById('index-cast-search');
+  const clearBtn = document.getElementById('clearBtn');
+
+  // 入力値をチェックしてクラスの付け外しを行う
+  input.addEventListener('input', () => {
+    if (input.value.length > 0) {
+      wrapper.classList.add('has-value');
+    } else {
+      wrapper.classList.remove('has-value');
+    }
+  });
+
+  // クリアボタンを押した時の処理
+  clearBtn.addEventListener('click', () => {
+    input.value = '';
+    wrapper.classList.remove('has-value');
+    input.focus(); // クリア後にフォーカスを戻す
+  });
+};

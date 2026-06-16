@@ -5,7 +5,7 @@ import { back2top, initPhysicalScrollWatcher } from "./module/back2top.js";
 import { formattingSorting, getVideoData } from "./module/formatting-sorting.js";
 import { buildList, initCastSearch } from "./module/list-builder.js";
 import { embbedYoutubePlayer } from "./module/embedYoutubePlayer.js";
-import { insertLoadlazy, externalLink } from "./module/utils.js";
+import { insertLoadlazy, externalLink, clearButton } from "./module/utils.js";
 import { initTooltip } from "./module/tooltip.js";
 import { initIndexCastSearch } from "./module/list-builder.js";
 
@@ -14,6 +14,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   initIndexCastSearch();
   //scrollDirection();
   embbedYoutubePlayer();
+
+  if (document.querySelector(".cast-search")) {
+    clearButton();
+  }
 
   const target = document.querySelector('.back-to-top-text');
   initPhysicalScrollWatcher();
@@ -43,6 +47,10 @@ const layout = document.querySelector(".layout");
 
   if (document.querySelector(".reading-main")) {
     await footnote();
+    initTooltip();
+  }
+
+  if (document.querySelector(".clear-btn")) {
     initTooltip();
   }
 
