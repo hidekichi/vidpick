@@ -65,6 +65,7 @@ export const initIndexCastSearch = () => {
       "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
     })[c]);
 
+
   input.addEventListener("input", async ({ target }) => {
     const q = target.value.trim();
 
