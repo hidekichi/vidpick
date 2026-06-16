@@ -116,6 +116,7 @@ export default function (eleventyConfig) {
             //'**/.11ty-vite/assets/js/**',
             '**/.11ty-vite/assets/images/**',
             '**/.11ty-vite/assets/fonts/**',
+            '**/.11ty-vite/*.11ty.js',
             '**/_site/**',
           ]
         }
@@ -172,7 +173,8 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/assets/js");
   //eleventyConfig.addPassthroughCopy("src/assets/css");
   eleventyConfig.addPassthroughCopy("src/_plugins");
-  eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg,png,svg}");
+  eleventyConfig.addPassthroughCopy("src/public/*.{txt,xsl,jpg,png,svg,json}");
+
   //eleventyConfig.addPassthroughCopy({ "src/public/**/*.css": "/assets/css" });
 
   // -----------------------------------------------------------------

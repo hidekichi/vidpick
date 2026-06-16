@@ -1,6 +1,6 @@
 // src/posts-index.json.11ty.js
 export const data = {
-  permalink: "/posts-index.json",
+  permalink: "/public/posts-index.json",
   eleventyExcludeFromCollections: true,
 };
 
