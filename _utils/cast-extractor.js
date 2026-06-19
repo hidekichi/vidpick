@@ -23,13 +23,23 @@ const fromTver = (blockText) => {
   if (checkExpired(lines[1])) return [];
 
   const castLine = lines.find(l =>
-    l.includes("らが出演しています") ||
-    (l.includes("、") && !l.startsWith("※") && !l.includes("https://"))
+    //l.includes("らが出演しています") ||
+    //(l.includes("、") && !l.startsWith("※") && !l.includes("https://"))
+    l.includes(" らが出演しています") || l.includes(" 話")
   );
   if (!castLine) return [];
 
-  return castLine
-    .split(" ")[0]   // "らが出演しています"より前
+  // グループ名(name1、name2、...) → name1(グループ名)、name2(グループ名)
+  const expandGroupNotation = (line) =>
+    line.replace(/([^、\s()]+)\(([^()]*、[^()]*)\)/g, (_, group, names) =>
+      names.split("、").map(n => `${n.trim()}(${group})`).join("、")
+    );
+
+  //console.log("casts: ", expandGroupNotation(castLine).split(/\s+(話|らが出演しています)/)[0].split("、").map(s => s.trim()).filter(Boolean));
+  return expandGroupNotation(castLine)
+    //.split(" ")[0]   // "らが出演しています"より前
+    //.replace(/\s*(らが出演しています。?|話)\s*$/, "")
+    .split(/\s+(話|らが出演しています)/)[0]
     .split("、")
     .map(s => s.trim())
     .filter(Boolean);
@@ -56,7 +66,8 @@ const fromYT = (blockText) => {
     } else if (line.includes("、") || line.includes("らが出演")) {
       // 読点区切り形式
       cast.push(
-        ...line.split(" ")[0].split("、").map(s => s.trim()).filter(Boolean)
+        ...expandGroupNotation(line.split(" ")[0])
+              .split("、").map(s => s.trim()).filter(Boolean)
       );
     }
   }
