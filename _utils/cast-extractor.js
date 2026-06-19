@@ -15,6 +15,12 @@ const checkExpired = (rawStr) => {
   return leftDay(withYear.replace(/\//g, "-")) < 1;
 };
 
+// グループ名(name1、name2、...) → name1(グループ名)、name2(グループ名)
+const expandGroupNotation = (line) =>
+  line.replace(/([^、\s()]+)\(([^()]*、[^()]*)\)/g, (_, group, names) =>
+    names.split("、").map(n => `${n.trim()}(${group})`).join("、")
+  );
+
 // TVer形式ブロックからキャスト抽出
 const fromTver = (blockText) => {
   const lines = blockText.split("\n").map(s => s.trim()).filter(Boolean);
@@ -28,12 +34,6 @@ const fromTver = (blockText) => {
     l.includes(" らが出演しています") || l.includes(" 話")
   );
   if (!castLine) return [];
-
-  // グループ名(name1、name2、...) → name1(グループ名)、name2(グループ名)
-  const expandGroupNotation = (line) =>
-    line.replace(/([^、\s()]+)\(([^()]*、[^()]*)\)/g, (_, group, names) =>
-      names.split("、").map(n => `${n.trim()}(${group})`).join("、")
-    );
 
   //console.log("casts: ", expandGroupNotation(castLine).split(/\s+(話|らが出演しています)/)[0].split("、").map(s => s.trim()).filter(Boolean));
   return expandGroupNotation(castLine)
