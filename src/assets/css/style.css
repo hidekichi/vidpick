@@ -1310,7 +1310,7 @@ p:is(.tver, .yt) {
   /* 表示アニメーション */
   opacity: 0;
   transition:
-    opacity 0.2s,
+    opacity 0.4s,
     display 0.2s allow-discrete;
 
   &:popover-open {
