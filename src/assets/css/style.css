@@ -1042,14 +1042,18 @@ h6 {
     overflow-y: auto;
     padding-block: 1rem;
     padding-inline: 1rem 2rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    border-right: 0.25px solid rgba(255, 255, 255, 0.2);
+    border-left: 0.25px solid rgba(255, 255, 255, 0.2);
     scroll-margin-block-start: 0;
     scroll-snap-type: y proximity;
 
-    &:not(:last-of-type) {
+    &:not(div + div):last-of-type {
       border: 0;
+      /*
       border-right: 1px solid rgba(200, 200, 255, 0.5);
       border-bottom: 2px solid rgba(200, 200, 255, 0.5);
+      */
     }
 
     &:empty {
