@@ -323,8 +323,7 @@ const loadThumbnail = (cardEl, thumbSrc, linkUrl, fallbackSrc = null, timeoutMs 
   );
 };
 
-export async function formattingSorting() {
-
+export function formattingSorting() {
   const cards = [];
 
   const process = (p, parseFn) => {
@@ -333,20 +332,45 @@ export async function formattingSorting() {
       render(d, p);
       cards.push({
         p,
-        thumbSrc:    d.thumbSrc,
+        thumbSrc: d.thumbSrc,
         fallbackSrc: d.fallbackSrc ?? null,
-        linkUrl:     d.thumbLinkUrl ?? d.links[0]?.url ?? "", // ← ここ
+        linkUrl: d.thumbLinkUrl ?? d.links[0]?.url ?? "",
       });
     } catch (e) {
-      console.error("パースエラー:", e.message, "\n", p.textContent.slice(0, 60));
+      console.error("パースエラー:", e.message, p.textContent.slice(0, 60));
     }
   };
 
-  document.querySelectorAll(".tver").forEach(p => process(p, parseTver));
-  document.querySelectorAll(".yt").forEach(p => process(p, parseYT));
+  // 要素を配列に取得してからexpired順にソート
+  const sortByExpired = (selector, parseFn) => {
+    const els = [...document.querySelectorAll(selector)];
+    const parsed = els.flatMap(p => {
+      try {
+        return [{ p, d: parseFn(p) }];
+      } catch (e) {
+        console.error("パースエラー:", e.message, p.textContent.slice(0, 60));
+        return [];
+      }
+    });
+
+    // 配信中を先頭、終了済みを末尾
+    parsed.sort((a, b) => (a.d.expired ? 1 : 0) - (b.d.expired ? 1 : 0));
+
+    parsed.forEach(({ p, d }) => {
+      render(d, p);
+      cards.push({
+        p,
+        thumbSrc: d.thumbSrc,
+        fallbackSrc: d.fallbackSrc ?? null,
+        linkUrl: d.thumbLinkUrl ?? d.links[0]?.url ?? "",
+      });
+    });
+  };
+
+  sortByExpired(".tver", parseTver);
+  sortByExpired(".yt", parseYT);
 
   cards.forEach(({ p, thumbSrc, fallbackSrc, linkUrl }) =>
     loadThumbnail(p, thumbSrc, linkUrl, fallbackSrc)
   );
-
-};
+}
