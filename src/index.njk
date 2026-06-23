@@ -3,7 +3,7 @@ layout: base.njk
 title: Home
 pagination:
   data: collections.postsWithArticles
-  size: 10
+  size: 7
   alias: posts
 ---
 
@@ -50,7 +50,12 @@ pagination:
           <ul class="related-articles">
             {% for art in post.relatedArticles %}
             <li>
-              <span><a href="{{ art.url }}">{{ art.data.title }}</a><span class="casts">{{ art.data.cast | join("｜") }}</span></span>
+              <span><a href="{{ art.url }}">{{ art.data.title }}</a>
+                <span class="casts">{{ art.data.cast | join("｜") }}</span>
+                  {% if art.daysLeft !== null %}
+                    <span class="art-expiry" title="関連記事の公開期限">{{ art.daysLeft }}</span>
+                  {% endif %}
+                </span>
               <span class="summary">{{ art.data.summary }}</span>
             </li>
             {% endfor %}

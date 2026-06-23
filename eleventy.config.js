@@ -261,7 +261,19 @@ export default function (eleventyConfig) {
   };
 
   eleventyConfig.addCollection("posts", (api) => {
-    return noDraft(api.getFilteredByGlob("src/posts/**/*.njk")).reverse();
+    const posts = noDraft(api.getFilteredByGlob("src/posts/**/*.njk")).reverse();
+
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+      const old = posts.filter(p => new Date(p.date) < oneMonthAgo);
+      if (old.length) {
+        console.log("\n⚠️  1ヶ月経過したピックアップページ:");
+        old.forEach(p => console.log(`  - ${p.data.title} (${p.date.toISOString().slice(0, 10)})`));
+        console.log("");
+      }
+
+      return posts;
   });
 
   eleventyConfig.addCollection("allTags", (api) => {
@@ -307,12 +319,28 @@ export default function (eleventyConfig) {
       .sort((a, b) => b.date - a.date);
     const articles = collection.getFilteredByTag("article");
 
+    const calcLeft = (expiry) => {
+      if (!expiry) return null;
+
+      // DateオブジェクトまたはISO文字列どちらにも対応
+      const dateStr = expiry instanceof Date
+        ? expiry.toISOString().slice(0, 10)
+        : String(expiry).slice(0, 10);
+
+      const [y, m, d] = dateStr.split("-");
+      const deadline = new Date(y, m - 1, d, 23, 59, 59);
+      const days = Math.ceil((deadline - new Date()) / 864e5);
+      return days;
+    };
+
     return posts.map(post => {
-      const postCast = post.data.cast ?? [];
-      post.relatedArticles = articles.filter(art => {
-        const artCast = art.data.cast ?? [];
-        return artCast.some(c => postCast.includes(c));
-      });
+      post.relatedArticles = articles
+        .filter(art => (art.data.cast ?? []).some(c => (post.data.cast ?? []).includes(c)))
+        .map(art => {
+          art.daysLeft = calcLeft(art.data.expiry); // ← 直接追加
+          return art;
+        })
+        .filter(art => art.daysLeft === null || art.daysLeft > 0);
       return post;
     });
   });

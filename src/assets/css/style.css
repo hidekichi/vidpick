@@ -1649,6 +1649,7 @@ p:is(.tver, .yt) {
       }
     }
   }
+
   .related-articles {
     position: relative;
     padding-inline: 1em 0;
@@ -1699,6 +1700,16 @@ p:is(.tver, .yt) {
         padding-inline-end: 0.5em;
       }
 
+      .art-expiry {
+        font-size: 0.7em;
+
+        &::before {
+          content: "(あと ";
+        }
+        &::after {
+          content: "日表示)";
+        }
+      }
       .casts {
         position: relative;
         font-size: 0.7em;
