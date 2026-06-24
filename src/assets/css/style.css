@@ -1864,6 +1864,24 @@ kbd {
       top: -0.5em;
       stroke: oklch(0.59 0.12 187.01);
     }
+
+    a {
+      svg {
+        display: inline-flex;
+      }
+      .amazon {
+        line-height: 1.1;
+        vertical-align: text-bottom;
+        width: 1.25em;
+        height: 1.25em;
+        margin-block: 0;
+        margin-inline-start: 0.1em;
+        padding-inline: 0.2em;
+        background-color: oklch(0.57 0.18 42);
+        border-radius: 4px;
+        color: #fff;
+      }
+    }
   }
 
   h2 {
