@@ -350,6 +350,10 @@ export default function (eleventyConfig) {
     return noDraft(api.getFilteredByGlob("src/articles/**/*.md")).reverse();
   });
 
+  eleventyConfig.addCollection("ongoing", (api) => {
+    return noDraft(api.getFilteredByTag("ongoing")).reverse();
+  });
+
   // -----------------------------------------------------------------
   // shortcode
   // -----------------------------------------------------------------
