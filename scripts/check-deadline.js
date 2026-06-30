@@ -40,7 +40,8 @@ const fetchDeadline = async (url) => {
     const html = await res.text();
 
     // SubInfo要素のテキストを抽出（構造変化時はここがエラーになる想定）
-    const m = html.match(/SubInfo_root__[^"]*"[^>]*>([^<]+)</);
+    //const m = html.match(/SubInfo_root__[^"]*"[^>]*>([^<]+)</);
+    const m = htme.match(/EpisodeDescription_endAtLabel__[^"]*"[^>]*>([^<]+)</);
     if (!m) return { status: "error", reason: "該当要素が見つからない（構造変化の可能性）" };
 
     const text = m[1].trim();
