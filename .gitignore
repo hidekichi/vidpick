@@ -35,4 +35,5 @@ desktop.ini
 *.sln
 
 # -- 更新チェック用
-deadline/
+deadline/.last-run
+deadline/changes.txt
