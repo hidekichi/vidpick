@@ -1,3 +1,4 @@
+import { runDeadlineCheckOnce } from "./scripts/check-deadline.js";
 import path from "path";
 import fs from 'fs-extra';
 import { DateTime } from "luxon";
@@ -19,6 +20,13 @@ import EleventyPassthroughBridge from './src/_plugins/eleventy-passthrough-bridg
 const isServe = process.env.ELEVENTY_RUN_MODE === "serve";
 
 export default function (eleventyConfig) {
+  if (isServe) {
+      // ビルドをブロックしないよう非同期で裏走り
+      runDeadlineCheckOnce().catch(e =>
+        console.error("終了日チェックでエラー:", e.message)
+      );
+    }
+
   //ignore
   eleventyConfig.watchIgnores.add("src/assets");
 

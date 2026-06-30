@@ -33,3 +33,7 @@ desktop.ini
 *.ntvs*
 *.njsproj
 *.sln
+
+# -- 更新チェック用
+deadline/
+scripts/
