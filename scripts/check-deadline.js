@@ -11,6 +11,17 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 // <p class="tver">ブロックのうち「終了日未記載」を含むものだけ抽出
 const extractUnconfirmed = (content) => {
+  const dateMatch = content.match(/^date:\s*(.+)$/m);
+  const fileDate = dateMatch?.[1].trim() ?? null;
+
+  const today = new Date();
+  const diffDays = fileDate
+      ? Math.floor((today - new Date(fileDate)) / 864e5)
+      : 999;
+
+  // 作成から3日未満はスキップ
+  if (diffDays < 3) return [];
+
   const blocks = [...content.matchAll(/<p\s+class="tver">([\s\S]*?)<\/p>/g)];
 
   return blocks
@@ -34,30 +45,30 @@ const extractUnconfirmed = (content) => {
 
 const fetchDeadline = async (url) => {
   try {
-    const res = await fetch(url);
+    const episodeId = url.split("episodes/")[1];
+    const jsonUrl = `https://statics.tver.jp/content/episode/${episodeId}.json`;
+
+    const res = await fetch(jsonUrl);
     if (!res.ok) return { status: "error", reason: `HTTP ${res.status}` };
 
-    const html = await res.text();
+    const data = await res.json();
+    const endAt = data?.viewStatus?.endAt;
+    if (!endAt) return { status: "error", reason: "endAtが見つからない" };
 
-    // SubInfo要素のテキストを抽出（構造変化時はここがエラーになる想定）
-    //const m = html.match(/SubInfo_root__[^"]*"[^>]*>([^<]+)</);
-    const m = htme.match(/EpisodeDescription_endAtLabel__[^"]*"[^>]*>([^<]+)</);
-    if (!m) return { status: "error", reason: "該当要素が見つからない（構造変化の可能性）" };
+    const endDate = new Date(endAt * 1000); // UnixタイムスタンプはミリSecに変換
+    const mo  = endDate.getMonth() + 1;
+    const d   = endDate.getDate();
+    const h   = String(endDate.getHours()).padStart(2, "0");
+    const min = String(endDate.getMinutes()).padStart(2, "0");
 
-    const text = m[1].trim();
+    // 年をまたぐ場合は西暦も付ける
+    const today = new Date();
+    const deadline = endDate.getFullYear() !== today.getFullYear()
+      ? `${endDate.getFullYear()}/${mo}/${d} ${h}:${min}まで`
+      : `${mo}/${d} ${h}:${min}まで`;
 
-    if (text.includes("1週間以上")) return { status: "over_week" };
+    return { status: "confirmed", deadline };
 
-    // 西暦の有無どちらにも対応
-const dateMatch = text.match(/(?:(\d{4})年)?(\d{1,2})月(\d{1,2})日.*?(\d{1,2}:\d{2})/);
-if (!dateMatch) return { status: "error", reason: `日付パース失敗: "${text}"` };
-
-const [, year, mo, d, time] = dateMatch;
-const deadline = year
-  ? `${year}/${mo}/${d} ${time}まで`
-  : `${mo}/${d} ${time}まで`;
-
-return { status: "confirmed", deadline };
   } catch (e) {
     return { status: "error", reason: e.message };
   }
@@ -129,7 +140,13 @@ export const runDeadlineCheckOnce = async () => {
     console.log("ℹ️ 終了日チェックは本日実行済みのためスキップ");
     return;
   }
-  console.log("🔍 終了日未記載チェックを開始します...");
-  await main();
-  markRunToday();
+  console.log("🔍 終了日チェックを開始します...");
+  try {
+    await main();
+  } catch (e) {
+    console.error("チェック中にエラー:", e.message);
+  } finally {
+    markRunToday(); // 成功・失敗に関わらず必ず実行
+    console.log("✅ .last-run を更新しました");
+  }
 };
