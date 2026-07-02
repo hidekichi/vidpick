@@ -1925,6 +1925,7 @@ kbd {
     color: oklch(0.8 0.04 206.1);
     font-weight: bold;
     position: relative;
+    margin-block: 4em;
 
     &::before {
       content: "";
@@ -1972,7 +1973,22 @@ kbd {
     overflow-wrap: break-word;
   }
 
+  p + table {
+    margin-block-start: 4em;
+  }
+
   table {
+    & + table {
+      margin-block-start: 4em;
+    }
+
+    caption {
+      font-size: 1.5em;
+      font-weight: bold;
+      text-align: left;
+      color: oklch(0.78 0.18 94.3);
+    }
+
     th {
       font-size: 1.2em;
       color: #fff;
