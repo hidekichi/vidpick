@@ -26,7 +26,7 @@ const extractUnconfirmed = (content) => {
 
   return blocks
     .map(m => m[1])
-    .filter(b => b.includes("終了日未記載"))
+    .filter(b => /終了日未記載|終了時間未記載/.test(b))
     .map(b => {
       const lines = b.split("\n").map(s => s.trim()).filter(Boolean);
       const headLine = lines[0] ?? "(不明)";
