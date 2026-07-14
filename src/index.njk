@@ -74,8 +74,29 @@ pagination:
   <ol class="pagination">
     <li>{% if pagination.href.previous %}<a href="{{ pagination.href.previous }}"><button class="previous">Prev</button></a>{% else %}<button class="previous text-gray-800 bg-gray-600 aria-disabled cursor-not-allowed">Prev</button>{% endif %}</li>
 	<li>{% if pagination.href.next %}<a href="{{ pagination.href.next }}"><button class="next">Next</button></a>{% else %}<button class="next text-gray-800 bg-gray-600 aria-disabled cursor-not-allowed">Next</button>{% endif %}</li>
+
+{% macro renderTitleDate(firstObj, lastObj) %}
+  {%- if firstObj and lastObj -%}
+    {# 最初の日付のフォーマット #}
+    {%- if firstObj.year -%}{{ firstObj.year }}/{%- endif -%}{{ firstObj.month }}/{{ firstObj.day }}{{ " ～ " }}{%- if lastObj.year -%}{{ lastObj.year }}/{%- endif -%}{{ lastObj.month }}/{{ lastObj.day }}
+  {%- endif -%}
+{% endmacro %}
+
 {%- for pageEntry in pagination.pages %}
-    <li><a href="{{ pagination.hrefs[ loop.index0 ] }}"{% if page.url == pagination.hrefs[ loop.index0 ] %} aria-current="page"{% endif %}>Page {{ loop.index }}</a></li>
+  {%- set firstPost = pageEntry | first -%}
+  {%- set lastPost = pageEntry | last -%}
+  {%- set firstDateObj = firstPost.date | getPageDateObj -%}
+  {%- set lastDateObj = lastPost.date | getPageDateObj -%}
+    <li>
+      {# <a href="{{ pagination.hrefs[ loop.index0 ] }}"{% if page.url == pagination.hrefs[ loop.index0 ] %}
+        aria-current="page"{% endif %}
+        title="{{ renderTitleDate(firstDateObj, lastDateObj) }}">Page {{ loop.index }}</a> #}
+        <a href="{{ pagination.hrefs[ loop.index0 ] }}"
+                   {% if page.url == pagination.hrefs[ loop.index0 ] %} aria-current="page"{% endif %}
+                   title="{{ renderTitleDate(firstDateObj, lastDateObj) }}">
+                  Page {{ loop.index }}
+                </a>
+    </li>
 {%- endfor %}
   </ol>
 </nav>

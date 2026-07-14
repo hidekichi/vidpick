@@ -251,6 +251,24 @@ export default async function (eleventyConfig) {
     return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
   });
 
+  // page navi用フィルター
+  eleventyConfig.addFilter("getPageDateObj", (dateObj) =>  {
+      if (!dateObj) return null;
+
+      // Luxonでパース
+      const dt = DateTime.fromJSDate(dateObj, { zone: "utc" });
+      const currentYear = DateTime.now().year; // 現在の西暦（2026）
+
+      // 記事の年が「今年」と異なる場合のみ year を返す（今年なら null）
+      const displayYear = (dt.year !== currentYear) ? dt.year : null;
+
+      return {
+        year: displayYear,   // 今年なら null, 去年以前なら 2025 など
+        month: dt.month,     // 7
+        day: dt.day          // 14
+      };
+    });
+
   //eleventyConfig.addFilter("dateToRfc3339", pluginRss.dateToRfc3339);
 
   // -----------------------------------------------------------------
