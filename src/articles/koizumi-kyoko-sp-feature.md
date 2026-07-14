@@ -10,35 +10,15 @@ summary: 歌手・女優・タレントとマルチタレントみたいな言�
 
 ## テレビドラマ出演情報
 
+<!--
 <section class="zxc">
-
-<p class="tver">
-  ドラマ 愛するということ(1993) 11(最終)話の配信がTVerで始まりました。
-  7/14 21:59まで
-  緒形直人、伊藤かずえ、石橋保、篠塚勝、高島礼子、島崎和歌子、矢野武、橋爪功、佐藤オリエ、角野卓造、小泉今日子 らが出演しています
-  https://tver.jp/episodes/ep8zg9w688
-</p>
-
-<p class="tver">
-  ドラマ 愛するということ(1993) 10話の配信がTVerで始まりました。
-  7/11 11:59まで
-  緒形直人、伊藤かずえ、石橋保、矢野武、橋爪功、角野卓造、小泉今日子 らが出演しています
-  https://tver.jp/episodes/epzafzjql4
-</p>
-
-  <p class="tver">
-    ドラマ 愛するということ(1993) 1～3話の配信がTVerで始まりました。
-    7/14 21:59まで
-    緒形直人、伊藤かずえ、篠塚勝、島崎和歌子、矢野武、橋爪功、角野卓造、小泉今日子 らが出演しています
-    https://tver.jp/episodes/epj7c4qz6s
-  </p>
-  
 </section>
 
 <section class="layout mt-0 mb-12">
   <div id="drama"></div>
   <div id="youtube"></div>
 </section>
+-->
 
 
 #### 2026
