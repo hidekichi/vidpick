@@ -78,7 +78,7 @@ pagination:
 {% macro renderTitleDate(firstObj, lastObj) %}
   {%- if firstObj and lastObj -%}
     {# 最初の日付のフォーマット #}
-    {%- if firstObj.year -%}{{ firstObj.year }}/{%- endif -%}{{ firstObj.month }}/{{ firstObj.day }}{{ " ～ " }}{%- if lastObj.year -%}{{ lastObj.year }}/{%- endif -%}{{ lastObj.month }}/{{ lastObj.day }}
+    {%- if firstObj.year -%}{{ firstObj.year }}/{%- endif -%}{{ firstObj.month }}/{{ firstObj.day }}{{ " ～ " }}{%- if lastObj.year -%}{{ lastObj.year }}/{%- endif -%}{{ lastObj.month }}/{{ lastObj.day }}のピックアップ
   {%- endif -%}
 {% endmacro %}
 
