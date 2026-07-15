@@ -31,7 +31,7 @@ const fromTver = (blockText) => {
   const castLine = lines.find(l =>
     //l.includes("らが出演しています") ||
     //(l.includes("、") && !l.startsWith("※") && !l.includes("https://"))
-    l.includes(" らが出演しています") || l.includes(" 話")
+    l.includes(" らが出演しています") || l.includes(" 他")
   );
   if (!castLine) return [];
 
@@ -39,7 +39,7 @@ const fromTver = (blockText) => {
   return expandGroupNotation(castLine)
     //.split(" ")[0]   // "らが出演しています"より前
     //.replace(/\s*(らが出演しています。?|話)\s*$/, "")
-    .split(/\s+(話|らが出演しています)/)[0]
+    .split(/\s+(他|らが出演しています)/)[0]
     .split("、")
     .map(s => s.trim())
     .filter(Boolean);
