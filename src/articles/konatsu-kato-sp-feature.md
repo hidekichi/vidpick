@@ -12,15 +12,21 @@ summary: ゲーム配信でも話題の加藤小夏について
 
 最近出てきた人と言う声が多いように思いますが、本人も若いので最近ではあるものの、ある意味中堅の域に達している俳優さんなのではないかと思います。
 
-<!--
+
 <section class="zxc">
+  <p class="tver">
+    ドラマSP 禍話(2021) の配信がTVerで始まりました。
+    終了日未記載
+    水谷果穂、入野自由、加藤小夏、秋山ゆずき、大水洋介(ラバーガール)、中山莉子(私立恵比寿中学)、希志真ロイ、松原タニシ、小日向流季、清井咲希 らが出演しています
+    https://tver.jp/episodes/epc9nmv03z
+  </p>
 </section>
 
 <section class="layout mt-0 mb-12">
   <div id="drama"></div>
   <div id="youtube"></div>
 </section>
--->
+
 
 #### 2026
 
