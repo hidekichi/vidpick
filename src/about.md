@@ -108,6 +108,7 @@ TVerやYoutubeの動画には期限がついているものがあります。TVe
 まだ改良は必要だと思いますが、**TVerが最初からこう作ってておいてくれよ**というような番組や出演者の見つけやすさを色々考えたいと思います。
 
 
+
   [Buy Me a Coffee](https://buymeacoffee.com/hidekichi)
   {class="text-2xl pt-[4em] text-center"}
 
