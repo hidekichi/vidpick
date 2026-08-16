@@ -97,7 +97,7 @@ const parseTver = (p) => {
     cast: artist.split(/\s+(話|らが出演しています)/)[0],
     links,
     thumbLinkUrl: links[0]?.url ?? "",
-    thumbSrc: `https://image-cdn.tver.jp/w=800/images/content/thumbnail/episode/small/${episodeId}.jpg`,
+    thumbSrc: `https://image-cdn.tver.jp/w=400/images/content/thumbnail/episode/small/${episodeId}.jpg`,
     catId: rule.catId,
   };
 };
