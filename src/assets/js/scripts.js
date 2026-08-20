@@ -8,6 +8,9 @@ import { embbedYoutubePlayer } from "./module/embedYoutubePlayer.js";
 import { insertLoadlazy, externalLink, clearButton } from "./module/utils.js";
 import { initTooltip } from "./module/tooltip.js";
 import { initIndexCastSearch } from "./module/list-builder.js";
+import { set_isFeatured } from "./module/isFeaturedDiv.js";
+
+const layout = document.querySelector(".layout");
 
 document.addEventListener("DOMContentLoaded", async () => {
   back2top();
@@ -43,8 +46,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     externalLink();
   }
 
-const layout = document.querySelector(".layout");
-
   if (document.querySelector(".reading-main")) {
     await footnote();
     initTooltip();
@@ -70,4 +71,8 @@ const layout = document.querySelector(".layout");
       });
     }
   }
+});
+
+window.addEventListener("load", () => {
+    set_isFeatured();
 });

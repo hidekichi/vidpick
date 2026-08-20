@@ -2345,3 +2345,68 @@ kbd {
     opacity: 1;
   }
 }
+
+/* layoutの先頭を拡張して注目させる
+    - メニュー作成
+*/
+
+#genre-menu {
+  position: fixed;
+  top: 200px;
+  left: 0;
+
+  li {
+    list-style: none;
+    writing-mode: vertical-lr;
+    text-transform: capitalize;
+    padding-inline: 1em;
+    cursor: pointer;
+
+    &[data-target=""] {
+      background-color: #666;
+    }
+
+    &[data-target="drama"] {
+      background-color: #00f;
+    }
+
+    &[data-target="anime"] {
+      background-color: oklch(0.53 0.22 356.48);
+    }
+
+    &[data-target="variety"] {
+      background-color: #090;
+    }
+
+    &[data-target="documentaly"] {
+      background-color: #960;
+    }
+
+    &[data-target="youtube"] {
+      background-color: #c00;
+    }
+
+    &[data-target="other"] {
+      background-color: #f00;
+    }
+  }
+}
+
+.layout {
+  & > div {
+    order: 0;
+
+    &.is-featured {
+      order: -1;
+      grid-column: 1 / -1;
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: center;
+      column-gap: 2em;
+
+      p {
+        width: 400px;
+      }
+    }
+  }
+}
