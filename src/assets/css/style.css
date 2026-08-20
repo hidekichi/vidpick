@@ -2352,6 +2352,8 @@ kbd {
 
 #genre-menu {
   position: fixed;
+  display: flex;
+  flex-direction: column;
   top: 50%;
   transform: translateY(-50%);
   max-height: 100vh;
@@ -2394,6 +2396,19 @@ kbd {
   }
 }
 
+@media (height <= 500px) {
+  #genre-menu {
+    overflow-x: scroll;
+
+    li {
+      font-size: 0.8em;
+      padding-block: 0.5em;
+      width: fit-content;
+      text-wrap: nowrap;
+    }
+  }
+}
+
 .layout {
   & > div {
     order: 0;
@@ -2407,7 +2422,7 @@ kbd {
       column-gap: 2em;
 
       p {
-        width: 400px;
+        width: 420px;
       }
     }
   }

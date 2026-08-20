@@ -1,6 +1,9 @@
+const layout = document.querySelector(".layout");
+
 function setFeaturedGenre(targetId) {
   document.querySelector('.layout > div.is-featured')?.classList.remove('is-featured');
   document.getElementById(targetId)?.classList.add('is-featured');
+  layout.scrollIntoView();
 }
 
 export function set_isFeatured() {
