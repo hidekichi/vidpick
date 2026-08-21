@@ -2,9 +2,17 @@ const layout = document.querySelector(".layout");
 
 function setFeaturedGenre(targetId) {
   document.querySelector('.layout > div.is-featured')?.classList.remove('is-featured');
+
+  if (!targetId) {
+    layout.scrollIntoView();
+    return;
+  }
+
   document.getElementById(targetId)?.classList.add('is-featured');
+
   const featured = layout.querySelector("div.is-featured");
-  featured.scrollTo({top: 0});
+  featured?.scrollTo({ top: 0 });
+
   layout.scrollIntoView();
 }
 

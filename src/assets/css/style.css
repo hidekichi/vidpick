@@ -2422,7 +2422,11 @@ kbd {
       column-gap: 2em;
 
       p {
-        width: 420px;
+        width: 385px;
+
+        &::after {
+          border: 0 !important;
+        }
       }
     }
   }
