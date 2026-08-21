@@ -8,7 +8,7 @@ import { embbedYoutubePlayer } from "./module/embedYoutubePlayer.js";
 import { insertLoadlazy, externalLink, clearButton } from "./module/utils.js";
 import { initTooltip } from "./module/tooltip.js";
 import { initIndexCastSearch } from "./module/list-builder.js";
-import { set_isFeatured } from "./module/isFeaturedDiv.js";
+// import { set_isFeatured } from "./module/isFeaturedDiv.js";
 
 const layout = document.querySelector(".layout");
 
@@ -73,6 +73,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-window.addEventListener("load", () => {
-    set_isFeatured();
-});
+const mediaQuery = window.matchMedia("(min-width: 768px)");
+
+const loadIsFeatured = async () => {
+  if (!layout || !mediaQuery.matches) return;
+
+  const { set_isFeatured } = await import("./module/isFeaturedDiv.js");
+
+  set_isFeatured();
+};
+
+window.addEventListener("load", loadIsFeatured);
+mediaQuery.addEventListener("change", loadIsFeatured);
