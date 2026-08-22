@@ -2420,6 +2420,7 @@ kbd {
       flex-flow: row wrap;
       justify-content: space-evenly;
       column-gap: 2em;
+      background-color: oklch(0.2 0.04 244.63);
 
       p {
         width: clamp(300px, 380px, calc(100% / 2));
