@@ -2418,14 +2418,20 @@ kbd {
       grid-column: 1 / -1;
       display: flex;
       flex-flow: row wrap;
-      justify-content: center;
+      justify-content: space-evenly;
       column-gap: 2em;
 
       p {
-        width: 385px;
+        width: clamp(300px, 380px, calc(100% / 2));
+        flex-shrink: 1;
 
         &::after {
           border: 0 !important;
+        }
+
+
+        img {
+          width: 100%;
         }
       }
     }
