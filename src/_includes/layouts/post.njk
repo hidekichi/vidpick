@@ -20,11 +20,11 @@ layout: base.njk
         </div>
         <div class="busyman">忙しい人向け</div>
       </div>
-
-      {% set prevWeek = date | getPickUrl(-7) %}
-      {% set prevDay  = date | getPickUrl(-1) %}
-      {% set nextDay  = date | getPickUrl(1) %}
-      {% set nextWeek = date | getPickUrl(7) %}
+      {% if page.fileSlug and page.fileSlug.startsWith("pick") and "ongoing" not in page.fileSlug %}
+        {% set prevWeek = date | getPickUrl(-7) %}
+        {% set prevDay  = date | getPickUrl(-1) %}
+        {% set nextDay  = date | getPickUrl(1) %}
+        {% set nextWeek = date | getPickUrl(7) %}
 
       <div class="nav-title">
         <div class="prev">
@@ -40,6 +40,9 @@ layout: base.njk
           <p class="post-description">{{ description }}</p>
         {% endif %}
       </div>
+    {% else %}
+    <h1 class="post-title">{{ title }}</h1>
+    {% endif %}
       <div class="attention">サムネイル付きのカードリストは「スクロールスナップが有効」になっています。少しのスクロールで次のカードにスナップします。<br>フォーカスを当ててキーボードの<kbd>Page UP/Down</kbd>or
         <kbd>SPACE</kbd>|<kbd>Shift + SPACE</kbd>でも操作できます。ただしスクロール量によってはカードを飛ばすこともあるので注意</div>
     </header>
