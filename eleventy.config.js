@@ -269,6 +269,27 @@ export default async function (eleventyConfig) {
       };
     });
 
+  eleventyConfig.addFilter("getPickUrl", function(currentDate, offsetDays) {
+      if (!currentDate) return null;
+
+      // Luxonで日付オブジェクトを作成し、タイムゾーンを日本時間に固定して日数計算
+      const targetDate = DateTime.fromJSDate(new Date(currentDate))
+        .setZone("Asia/Tokyo")
+        .plus({ days: offsetDays });
+
+      // "260815" のような yyMMdd 形式文字列を取得
+      const dateSlug = targetDate.toFormat("yyMMdd"); // yy:年2桁, MM:月2桁, dd:日2桁
+      const fileName = `pick${dateSlug}.njk`; // ※拡張子は使用しているファイル形式に合わせて指定
+
+      // 実際にファイルが存在するかチェック
+      const filePath = path.join(process.cwd(), "src/posts", fileName); // パスは環境に合わせて調整
+
+      if (fs.existsSync(filePath)) {
+        return `pick${dateSlug}`;
+      }
+      return null; // ファイルが削除済みなら null
+    });
+
   //eleventyConfig.addFilter("dateToRfc3339", pluginRss.dateToRfc3339);
 
   // -----------------------------------------------------------------

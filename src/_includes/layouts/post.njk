@@ -20,10 +20,26 @@ layout: base.njk
         </div>
         <div class="busyman">忙しい人向け</div>
       </div>
-      <h1 class="post-title">{{ title }}</h1>
-      {% if description %}
-        <p class="post-description">{{ description }}</p>
-      {% endif %}
+
+      {% set prevWeek = date | getPickUrl(-7) %}
+      {% set prevDay  = date | getPickUrl(-1) %}
+      {% set nextDay  = date | getPickUrl(1) %}
+      {% set nextWeek = date | getPickUrl(7) %}
+
+      <div class="nav-title">
+        <div class="prev">
+          {% if prevWeek %}<a href="/posts/{{ prevWeek }}/" title="{{ prevWeek }} へ">1週間前</a><svg><use href="#chevron-double-left"/></svg>{% endif %}
+          {% if prevDay %}<a href="/posts/{{ prevDay }}/" title="{{ prevDay }} へ">前日</a><svg><use href="#chevron-left"/></svg>{% endif %}
+        </div>
+        <h1 class="nav-post-title">{{ title }}</h1>
+        <div class="next">
+          {% if nextDay %}<svg><use href="#chevron-right"/></svg><a href="/posts/{{ nextDay }}/" title="{{ nextDay }} へ">翌日</a>{% endif %}
+          {% if nextWeek %}<svg><use href="#chevron-double-right"/></svg><a href="/posts/{{ nextWeek }}/" title="{{ nextWeek }} へ">1週間後</a>{% endif %}
+        </div>
+        {% if description %}
+          <p class="post-description">{{ description }}</p>
+        {% endif %}
+      </div>
       <div class="attention">サムネイル付きのカードリストは「スクロールスナップが有効」になっています。少しのスクロールで次のカードにスナップします。<br>フォーカスを当ててキーボードの<kbd>Page UP/Down</kbd>or
         <kbd>SPACE</kbd>|<kbd>Shift + SPACE</kbd>でも操作できます。ただしスクロール量によってはカードを飛ばすこともあるので注意</div>
     </header>
