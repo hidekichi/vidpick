@@ -2350,6 +2350,20 @@ kbd {
     - メニュー作成
 */
 
+:root {
+  --L: 0.225;
+  --C: 0.04;
+
+  --isFeature-background: oklch(0.2 0.04 244.63);
+  --default-color: #666;
+  --drama: #00f;
+  --anime: oklch(0.53 0.22 356.48);
+  --variety: #090;
+  --documentaly: #960;
+  --youtube: #c00;
+  --other: #f00;
+}
+
 #genre-menu {
   position: fixed;
   display: flex;
@@ -2371,27 +2385,27 @@ kbd {
     }
 
     &[data-target="drama"] {
-      background-color: #00f;
+      background-color: var(--drama);
     }
 
     &[data-target="anime"] {
-      background-color: oklch(0.53 0.22 356.48);
+      background-color: var(--anime);
     }
 
     &[data-target="variety"] {
-      background-color: #090;
+      background-color: var(--variety);
     }
 
     &[data-target="documentaly"] {
-      background-color: #960;
+      background-color: var(--documentaly);
     }
 
     &[data-target="youtube"] {
-      background-color: #c00;
+      background-color: var(--youtube);
     }
 
     &[data-target="other"] {
-      background-color: #f00;
+      background-color: var(--other);
     }
   }
 }
@@ -2420,7 +2434,7 @@ kbd {
       flex-flow: row wrap;
       justify-content: space-evenly;
       column-gap: 2em;
-      background-color: oklch(0.2 0.04 244.63);
+      /*background-color: oklch(0.2 0.04 244.63);*/
 
       p {
         width: clamp(300px, 380px, calc(100% / 2));
@@ -2436,6 +2450,25 @@ kbd {
         }
       }
     }
+  }
+
+  #drama.is-featured {
+    background-color: oklch(from var(--drama) var(--L) var(--C) h);
+  }
+  #anime.is-featured {
+    background-color: oklch(from var(--anime) var(--L) var(--C) h);
+  }
+  #variety.is-featured {
+    background-color: oklch(from var(--variety) var(--L) var(--C) h);
+  }
+  #documentaly.is-featured {
+    background-color: oklch(from var(--documentaly) var(--L) var(--C) h);
+  }
+  #youtube.is-featured {
+    background-color: oklch(from var(--youtube) var(--L) var(--C) h);
+  }
+  #other.is-featured {
+    background-color: oklch(from var(--other) var(--L) var(--C) h);
   }
 }
 
