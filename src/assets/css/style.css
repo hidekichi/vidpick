@@ -2351,8 +2351,8 @@ kbd {
 */
 
 :root {
-  --L: 0.225;
-  --C: 0.04;
+  --L: 0.2;
+  --C: 0.03;
 
   --isFeature-background: oklch(0.2 0.04 244.63);
   --default-color: #666;
