@@ -1258,7 +1258,7 @@ p:is(.tver, .yt) {
 .sub {
   margin-block: 0.5rem;
   line-height: 1.4;
-  color: oklch(0.88 0.01 192.72);
+  color: oklch(0.98 0.06 114.89);
 
   &:not(:empty)::before {
     content: "※";
