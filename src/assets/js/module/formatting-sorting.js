@@ -94,7 +94,7 @@ const parseTver = (p) => {
     season: rawSeason.replace(/(\d+)期/, "シーズン$1"),
     episode, sub: subLine.replace(/^※\s*/, ""),
     endOfDay, leftDay: leftD, expired,
-    cast: artist.split(/\s+(話|らが出演しています)/)[0],
+    cast: artist.split(/\s+(他|らが出演しています)/)[0],
     links,
     thumbLinkUrl: links[0]?.url ?? "",
     thumbSrc: `https://image-cdn.tver.jp/w=400/images/content/thumbnail/episode/small/${episodeId}.jpg`,
@@ -149,7 +149,7 @@ const links = [];
       //castNames.push(line.split("：")[0].replace(/[\s　]+/g, ""));
 		castNames.push(line);
     } else if (line.includes("、") || line.includes("らが出演")) {
-      let withoutLastSpace = line.replace(/\s+?(話|らが出演)/,"|").split("|")[0];
+      let withoutLastSpace = line.replace(/\s+?(他|らが出演)/,"|").split("|")[0];
       // 読点区切りキャスト
       castNames.push(withoutLastSpace);
 
@@ -186,12 +186,15 @@ const links = [];
 const renderLinks = (links, mainUrl = "") => {
   if (links.length > 0) {
     return links.map(({ label, url }) =>
-      `<a class="part-link" href="${url}" target="_blank">${label || url}</a>`
+      label ?
+        `<a class="part-link" href="${url}" target="_blank" title="${label}へのリンク">${label || url}</a>`
+        :`<a class="part-link" href="${url}" target="_blank" title="リンク">${label || url}</a>`
+
     ).join("");
   }
   // ラベル付きリンクがない場合はmainUrlを表示
   return mainUrl
-    ? `<a href="${mainUrl}" target="_blank">${mainUrl}</a>`
+    ? `<a href="${mainUrl}" target="_blank" title="動画ページのリンク">${mainUrl}</a>`
     : "";
 };
 
@@ -245,7 +248,7 @@ const render = (d, p) => {
     d.genre = `${d.genre}<span class="genre-hero">(ヒーロー)</span>`;
   } else if (d.genre === "ドキュメンタリー") {
     d.genre = `${d.genre}<span class="genre-documentaly">(報道)</span>`;
-	}
+  }
 
   p.innerHTML = `
     <div class="category ${d.catId}">${d.genre}</div>

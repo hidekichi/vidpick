@@ -85,3 +85,20 @@ const loadIsFeatured = async () => {
 
 window.addEventListener("load", loadIsFeatured);
 mediaQuery.addEventListener("change", loadIsFeatured);
+
+// サムネイルが入る親要素
+const container = document.getElementById('genre-menu');
+
+// 1. 中身が変化（読み込まれた）したら実行する処理を設定
+const observer = new MutationObserver((mutations, obs) => {
+  // 親要素の中に対象の a タグが読み込まれたか探す
+  const anchors = container.querySelectorAll('li');
+
+  if (anchors.length > 0) {
+    initTooltip();
+
+    obs.disconnect();
+  }
+});
+
+observer.observe(container, { childList: true });

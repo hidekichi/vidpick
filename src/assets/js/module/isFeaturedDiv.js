@@ -13,7 +13,8 @@ function setFeaturedGenre(targetId) {
   const featured = layout.querySelector("div.is-featured");
   featured?.scrollTo({ top: 0,behavior: "smooth", });
 
-  layout.scrollIntoView();
+  const header = document.querySelector(".nav-post-title") ?? document.querySelector(".post-title");
+  header.scrollIntoView();
 }
 
 export function set_isFeatured() {

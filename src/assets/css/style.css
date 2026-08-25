@@ -1258,10 +1258,12 @@ p:is(.tver, .yt) {
 .sub {
   margin-block: 0.5rem;
   line-height: 1.4;
+  color: oklch(0.96 0.07 191.02);
 
   &:not(:empty)::before {
     content: "※";
     margin-right: 0.5rem;
+    color: oklch(0.69 0.15 208.27);
   }
 }
 
