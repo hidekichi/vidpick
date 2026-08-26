@@ -92,8 +92,6 @@ const parseTver = (p) => {
   subLine = subLine.replace(/(【(.*?)】|『(.*?)』|\[(.*?)\])/g, `<span class="feat">$1</span>`);
   subLine = subLine.replace(/(「(.*?)」)/g, `<strong>$1</strong>`);
 
-  artist = artist.replace(/\((.*?)\)/g, `<span class="artistGroup">($1)</span>`);
-
   return {
     type: "tver",
     genre, title, year,
@@ -165,6 +163,7 @@ const links = [];
     }
   }
 
+
   const { endOfDay, leftD, expired } = calcEndInfo(endDayRaw || "未記載");
 
   // サムネイルのリンク先：mainUrl優先、なければ最初のラベル付きリンク
@@ -213,7 +212,8 @@ const buildCast = (cast) => {
 
  // 「、」区切り → 従来通り
  if (!hasRoles) {
-   const inner = isArray ? cast.join("、") : cast;
+   let inner = isArray ? cast.join("、") : cast;
+   inner = inner.replace(/\((.*?)\)/g, `<span class="artistGroup">($1)</span>`);
    return `<div class="cast">${inner}</div>`;
  }
 
