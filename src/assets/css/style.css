@@ -1286,7 +1286,8 @@ p:is(.tver, .yt) {
 
 .cast {
   margin-block: 1rem;
-  font-size: 0.9em;
+  font-size: 0.925em;
+  line-height: 1.65;
 
   &:first-of-type::after {
     content: "らが出演しています";
@@ -1296,6 +1297,8 @@ p:is(.tver, .yt) {
 
   .artistGroup {
     color: oklch(0.87 0.01 192.83);
+    font-size: 0.85em;
+    padding-inline: 0.15em;
   }
 
   &:has(br) {
