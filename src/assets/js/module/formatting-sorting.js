@@ -71,7 +71,7 @@ const parseTver = (p) => {
     linkLines = rest.filter(s => s.includes("https://"));
   }
 
-  const subLine = rest.find(s => !s.includes("https://")) ?? "";
+  let subLine = rest.find(s => !s.includes("https://")) ?? "";
   const { groups: { genre, title, yearSeason, ep } } = head.match(HEAD_RE);
   const rule = GENRE[genre];
   const [year, rawSeason = ""] = yearSeason.split("・");
@@ -87,6 +87,10 @@ const parseTver = (p) => {
   });
 
   const episodeId = links[0]?.url.split("episodes/")[1] ?? "";
+
+  subLine = subLine.replace(/(▽|▼|★)/g, `<span class="splitTriangle">$1</span>`);
+  subLine = subLine.replace(/(【(.*?)】|『(.*?)』|\[(.*?)\])/g, `<span class="feat">$1</span>`);
+  subLine = subLine.replace(/(「(.*?)」)/g, `<strong>$1</strong>`);
 
   return {
     type: "tver",

@@ -1265,6 +1265,23 @@ p:is(.tver, .yt) {
     margin-right: 0.5rem;
     color: #fff;
   }
+
+  .splitTriangle {
+    color: oklch(0.81 0.19 94.16);
+    padding-inline-start: 0.25em;
+  }
+
+  .feat {
+    color: oklch(0.95 0.1 138.28);
+  }
+
+  strong {
+    color: #fff;
+
+    &:not(:has(.spritTriangle)) {
+      color: inherit;
+    }
+  }
 }
 
 .cast {
