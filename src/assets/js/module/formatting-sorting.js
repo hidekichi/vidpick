@@ -88,10 +88,6 @@ const parseTver = (p) => {
 
   const episodeId = links[0]?.url.split("episodes/")[1] ?? "";
 
-  subLine = subLine.replace(/(▽|▼|★)/g, `<span class="splitTriangle">$1</span>`);
-  subLine = subLine.replace(/(【(.*?)】|『(.*?)』|\[(.*?)\])/g, `<span class="feat">$1</span>`);
-  subLine = subLine.replace(/(「(.*?)」)/g, `<strong>$1</strong>`);
-
   return {
     type: "tver",
     genre, title, year,
@@ -203,6 +199,25 @@ const renderLinks = (links, mainUrl = "") => {
     : "";
 };
 
+// 括弧の外側の「、」だけで分割する
+const splitCastSafe = (str) => {
+  const result = [];
+  let depth = 0;
+  let buf = "";
+  for (const ch of str) {
+    if (ch === "(" || ch === "（") depth++;
+    if (ch === ")" || ch === "）") depth--;
+    if (ch === "、" && depth === 0) {
+      result.push(buf);
+      buf = "";
+    } else {
+      buf += ch;
+    }
+  }
+  if (buf) result.push(buf);
+  return result.map(s => s.trim()).filter(Boolean);
+};
+
 
 let castIdCounter = 0;
 
@@ -248,6 +263,12 @@ const buildHead = (d) => d.type === "youtube"
 
 const allVideoData = [];
 
+// 表示用の装飾関数を新設（buildCastと対になる関数）
+const decorateSub = (sub) => sub
+  .replace(/(▽|▼|★)/g, `<span class="splitTriangle">$1</span>`)
+  .replace(/(【(.*?)】|『(.*?)』|\[(.*?)\])/g, `<span class="feat">$1</span>`)
+  .replace(/(「(.*?)」)/g, `<strong>$1</strong>`);
+
 const render = (d, p) => {
 
   if (d.genre === "アニメ") {
@@ -262,7 +283,7 @@ const render = (d, p) => {
     ${d.endOfDay
       ? `<div class="endOfDay">${d.endOfDay}<span class="leftDay">${d.leftDay}</span></div>`
       : ""}
-    <div class="sub">${d.sub}</div>
+    <div class="sub">${decorateSub(d.sub)}</div>
     <div class="cast">${buildCast(d.cast)}</div>
     <div class="thumbnail"></div>
     <div class="link">${renderLinks(d.links, d.thumbLinkUrl ?? "")}</div>`;
@@ -278,7 +299,7 @@ const render = (d, p) => {
     links:        d.links,
     thumbLinkUrl: d.thumbLinkUrl ?? "",  // ← これが抜けていると空になる
     year:         d.year,
-    cast:         Array.isArray(d.cast) ? d.cast : d.cast.split("、"),
+    cast:         Array.isArray(d.cast) ? d.cast : splitCastSafe(d.cast),
     endOfDay:     d.endOfDay,
     leftDay:      d.leftDay,
     expired:      d.expired,
