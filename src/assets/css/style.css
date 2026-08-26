@@ -1294,6 +1294,10 @@ p:is(.tver, .yt) {
     margin-left: 0.5rem;
   }
 
+  .artistGroup {
+    color: oklch(0.87 0.01 192.83);
+  }
+
   &:has(br) {
     font-family: monospace;
   }

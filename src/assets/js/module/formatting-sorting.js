@@ -92,6 +92,8 @@ const parseTver = (p) => {
   subLine = subLine.replace(/(【(.*?)】|『(.*?)』|\[(.*?)\])/g, `<span class="feat">$1</span>`);
   subLine = subLine.replace(/(「(.*?)」)/g, `<strong>$1</strong>`);
 
+  artist = artist.replace(/\((.*?)\)/g, `<span class="artistGroup">($1)</span>`);
+
   return {
     type: "tver",
     genre, title, year,
