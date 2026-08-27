@@ -573,8 +573,9 @@ section {
 
 .post-description {
   font-size: 0.9rem;
-  color: var(--text-muted);
-  margin: 0;
+  color: oklch(0.85 0.19 201.81 / 0.80);
+  margin-inline-start: 1em;
+  margin-block: -1em 1em;
   line-height: 1.7;
 }
 
@@ -2187,18 +2188,18 @@ kbd {
     line-height: 1.2;
   }
 
+    .currentYear {
+      padding-block: 0.2em 0.1em;
+      margin-block: 0;
+      margin-inline-start: 0;
+      color: oklch(0.86 0.13 206.28);
+      border-bottom: 0.001em solid oklch(0.86 0.13 206.28);
+    }
+
   .post-card {
     max-width: 968px;
     padding-inline: 1em;
     margin-inline: auto;
-
-    .currentYear {
-      padding-block: 0.2em 0.1em;
-      margin-block: 0 1em;
-      margin-inline-start: -1em;
-      color: oklch(0.86 0.13 206.28);
-      border-bottom: 0.001em solid oklch(0.86 0.13 206.28);
-    }
   }
 }
 

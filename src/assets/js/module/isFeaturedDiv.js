@@ -19,6 +19,11 @@ function setFeaturedGenre(targetId) {
 
 export function set_isFeatured() {
 
+  if (location.pathname.includes("youtube-ongoing")) {
+      setFeaturedGenre('youtube');
+      return;
+    }
+
   const activeGenres = Array.from(
     document.querySelectorAll('.layout > div[id]:has(p)'),
     div => ({

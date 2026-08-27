@@ -175,7 +175,7 @@ const links = [];
     leftDay: leftD, expired,
     cast: castNames,
     links,
-    thumbSrc: `https://i.ytimg.com/vi_webp/${videoId}/maxresdefault.webp`,
+    thumbSrc: `https://i.ytimg.com/vi_webp/${videoId}/hqdefault.webp`,
       fallbackSrc: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
       thumbLinkUrl,
       catId: "youtube",
