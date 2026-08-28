@@ -1288,7 +1288,7 @@ p:is(.tver, .yt) {
 .cast {
   margin-block: 1rem;
   font-size: 0.925em;
-  line-height: 1.65;
+  line-height: 1.5;
 
   &:first-of-type::after {
     content: "らが出演しています";
