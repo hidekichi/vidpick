@@ -1267,6 +1267,12 @@ p:is(.tver, .yt) {
     color: #fff;
   }
 
+  .starBold {
+    color: oklch(0.81 0.19 94.16);
+    font-weight: bold;
+    padding-inline-end: 0.25em;
+  }
+
   .splitTriangle {
     color: oklch(0.81 0.19 94.16);
     padding-inline-start: 0.25em;

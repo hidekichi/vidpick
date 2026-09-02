@@ -265,7 +265,8 @@ const allVideoData = [];
 
 // 表示用の装飾関数を新設（buildCastと対になる関数）
 const decorateSub = (sub) => sub
-  .replace(/(▽|▼|★|◆)/g, `<span class="splitTriangle">$1</span>`)
+  .replace(/(★(.*?)★)/g, `<span class="starBold">$1</span>`)
+  .replace(/(▽|▼|◆)/g, `<span class="splitTriangle">$1</span>`)
   .replace(/(【(.*?)】|『(.*?)』|\[(.*?)\])/g, `<span class="feat">$1</span>`)
   .replace(/(「(.*?)」)/g, `<strong>$1</strong>`);
 
