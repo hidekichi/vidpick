@@ -268,7 +268,7 @@ const buildHead = (d) => d.type === "youtube"
   : `<span class="title">${d.title}</span>
      <span class="broadcastYear">${d.year}<span class="season">${d.season}</span></span>
      <span class="episode">${d.episode}</span>
-     ${d.duration ? `<span class="duration">${d.duration}</span>` : ""}`;
+     ${d.duration ? `<span class="duration" title="複数動画の場合は、最初の動画の時間">${d.duration}</span>` : ""}`;
 
 const allVideoData = [];
 

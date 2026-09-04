@@ -1224,6 +1224,7 @@ p:is(.tver, .yt) {
     display: block;
     font-size: 0.65em;
     padding-block-start: 0.3em;
+    cursor: pointer;
 
     &:not(:empty)::before {
       content: "動画時間：";
