@@ -56,6 +56,9 @@ const GENRE = {
 // named capture groups でregexを自己文書化
 const HEAD_RE = /(?<genre>ドラマSP|ドラマ|バラエティ|アニメ|ドキュメンタリー|その他)\s+(?<title>.+?)\s*\((?<yearSeason>.+?)\)\s*(?<ep>\d+|.*?)?(話|回)?の配信/;
 
+// durationは別途取得
+const DURATION_RE = /(\d+)分/;
+
 // ── TVer パーサー ─────────────────────────────────────
 const parseTver = (p) => {
   const [head, endDay, ...rest] = p.textContent
@@ -73,9 +76,13 @@ const parseTver = (p) => {
 
   let subLine = rest.find(s => !s.includes("https://")) ?? "";
   const { groups: { genre, title, yearSeason, ep } } = head.match(HEAD_RE);
+  const durationMatch = head.match(DURATION_RE);
+  const duration = durationMatch ? `${durationMatch[1]}分` : "";
   const rule = GENRE[genre];
   const [year, rawSeason = ""] = yearSeason.split("・");
   const { endOfDay, leftD, expired } = calcEndInfo(endDay);
+
+console.log(duration)
 
   const episode = ep
     ? (genre === "ドラマSP" && !/^\d+$/.test(ep) ? ep : `${ep}${rule.unit}`)
@@ -93,6 +100,7 @@ const parseTver = (p) => {
     genre, title, year,
     season: rawSeason.replace(/(\d+)期/, "シーズン$1"),
     episode, sub: subLine.replace(/^※\s*/, ""),
+    duration: duration ?? "",
     endOfDay, leftDay: leftD, expired,
     cast: artist.split(/\s+(他|らが出演しています)/)[0],
     links,
@@ -259,7 +267,8 @@ const buildHead = (d) => d.type === "youtube"
      <span class="duration">${d.episode}</span>`
   : `<span class="title">${d.title}</span>
      <span class="broadcastYear">${d.year}<span class="season">${d.season}</span></span>
-     <span class="episode">${d.episode}</span>`;
+     <span class="episode">${d.episode}</span>
+     ${d.duration ? `<span class="duration">${d.duration}</span>` : ""}`;
 
 const allVideoData = [];
 
