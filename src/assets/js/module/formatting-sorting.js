@@ -57,7 +57,7 @@ const GENRE = {
 const HEAD_RE = /(?<genre>ドラマSP|ドラマ|バラエティ|アニメ|ドキュメンタリー|その他)\s+(?<title>.+?)\s*\((?<yearSeason>.+?)\)\s*(?<ep>\d+|.*?)?(話|回)?の配信/;
 
 // durationは別途取得
-const DURATION_RE = /(\d+)分/;
+const DURATION_RE = /(\d+)分(?!間)/;
 
 // ── TVer パーサー ─────────────────────────────────────
 const parseTver = (p) => {
