@@ -34,6 +34,12 @@ const SITE_CONFIGS = [
     iconId: '#icon-amazon',
     className: 'amazon',
     title: 'Amazonへのリンクです',
+  },
+  {
+    test: (href) => href.includes('link.amazon'),
+    iconId: '#icon-amazon',
+    className: 'amazon',
+    title: 'Amazonへのリンクです',
     },
     {
         test: (href) => href.includes('github'),
