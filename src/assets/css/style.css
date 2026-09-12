@@ -39,6 +39,7 @@
   --max-w: 100vw;
   --max-w-wide: 900px;
   --header-h: 60px;
+  --halo: oklch(0.57 0.26 257.35 / 0.8);
   interpolate-size: allow-keywords;
 }
 
@@ -1296,10 +1297,16 @@ p:is(.tver, .yt) {
 
   .feat {
     color: oklch(0.95 0.1 138.28);
+    margin-inline: 0.1em;
   }
 
   strong {
     color: #fff;
+    text-shadow:
+    -1px -1px 3px var(--halo),
+    -1px 1px 3px var(--halo),
+    1px -1px 3px var(--halo),
+    1px 1px 3px var(--halo);
 
     &:not(:has(.spritTriangle)) {
       color: inherit;
