@@ -11,26 +11,48 @@ function getRectAtMouseX(el, mouseX) {
   return rects.find(r => mouseX >= r.left && mouseX <= r.right) ?? rects[0];
 }
 
-function positionTooltip(tooltipEl, el, mouseX) {
+function positionTooltip(tooltipEl, el, mouseX, mouseY) {
   const rect = getRectAtMouseX(el, mouseX);
   const tw   = tooltipEl.offsetWidth;
   const th   = tooltipEl.offsetHeight;
   const vw   = window.innerWidth;
+  const vh   = window.innerHeight;
 
   let x = mouseX - tw / 2;
   x = Math.max(4, Math.min(vw - tw - 4, x));
 
-  let y = rect.top - th - MARGIN;
-  if (y < 4) y = rect.bottom + MARGIN;
+  const img = el.querySelector('img');
+
+  let y;
+
+  if (img) {
+    // 画像リンク：カーソル付近
+    y = mouseY - th - MARGIN;
+
+    // 上には置けない場合はカーソルの下
+    if (y < 4) {
+      y = mouseY + MARGIN;
+    }
+  } else {
+    // 通常のテキストリンク：従来通り
+    y = rect.top - th - MARGIN;
+
+    if (y < 4) {
+      y = rect.bottom + MARGIN;
+    }
+  }
+
+  // 下端からはみ出す場合
+  y = Math.max(4, Math.min(vh - th - 4, y));
 
   tooltipEl.style.left = x + 'px';
   tooltipEl.style.top  = y + 'px';
 }
 
-function showTooltip(tooltipEl, el, text, mouseX) {
+function showTooltip(tooltipEl, el, text, mouseX, mouseY) {
   tooltipEl.textContent = trimText(text, MAX_CHARS);
   tooltipEl.classList.add('visible');
-  positionTooltip(tooltipEl, el, mouseX);
+  positionTooltip(tooltipEl, el, mouseX, mouseY);
 }
 
 function hideTooltip(tooltipEl) {
@@ -51,11 +73,11 @@ export function initTooltip(selector = '[title]', tooltipId = 'custom-tooltip') 
       el.addEventListener('mouseenter', (e) => {
         el.dataset.tooltip = el.getAttribute('title') ?? '';
         el.removeAttribute('title');
-        showTooltip(tooltipEl, el, el.dataset.tooltip, e.clientX);
+        showTooltip(tooltipEl, el, el.dataset.tooltip, e.clientX, e.clientY);
       });
 
       el.addEventListener('mousemove', (e) => {
-        positionTooltip(tooltipEl, el, e.clientX);
+        positionTooltip(tooltipEl, el, e.clientX, e.clientY);
       });
 
       el.addEventListener('mouseleave', () => {
