@@ -197,13 +197,13 @@ const renderLinks = (links, mainUrl = "") => {
     return links.map(({ label, url }) =>
       label ?
         `<a class="part-link" href="${url}" target="_blank" title="${label}へのリンク">${label || url}</a>`
-        :`<a class="part-link" href="${url}" target="_blank" title="リンク">${label || url}</a>`
+        :`<a class="part-link" href="${url}" target="_blank" title="動画ページへのリンク">${label || url}</a>`
 
     ).join("");
   }
   // ラベル付きリンクがない場合はmainUrlを表示
   return mainUrl
-    ? `<a href="${mainUrl}" target="_blank" title="動画ページのリンク">${mainUrl}</a>`
+    ? `<a href="${mainUrl}" target="_blank" title="動画ページへのリンク">${mainUrl}</a>`
     : "";
 };
 
@@ -346,7 +346,7 @@ const loadThumbnail = (cardEl, thumbSrc, linkUrl, fallbackSrc = null, timeoutMs 
         thumbEl.appendChild(dv);
       } else {
       const a = Object.assign(document.createElement("a"),
-        { href: linkUrl, target: "_blank", title: "リンク" });
+        { href: linkUrl, target: "_blank", title: "動画ページへのリンク" });
       a.appendChild(img);
         thumbEl.appendChild(a);
       }
