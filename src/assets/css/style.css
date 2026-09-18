@@ -1292,13 +1292,13 @@ p:is(.tver, .yt) {
   }
 
   .splitTriangle {
-    color: oklch(0.81 0.19 94.16);
-    padding-inline-start: 0.25em;
+    color: oklch(0.69 0.31 342.57);
+    padding-inline: 0.2em;
   }
 
   .feat {
-    color: oklch(0.95 0.1 138.28);
-    margin-inline: 0.1em;
+    color: oklch(0.92 0.18 138.77);
+    padding-inline: 0.1em;
   }
 
   strong {
@@ -1308,6 +1308,7 @@ p:is(.tver, .yt) {
     -1px 1px 3px var(--halo),
     1px -1px 3px var(--halo),
     1px 1px 3px var(--halo);
+    padding-inline: 0.1em;
 
     &:not(:has(.spritTriangle)) {
       color: inherit;
