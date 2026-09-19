@@ -319,7 +319,7 @@ const render = (d, p) => {
 export const getVideoData = () => allVideoData;
 
 // ── サムネイル非同期ロード ─────────────────────────────
-const loadThumbnail = (cardEl, thumbSrc, linkUrl, fallbackSrc = null, timeoutMs = 8000) => {
+const loadThumbnail = (cardEl, thumbSrc, linkUrl, fallbackSrc = null, timeoutMs = 10000) => {
   const thumbEl = cardEl.querySelector(".thumbnail");
 
   const tryLoad = (src, onFail) => {
@@ -362,6 +362,7 @@ const loadThumbnail = (cardEl, thumbSrc, linkUrl, fallbackSrc = null, timeoutMs 
       : (thumbEl.textContent = "（画像なし）")
   );
 };
+
 
 export function formattingSorting() {
   const cards = [];
