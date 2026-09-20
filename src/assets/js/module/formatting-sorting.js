@@ -82,7 +82,7 @@ const parseTver = (p) => {
   const [year, rawSeason = ""] = yearSeason.split("・");
   const { endOfDay, leftD, expired } = calcEndInfo(endDay);
 
-console.log(duration)
+//console.log(duration)
 
   const episode = ep
     ? (genre === "ドラマSP" && !/^\d+$/.test(ep) ? ep : `${ep}${rule.unit}`)
@@ -382,6 +382,132 @@ export function formattingSorting() {
     }
   };
 
+  const splitCastSafe = (str) => {
+    const result = [];
+    let depth = 0;
+    let buf = "";
+    for (const ch of str) {
+      if (ch === "(" || ch === "（") depth++;
+      if (ch === ")" || ch === "）") depth--;
+      if (ch === "、" && depth === 0) {
+        result.push(buf);
+        buf = "";
+      } else {
+        buf += ch;
+      }
+    }
+    if (buf) result.push(buf);
+    return result.map(s => s.trim()).filter(Boolean);
+  };
+
+  // list内でcatIdが一致する要素だけを対象にクラスタリングし、
+  // 他のcatIdの要素の位置(スロット)は一切動かさない
+  const clusterCastWithinList = (list, targetCatId) => {
+    const targetIdxs = [];
+    list.forEach((item, i) => { if (item.d.catId === targetCatId) targetIdxs.push(i); });
+    if (targetIdxs.length < 2) return list; // 対象が1件以下なら何もしない
+
+    const targets = targetIdxs.map(i => list[i]);
+    const castArrays = targets.map(t =>
+      splitCastSafe(Array.isArray(t.d.cast) ? t.d.cast.join("、") : t.d.cast)
+    );
+
+    // Union-Find
+    const parent = targets.map((_, i) => i);
+    const find = (i) => (parent[i] === i ? i : (parent[i] = find(parent[i])));
+    const union = (a, b) => {
+      const ra = find(a), rb = find(b);
+      if (ra !== rb) parent[ra] = rb;
+    };
+
+/*
+    for (let i = 0; i < targets.length; i++) {
+      for (let j = i + 1; j < targets.length; j++) {
+        const sameLead = castArrays[i][0] && castArrays[i][0] === castArrays[j][0];
+        const overlap  = castArrays[i].some(name => castArrays[j].includes(name));
+        if (sameLead || overlap) union(i, j);
+      }
+    }
+    */
+
+for (let i = 0; i < targets.length; i++) {
+  for (let j = i + 1; j < targets.length; j++) {
+    const sameLead = castArrays[i][0] && castArrays[i][0] === castArrays[j][0];
+    const overlapNames = castArrays[i].filter(name => castArrays[j].includes(name));
+
+    // 主演一致は無条件、脇役重複は2人以上必要
+    const strongEnough = sameLead || overlapNames.length >=2;
+
+    if (strongEnough) {
+      union(i, j);
+    }
+  }
+}
+
+    /*
+    for (let i = 0; i < targets.length; i++) {
+      for (let j = i + 1; j < targets.length; j++) {
+        const sameLead = castArrays[i][0] && castArrays[i][0] === castArrays[j][0];
+        const overlapNames = castArrays[i].filter(name => castArrays[j].includes(name));
+        if (sameLead || overlapNames.length) {
+          console.log(
+            `[union] ${targets[i].d.title} × ${targets[j].d.title}`,
+            sameLead ? "(主演一致)" : `(重複: ${overlapNames.join("、")})`
+          );
+          union(i, j);
+        }
+      }
+    }
+    */
+
+    // 元の順番を保ったまま、同じグループのものだけ隣接させる
+    const visited = new Set();
+    const reorderedTargets = [];
+    targets.forEach((_, i) => {
+      if (visited.has(i)) return;
+      const gid = find(i);
+      targets.forEach((t2, j) => {
+        if (!visited.has(j) && find(j) === gid) {
+          reorderedTargets.push(t2);
+          visited.add(j);
+        }
+      });
+    });
+
+    // 元のスロット位置に、並べ替え後の中身を戻す
+    const result = [...list];
+    targetIdxs.forEach((slot, k) => { result[slot] = reorderedTargets[k]; });
+    return result;
+  };
+
+  const sortByExpired = (selector, parseFn) => {
+    const els = [...document.querySelectorAll(selector)];
+    const parsed = els.flatMap(p => {
+      try { return [{ p, d: parseFn(p) }]; }
+      catch (e) {
+        console.error("パースエラー:", e.message, p.textContent.slice(0, 60));
+        return [];
+      }
+    });
+
+    const active  = parsed.filter(x => !x.d.expired);
+    const expired = parsed.filter(x =>  x.d.expired);
+
+    // ドラマカテゴリのみ、それぞれの区分内でクラスタリング
+    const clusteredActive  = clusterCastWithinList(active,  "drama");
+    const clusteredExpired = clusterCastWithinList(expired, "drama");
+
+    [...clusteredActive, ...clusteredExpired].forEach(({ p, d }) => {
+      render(d, p);
+      cards.push({
+        p,
+        thumbSrc: d.thumbSrc,
+        fallbackSrc: d.fallbackSrc ?? null,
+        linkUrl: d.thumbLinkUrl ?? d.links[0]?.url ?? "",
+      });
+    });
+  };
+/*
   // 要素を配列に取得してからexpired順にソート
   const sortByExpired = (selector, parseFn) => {
     const els = [...document.querySelectorAll(selector)];
@@ -407,7 +533,7 @@ export function formattingSorting() {
       });
     });
   };
-
+*/
   sortByExpired(".tver", parseTver);
   sortByExpired(".yt", parseYT);
 
