@@ -647,10 +647,10 @@ section {
       li {
         list-style-position: outside;
         padding-block: 0em 1em;
-        margin-block-end: 0;
+        margin-block-end: 0em;
 
         &:last-of-type {
-          padding-block: 0;
+          padding-block: 0.5em;
         }
       }
     }
@@ -671,6 +671,11 @@ section {
       text-decoration-thickness: 0.02em;
       text-decoration-color: oklch(0.64 0.16 234.58);
       color: oklch(0.9 0.08 214.74);
+    }
+
+    s {
+      color: #fff;
+      opacity: 0.25;
     }
   }
 }

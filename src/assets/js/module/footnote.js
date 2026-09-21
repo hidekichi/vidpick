@@ -1,5 +1,6 @@
 // Convert paragraph text
 
+// 修正：引数に root を受け取るのはそのまま
 async function replaceInTextNodes(root, patterns) {
 	const walker = document.createTreeWalker(
 		root,
@@ -29,9 +30,10 @@ async function replaceInTextNodes(root, patterns) {
 	});
 }
 
-async function convertParagraphText() {
+// 修正：引数で判定済みの target 要素を受け取るように変更
+async function convertParagraphText(target) {
 	const patterns = [
-		[/\[\@(.*?)\](?:\((.*?)\))?/g, (_, p1, p2) => `<div class='ytp${p2 ? ' ' + p2 : ''}'>` + p1 + `</div>`],
+		[/\[\@(.*?)\](?:(.*?))?/g, (_, p1, p2) => `<div class='ytp${p2 ? ' ' + p2 : ''}'>` + p1 + `</div>`],
 		[/\[hs\((.+?)\)\]/g, `<div style='display:block; height:$1;'></div>`],
 		[
 			/\[(a)\((.+?)\)\](?:(.+)\[\/a\])?/g,
@@ -48,17 +50,24 @@ async function convertParagraphText() {
 		],
 	];
 
-	await replaceInTextNodes(document.querySelector(".reading-main"), patterns);
+    // 固定ではなく、受け取った target に対して処理を行う
+    await replaceInTextNodes(target, patterns);
 }
 
 
 export async function footnote() {
+    // 1. 今回の対象となる要素をカンマ区切りで取得（どちらのページでも対応可能）
+    const postContent = document.querySelector('.reading-main, .about-container > .body-copy');
+
+    // 2. どちらの要素も存在しないページなら、ここで安全に処理を終了（ガード節）
+    if (!postContent) return;
 
     if (document.querySelector('.footnotes-list')) return;
 
-	await convertParagraphText();
+    // 3. 存在するターゲットを引数として渡して実行
+    await convertParagraphText(postContent);
 
-	const postContent = document.querySelector('.reading-main');
+	// 修正：上で一回取得しているので、再取得せずに postContent をそのまま使います
 	const sups = postContent.querySelectorAll('.footnote');
 
 	if (sups.length > 0) {
