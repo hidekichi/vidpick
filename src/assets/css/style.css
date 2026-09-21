@@ -1366,7 +1366,7 @@ p:is(.tver, .yt) {
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 1rem;
-  padding: 1.25rem 1.5rem;
+  padding: 1.25em 1em;
   width: min(480px, 92vw);
   margin: auto; /* 画面中央 */
 
@@ -1407,10 +1407,11 @@ p:is(.tver, .yt) {
 
 .cast-actor {
   opacity: 0.95;
+  font-size: 0.925em;
 }
 .cast-role {
   opacity: 0.6;
-  font-size: 0.9em;
+  font-size: 0.875em;
 }
 
 .link {
