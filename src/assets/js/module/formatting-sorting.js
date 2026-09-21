@@ -400,6 +400,7 @@ export function formattingSorting() {
     return result.map(s => s.trim()).filter(Boolean);
   };
 
+  /*
   // list内でcatIdが一致する要素だけを対象にクラスタリングし、
   // 他のcatIdの要素の位置(スロット)は一切動かさない
   const clusterCastWithinList = (list, targetCatId) => {
@@ -420,15 +421,6 @@ export function formattingSorting() {
       if (ra !== rb) parent[ra] = rb;
     };
 
-/*
-    for (let i = 0; i < targets.length; i++) {
-      for (let j = i + 1; j < targets.length; j++) {
-        const sameLead = castArrays[i][0] && castArrays[i][0] === castArrays[j][0];
-        const overlap  = castArrays[i].some(name => castArrays[j].includes(name));
-        if (sameLead || overlap) union(i, j);
-      }
-    }
-    */
 
 for (let i = 0; i < targets.length; i++) {
   for (let j = i + 1; j < targets.length; j++) {
@@ -443,23 +435,6 @@ for (let i = 0; i < targets.length; i++) {
     }
   }
 }
-
-    /*
-    for (let i = 0; i < targets.length; i++) {
-      for (let j = i + 1; j < targets.length; j++) {
-        const sameLead = castArrays[i][0] && castArrays[i][0] === castArrays[j][0];
-        const overlapNames = castArrays[i].filter(name => castArrays[j].includes(name));
-        if (sameLead || overlapNames.length) {
-          console.log(
-            `[union] ${targets[i].d.title} × ${targets[j].d.title}`,
-            sameLead ? "(主演一致)" : `(重複: ${overlapNames.join("、")})`
-          );
-          union(i, j);
-        }
-      }
-    }
-    */
-
     // 元の順番を保ったまま、同じグループのものだけ隣接させる
     const visited = new Set();
     const reorderedTargets = [];
@@ -479,6 +454,90 @@ for (let i = 0; i < targets.length; i++) {
     targetIdxs.forEach((slot, k) => { result[slot] = reorderedTargets[k]; });
     return result;
   };
+  */
+
+  const LEAD_ZONE = 3; // 主演格とみなす人数
+
+  // 2作品間の関連スコアを計算
+  const calcRelationScore = (castA, castB) => {
+    let score = 0;
+    const leadA = castA.slice(0, LEAD_ZONE);
+    const leadB = castB.slice(0, LEAD_ZONE);
+
+    castA.forEach((name, i) => {
+      const j = castB.indexOf(name);
+      if (j === -1) return;
+
+      const aIsLead = i === 0;
+      const bIsLead = j === 0;
+      const aInZone = i < LEAD_ZONE;
+      const bInZone = j < LEAD_ZONE;
+
+      if (aIsLead && bIsLead)      score += 100; // 主演同士
+      else if ((aIsLead && bInZone) || (bIsLead && aInZone)) score += 40; // 主演↔メイン圏内
+      else if (aInZone && bInZone) score += 20; // メイン圏内同士
+      else                          score += 5;  // それ以外
+    });
+
+    return score;
+  };
+
+  // クラスタリング本体をスコアベースに変更
+  const clusterCastWithinList = (list, targetCatId, threshold = 20) => {
+    const targetIdxs = [];
+    list.forEach((item, i) => { if (item.d.catId === targetCatId) targetIdxs.push(i); });
+    if (targetIdxs.length < 2) return list;
+
+    const targets = targetIdxs.map(i => list[i]);
+    const castArrays = targets.map(t =>
+      splitCastSafe(Array.isArray(t.d.cast) ? t.d.cast.join("、") : t.d.cast)
+    );
+
+    const n = targets.length;
+
+    // スコア行列を作成
+    const scoreMatrix = Array.from({ length: n }, () => new Array(n).fill(0));
+    for (let i = 0; i < n; i++) {
+      for (let j = i + 1; j < n; j++) {
+        const s = calcRelationScore(castArrays[i], castArrays[j]);
+        scoreMatrix[i][j] = s;
+        scoreMatrix[j][i] = s;
+      }
+    }
+
+    // 貪欲法：元の順番を起点に、スコアの高いものを隣接させながら並べ替え
+    const used = new Array(n).fill(false);
+    const order = [];
+
+    for (let i = 0; i < n; i++) {
+      if (used[i]) continue;
+      used[i] = true;
+      order.push(i);
+
+      // iと最もスコアの高い未使用要素を連鎖的に引き寄せる
+      let current = i;
+      while (true) {
+        let bestJ = -1, bestScore = threshold; // しきい値未満は繋げない
+        for (let j = 0; j < n; j++) {
+          if (used[j]) continue;
+          if (scoreMatrix[current][j] > bestScore) {
+            bestScore = scoreMatrix[current][j];
+            bestJ = j;
+          }
+        }
+        if (bestJ === -1) break;
+        used[bestJ] = true;
+        order.push(bestJ);
+        current = bestJ;
+      }
+    }
+
+    const reorderedTargets = order.map(i => targets[i]);
+    const result = [...list];
+    targetIdxs.forEach((slot, k) => { result[slot] = reorderedTargets[k]; });
+    return result;
+  };
+
 
   const sortByExpired = (selector, parseFn) => {
     const els = [...document.querySelectorAll(selector)];
