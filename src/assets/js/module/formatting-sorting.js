@@ -319,7 +319,7 @@ const render = (d, p) => {
 export const getVideoData = () => allVideoData;
 
 // ── サムネイル非同期ロード ─────────────────────────────
-const loadThumbnail = (cardEl, thumbSrc, linkUrl, fallbackSrc = null, timeoutMs = 10000) => {
+const loadThumbnail = (cardEl, thumbSrc, linkUrl, fallbackSrc = null, timeoutMs = 8000) => {
   const thumbEl = cardEl.querySelector(".thumbnail");
 
   const tryLoad = (src, onFail) => {

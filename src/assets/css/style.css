@@ -1292,12 +1292,12 @@ p:is(.tver, .yt) {
   }
 
   .splitTriangle {
-    color: oklch(0.69 0.31 342.57);
+    color: oklch(0.56 0.11 211.83);
     padding-inline: 0.2em;
   }
 
   .feat {
-    color: oklch(0.92 0.18 138.77);
+    color: oklch(0.88 0.21 170.16);
     padding-inline: 0.1em;
   }
 
