@@ -644,16 +644,23 @@ section {
         margin-block-end: 0;
       }
 
-      li {
-        list-style-position: outside;
-        padding-block: 0em 1em;
-        margin-block-end: 0em;
+    }
 
-        &:last-of-type {
-          padding-block: 0.5em;
-        }
+    li {
+      list-style-position: outside;
+      padding-block: 0em 1em !important;
+      margin-block-end: 0em;
+      font-size: 1em;
+
+      li {
+        font-size: 0.95em;
+      }
+
+      &:last-of-type {
+        padding-block: 0.5em;
       }
     }
+
 
     cr {
       display: block;
@@ -742,7 +749,7 @@ h6 {
     padding-inline-start: 0.8em;
 
     li {
-      font-size: 0.9em;
+      font-size: 0.925em;
     }
   }
 }
