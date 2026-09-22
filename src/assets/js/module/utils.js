@@ -55,7 +55,7 @@ export function isExternalLink(url) {
 }
 
 export function externalLink() {
-    const links = document.querySelectorAll('.reading-main a');
+    const links = document.querySelectorAll('.reading-main a, .about-container > .body-copy a');
     if (!links.length) return;
 
     links.forEach((link) => {

@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (document.querySelector(".reading-main, .about-container")) {
     await footnote();
     initTooltip();
+    externalLink();
   }
 
   if (document.querySelector(".clear-btn")) {

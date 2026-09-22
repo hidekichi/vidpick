@@ -612,7 +612,7 @@ section {
     font-family: var(--font-sans);
     letter-spacing: 0.02em;
     line-break: strict;
-    word-break: auto-phrase;
+    word-break: break-all;
     overflow-wrap: break-word;
 
     h2,
@@ -636,8 +636,22 @@ section {
       }
     }
 
+    h4 {
+      display: inline-flex;
+      align-items: center;
+      padding-block: 1em;
+
+      &::before {
+        content: "";
+        width: 0.5em;
+        height: 1lh;
+        margin-inline-end: 0.8em;
+        background-color: oklch(0.71 0.16 69.21);
+      }
+    }
+
     :where(ul, ol) {
-      padding-block: 0 1.8em;
+      padding-block: 1em 0;
 
       :where(ul, ol) {
         padding-block: 0.8em 0;
@@ -658,6 +672,10 @@ section {
 
       &:last-of-type {
         padding-block: 0.5em;
+      }
+
+      &::marker {
+        color: oklch(0.67 0.18 264.08);
       }
     }
 
@@ -683,6 +701,35 @@ section {
     s {
       color: #fff;
       opacity: 0.25;
+    }
+
+    code {
+      display: inline-flex;
+      align-items: center;
+      line-height: 1.6;
+      font-size: 0.9em;
+      margin-inline: 0.2em;
+      border-radius: 4px;
+      color: oklch(0.81 0.16 182.79);
+      background-color: oklch(0.23 0.06 118.87);
+      border-color: oklch(0.54 0.13 188.48);
+      padding-block: 0.1em;
+    }
+
+    .external-link-wrapper {
+      display: inline-flex;
+
+      a {
+        display: inherit;
+        align-items: center;
+
+        svg {
+          display: inherit;
+          width: 1em;
+          height: 1em;
+          color: var(--text);
+        }
+      }
     }
   }
 }
