@@ -318,9 +318,50 @@ const render = (d, p) => {
 };
 export const getVideoData = () => allVideoData;
 
-// ── サムネイル非同期ロード ─────────────────────────────
+// ── サムネイル キャッシュ（成功したものだけ記憶）─────────
+const THUMB_CACHE_KEY = "thumbCache_v1";
+
+const loadThumbCache = () => {
+  try { return JSON.parse(sessionStorage.getItem(THUMB_CACHE_KEY) || "{}"); }
+  catch { return {}; }
+};
+const saveThumbCache = (cache) => {
+  try { sessionStorage.setItem(THUMB_CACHE_KEY, JSON.stringify(cache)); }
+  catch { /* 容量超過等は無視 */ }
+};
+let thumbCache = loadThumbCache();
+
+// ── サムネイル非同期ロード（改善版）───────────────────
 const loadThumbnail = (cardEl, thumbSrc, linkUrl, fallbackSrc = null, timeoutMs = 8000) => {
   const thumbEl = cardEl.querySelector(".thumbnail");
+  if (!thumbEl) return;
+
+  // この呼び出し固有のトークン。DOM入れ替え・二重リロード対策
+  const token = Symbol();
+  thumbEl._loadToken = token;
+  const isStale = () => !document.contains(thumbEl) || thumbEl._loadToken !== token;
+
+  const renderSuccess = (img, src) => {
+    if (isStale()) return;
+    const a = Object.assign(document.createElement("a"),
+      { href: linkUrl, target: "_blank", title: "リンク" });
+    a.appendChild(img);
+    thumbEl.innerHTML = "";
+    thumbEl.appendChild(a);
+    thumbCache[src] = true; // 成功のみ記憶（失敗は記憶しない）
+    saveThumbCache(thumbCache);
+  };
+
+  const renderDummy = () => {
+    if (isStale()) return;
+    thumbEl.innerHTML = "";
+    thumbEl.appendChild(Object.assign(document.createElement("div"), { className: "no-thumb" }));
+  };
+
+  const renderFail = (msg) => {
+    if (isStale()) return;
+    thumbEl.textContent = msg;
+  };
 
   const tryLoad = (src, onFail) => {
     const img = new Image();
@@ -328,27 +369,21 @@ const loadThumbnail = (cardEl, thumbSrc, linkUrl, fallbackSrc = null, timeoutMs 
     let settled = false;
 
     const settle = (fn) => {
-      if (settled) return;
+      if (settled || isStale()) return;
       settled = true;
       clearTimeout(timer);
       fn();
     };
 
-    const timer = setTimeout(() =>
-      settle(() => { img.src = ""; thumbEl.textContent = "（タイムアウト）"; }),
-      timeoutMs
-    );
+    // 過去に成功済みのURLは少し長めに待つ（一時的な遅延を許容）
+    const patient = thumbCache[src] ? Math.max(timeoutMs, 12000) : timeoutMs;
+    const timer = setTimeout(() => settle(() => { img.src = ""; onFail(); }), patient);
 
     img.onload = () => settle(() => {
       if (img.naturalWidth === 120 && img.naturalHeight === 90) {
-        const dv = document.createElement("div");
-        dv.classList.add("no-thumb");
-        thumbEl.appendChild(dv);
+        renderDummy(); // ダミー画像はフォールバックせずそのまま確定
       } else {
-      const a = Object.assign(document.createElement("a"),
-        { href: linkUrl, target: "_blank", title: "動画ページへのリンク" });
-      a.appendChild(img);
-        thumbEl.appendChild(a);
+        renderSuccess(img, src);
       }
     });
 
@@ -358,8 +393,8 @@ const loadThumbnail = (cardEl, thumbSrc, linkUrl, fallbackSrc = null, timeoutMs 
 
   tryLoad(thumbSrc, () =>
     fallbackSrc
-      ? tryLoad(fallbackSrc, () => { thumbEl.textContent = "（画像なし）"; })
-      : (thumbEl.textContent = "（画像なし）")
+      ? tryLoad(fallbackSrc, () => renderFail("（画像なし）"))
+      : renderFail("（画像なし）")
   );
 };
 
