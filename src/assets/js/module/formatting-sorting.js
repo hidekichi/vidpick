@@ -491,7 +491,7 @@ for (let i = 0; i < targets.length; i++) {
   };
   */
 
-  const LEAD_ZONE = 3; // 主演格とみなす人数
+  const LEAD_ZONE = 2; // 主演格とみなす人数
 
   // 2作品間の関連スコアを計算
   const calcRelationScore = (castA, castB) => {
@@ -508,10 +508,11 @@ for (let i = 0; i < targets.length; i++) {
       const aInZone = i < LEAD_ZONE;
       const bInZone = j < LEAD_ZONE;
 
-      if (aIsLead && bIsLead)      score += 100; // 主演同士
-      else if ((aIsLead && bInZone) || (bIsLead && aInZone)) score += 40; // 主演↔メイン圏内
-      else if (aInZone && bInZone) score += 20; // メイン圏内同士
-      else                          score += 5;  // それ以外
+      if (aIsLead && bIsLead)                                score += 100; // 主演同士
+      else if ((aIsLead && bInZone) || (bIsLead && aInZone)) score += 50;  // 主演↔メイン圏内
+      else if (aInZone && bInZone)                           score += 30;  // メイン圏内同士
+      else if (aIsLead || bIsLead)                           score += 20;  // 主演↔圏外
+      else                                                   score += 5;   // それ以外
     });
 
     return score;
@@ -541,9 +542,33 @@ for (let i = 0; i < targets.length; i++) {
     }
 
     // 貪欲法：元の順番を起点に、スコアの高いものを隣接させながら並べ替え
-    const used = new Array(n).fill(false);
-    const order = [];
+    //const used = new Array(n).fill(false);
+    //const order = [];
 
+    const columns = [];
+
+    for (let i = 0; i < n; i++) {           // 上(新しい方)から順に引く
+      let bestCol = -1, bestScore = threshold;
+
+      columns.forEach((col, c) => {
+        const s = scoreMatrix[col.head][i];  // 列の先頭との関連度
+        if (s > bestScore) { bestScore = s; bestCol = c; }
+      });
+
+      if (bestCol === -1) {
+        columns.push({ head: i, members: [] });            // 新しい列
+      } else {
+        columns[bestCol].members.push({ idx: i, score: bestScore });
+      }
+    }
+
+    // 各列の中をスコアの高い順に(同点は引いた順のまま)、列は左から順に並べる
+    const order = columns.flatMap(col => [
+      col.head,
+      ...col.members.sort((a, b) => b.score - a.score).map(m => m.idx),
+    ]);
+
+    /*
     for (let i = 0; i < n; i++) {
       if (used[i]) continue;
       used[i] = true;
@@ -566,6 +591,7 @@ for (let i = 0; i < targets.length; i++) {
         current = bestJ;
       }
     }
+    */
 
     const reorderedTargets = order.map(i => targets[i]);
     const result = [...list];
