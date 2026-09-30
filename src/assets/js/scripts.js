@@ -41,16 +41,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ユーザーが「戻るボタンを押す」という目的を確実に達成できます。
   });
 
-  if (window.location.pathname.includes('/articles/')) {
+  const targetPage = ['/articles/', '/about/'];
+
+  if (targetPage.some(path => window.location.pathname.includes(path))) {
     insertLoadlazy();
     externalLink();
   }
 
-  if (document.querySelector(".reading-main, .about-container")) {
+
+  if (window.location.pathname.includes('/about/')) {
     await footnote();
-    initTooltip();
-    externalLink();
   }
+
 
   if (document.querySelector(".clear-btn")) {
     initTooltip();
