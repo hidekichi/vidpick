@@ -491,13 +491,11 @@ for (let i = 0; i < targets.length; i++) {
   };
   */
 
-  const LEAD_ZONE = 2; // 主演格とみなす人数
+  const LEAD_ZONE = 3; // 主演格とみなす人数
 
   // 2作品間の関連スコアを計算
   const calcRelationScore = (castA, castB) => {
     let score = 0;
-    const leadA = castA.slice(0, LEAD_ZONE);
-    const leadB = castB.slice(0, LEAD_ZONE);
 
     castA.forEach((name, i) => {
       const j = castB.indexOf(name);
