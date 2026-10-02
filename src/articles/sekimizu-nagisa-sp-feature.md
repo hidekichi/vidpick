@@ -10,28 +10,15 @@ summary: 「今夜もシリアルキラーと待ち合わせ」に出演中の�
 
 ## テレビドラマ出演情報
 
+<!--
 <section class="zxc">
-
-  <p class="tver">
-    ドラマ 今夜もシリアルキラーと待ち合わせ(2026) 12(最終)話の配信がTVerで始まりました。 23分
-    9/30 23:00まで
-    横山裕(SUPER EIGHT)、関水渚、奥野壮、小島藤子、上田航平、槙尾ユウスケ(かもめんたる)、ジャッキーちゃん、松井咲子、戸田昌宏、山崎紘菜 らが出演しています
-    https://tver.jp/episodes/epzj2468q4
-  </p>
-
-  <p class="tver">
-  ドラマ 今夜もシリアルキラーと待ち合わせ(2026) 1話の配信がTVerで始まりました。
-  9/30 23:00まで
-  横山裕(SUPER EIGHT)、関水渚、奥野壮、米倉れいあ、大西武志、上田航平、飯田基祐、樋口日奈、小島藤子、戸田昌宏 らが出演しています
-  https://tver.jp/episodes/epwgi3odiw
-  </p>
 </section>
 
 <section class="layout mt-0 mb-12">
   <div id="drama"></div>
   <div id="youtube"></div>
 </section>
-
+-->
 
 #### 2026
 
