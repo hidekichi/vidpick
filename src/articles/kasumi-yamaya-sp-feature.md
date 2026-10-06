@@ -10,15 +10,21 @@ summary: ニンニンジャーのモモニンジャー、一番好きな花の�
 
 ## テレビドラマ出演情報
 
-<!--
+
 <section class="zxc">
+  <p class="tver">
+    ドラマ まめとむぎ(2026) 1話の配信がTVerで始まりました。 31分
+    終了日未記載
+    齋藤飛鳥、富田望生、石川瑠華、山谷花純、長井短、八木アリサ、大谷みつほ、誠(ヨネダ2000)、嶋田久作、ふせえり らが出演しています
+    https://tver.jp/episodes/epn0gyav0o
+  </p>
 </section>
 
 <section class="layout mt-0 mb-12">
   <div id="drama"></div>
   <div id="youtube"></div>
 </section>
--->
+
 
 ### 年代別ドラマ・映画出演情報
 
