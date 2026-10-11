@@ -85,7 +85,7 @@ const parseTver = (p) => {
 //console.log(duration)
 
   const episode = ep
-    ? (genre === "ドラマSP" && !/^\d+$/.test(ep) ? ep : `${ep}${rule.unit}`)
+    ? (genre === "ドラマSP" && !/^\d+～?\d+?$/.test(ep) ? ep : `${ep}${rule.unit}`)
     : "";
 
   const links = linkLines.map(s => {
