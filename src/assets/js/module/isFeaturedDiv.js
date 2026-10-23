@@ -45,7 +45,15 @@ export function set_isFeatured() {
     menu.addEventListener("click", (e) => {
       const targetValue = e.currentTarget.dataset.target;
       //const targetElement = document.getElementById(targetValue);
-      setFeaturedGenre(targetValue);
+
+      if (!document.startViewTransition) {
+        setFeaturedGenre(targetValue);
+        return;
+      }
+
+      const transition = document.startViewTransition(() => {
+        setFeaturedGenre(targetValue);
+      });
     });
 
   });

@@ -2636,3 +2636,58 @@ kbd {
     font-weight: bold;
   }
 }
+
+
+
+::view-transition-old(root) {
+  animation: 0.25s ease-out both fade-out;
+}
+
+/* 新しい画面が現れるときのスタイル（下から上にスライド ＋ フェード） */
+::view-transition-new(root) {
+  animation: 0.4s ease-out both slide-up-fade;
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes slide-up-fade {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+#drama {
+  view-transition-name: area-drama;
+}
+
+#anime {
+  view-transition-name: area-anime;
+}
+
+#variety {
+  view-transition-name: area-variety;
+}
+
+#documentary {
+  view-transition-name: area-documentary;
+}
+
+#youtube {
+  view-transition-name: area-youtube;
+}
+
+#other {
+  view-transition-name: area-other;
+}
