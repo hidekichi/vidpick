@@ -401,6 +401,10 @@ export default async function (eleventyConfig) {
     return noDraft(api.getFilteredByTag("ongoing")).reverse();
   });
 
+  eleventyConfig.addCollection("individual", (api) => {
+    return noDraft(api.getFilteredByTag("individual")).reverse();
+  });
+
   // -----------------------------------------------------------------
   // shortcode
   // -----------------------------------------------------------------

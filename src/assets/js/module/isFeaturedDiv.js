@@ -18,8 +18,8 @@ function setFeaturedGenre(targetId) {
 }
 
 export function set_isFeatured() {
-
-  if (location.pathname.includes("youtube-ongoing")) {
+  const scope = ["youtube-ongoing", "nmb-channel", "akb-channel"];
+  if (scope.find(f => location.pathname.includes(f))) {
       setFeaturedGenre('youtube');
       return;
     }
