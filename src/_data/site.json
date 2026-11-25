@@ -1,5 +1,7 @@
 {
   "name": "VidPick",
   "description": "TVerやYoutubeからピックアップした動画をまとめたサイト",
-  "url": "https://vidpick.pages.dev/"
+  "url": "https://vidpick.pages.dev/",
+  "author": "Hidekichi",
+  "since": "2026"
 }
