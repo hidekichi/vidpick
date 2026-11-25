@@ -3,5 +3,7 @@
   "description": "TVerやYoutubeからピックアップした動画をまとめたサイト",
   "url": "https://vidpick.pages.dev/",
   "author": "Hidekichi",
-  "since": "2026"
+  "since": "2026",
+  "x": "https://x.com/ko_hidekichi",
+  "bluesky": "https://bsky.app/profile/kohidekichi.bsky.social"
 }

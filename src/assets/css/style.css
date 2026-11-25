@@ -2697,3 +2697,15 @@ kbd {
 #other {
   view-transition-name: area-other;
 }
+
+
+.site-footer {
+  .social {
+    display: flex;
+    justify-content: center;
+
+    li {
+      list-style: none;
+    }
+  }
+}
